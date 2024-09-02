@@ -17,7 +17,7 @@ public class EgnitionSystem {
     static private DcMotor bl_wheel;
     static private DcMotor br_wheel;
     static private IMU imu;
-    static private double max;
+    static private double maxPower;
     static private double lx;
     static private double ly;
     static private double rx;
@@ -48,7 +48,7 @@ public class EgnitionSystem {
         EgnitionSystem.imu.resetYaw();
 
         //Setting variables
-        max = 1;
+        maxPower = 1;
         lx = 0;
         ly = 0;
         rx = 0;
@@ -63,7 +63,7 @@ public class EgnitionSystem {
         ly = -gamepad1.left_stick_y;
         rx = gamepad1.right_stick_x;
 
-        max = Math.max(Math.abs(lx) + Math.abs(ly) + Math.abs(rx), 1);
+        maxPower = Math.max(Math.abs(lx) + Math.abs(ly) + Math.abs(rx), 1);
 
         heading = -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
@@ -71,9 +71,9 @@ public class EgnitionSystem {
         adjustedLy = ly * Math.cos(heading) + lx * Math.sin(heading);
 
         //Giving power to motors
-        fl_wheel.setPower((adjustedLy + adjustedLx + rx) / max);
-        bl_wheel.setPower((adjustedLy - adjustedLx + rx) / max);
-        fr_wheel.setPower((adjustedLy - adjustedLx - rx) / max);
-        br_wheel.setPower((adjustedLy + adjustedLx - rx) / max);
+        fl_wheel.setPower((adjustedLy + adjustedLx + rx) / maxPower);
+        bl_wheel.setPower((adjustedLy - adjustedLx + rx) / maxPower);
+        fr_wheel.setPower((adjustedLy - adjustedLx - rx) / maxPower);
+        br_wheel.setPower((adjustedLy + adjustedLx - rx) / maxPower);
     }
 }
