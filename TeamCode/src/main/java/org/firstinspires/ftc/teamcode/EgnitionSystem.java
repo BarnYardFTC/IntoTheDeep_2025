@@ -20,22 +20,24 @@ public class EgnitionSystem {
     static private double imuHeadingRadians;
     static private double adjustedLx;
     static private double adjustedLy;
+    static private int fl = 0;
+    static private int fr = 1;
+    static private int bl = 2;
+    static private int br = 3;
 
     // Initializing function
     public static void init(DcMotor fl_wheel, DcMotor fr_wheel, DcMotor bl_wheel, DcMotor br_wheel, IMU imu) {
         // Assigning objects to variables
-        EgnitionSystem.Motors[0] = fl_wheel;
-        EgnitionSystem.Motors[1] = fr_wheel;
-        EgnitionSystem.Motors[2] = bl_wheel;
-        EgnitionSystem.Motors[3] = br_wheel;
+        EgnitionSystem.Motors = new DcMotor[]{fl_wheel, fr_wheel, bl_wheel, br_wheel};
         EgnitionSystem.imu = imu;
 
         // Setting motors behavior
-        EgnitionSystem.Motors[0].setDirection(DcMotorSimple.Direction.REVERSE);
-        EgnitionSystem.Motors[2].setDirection(DcMotorSimple.Direction.REVERSE);
+        EgnitionSystem.Motors[fl].setDirection(DcMotorSimple.Direction.REVERSE);
+        EgnitionSystem.Motors[bl].setDirection(DcMotorSimple.Direction.REVERSE);
 
         for (DcMotor motor : Motors) {
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
         // Setting imu behavior
@@ -70,9 +72,9 @@ public class EgnitionSystem {
         adjustedLy = ly * Math.cos(imuHeadingRadians) + lx * Math.sin(imuHeadingRadians);
 
         // Giving power to motors
-        Motors[0].setPower((adjustedLy + adjustedLx + rx) / maxPower);
-        Motors[1].setPower((adjustedLy - adjustedLx - rx) / maxPower);
-        Motors[2].setPower((adjustedLy - adjustedLx + rx) / maxPower);
-        Motors[3].setPower((adjustedLy + adjustedLx - rx) / maxPower);
+        Motors[fl].setPower((adjustedLy + adjustedLx + rx) / maxPower);
+        Motors[fr].setPower((adjustedLy - adjustedLx - rx) / maxPower);
+        Motors[bl].setPower((adjustedLy - adjustedLx + rx) / maxPower);
+        Motors[br].setPower((adjustedLy + adjustedLx - rx) / maxPower);
     }
 }
