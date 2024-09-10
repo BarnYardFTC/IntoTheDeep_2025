@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 //Imports
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -11,7 +11,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class EgnitionSystem {
     // Variables
-    static private DcMotor [] Motors;
+    static private DcMotorEx[] Motors;
     static private IMU imu;
     static private double maxPower;
     static private double lx;
@@ -26,18 +26,18 @@ public class EgnitionSystem {
     static private int br = 3;
 
     // Initializing function
-    public static void init(DcMotor fl_wheel, DcMotor fr_wheel, DcMotor bl_wheel, DcMotor br_wheel, IMU imu) {
+    public static void init(DcMotorEx fl_wheel, DcMotorEx fr_wheel, DcMotorEx bl_wheel, DcMotorEx br_wheel, IMU imu) {
         // Assigning objects to variables
-        EgnitionSystem.Motors = new DcMotor[]{fl_wheel, fr_wheel, bl_wheel, br_wheel};
+        EgnitionSystem.Motors = new DcMotorEx[]{fl_wheel, fr_wheel, bl_wheel, br_wheel};
         EgnitionSystem.imu = imu;
 
         // Setting motors behavior
         EgnitionSystem.Motors[fl].setDirection(DcMotorSimple.Direction.REVERSE);
         EgnitionSystem.Motors[bl].setDirection(DcMotorSimple.Direction.REVERSE);
 
-        for (DcMotor motor : Motors) {
-            motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        for (DcMotorEx motor : Motors) {
+            motor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+            motor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         }
 
         // Setting imu behavior
