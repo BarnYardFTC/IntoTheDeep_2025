@@ -1,26 +1,41 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class TestDifferential {
     // Servos
-    private static final int rightDifferential = 0;
-    private static final int leftDifferential = 1;
-    private static final int rightDifferentialArm = 2;
-    private static final int leftDifferentialArm = 3;
+    public static final int rightDifferential = 0;
+    public static final int leftDifferential = 1;
+    public static final int rightDifferentialArm = 2;
+    public static final int leftDifferentialArm = 3;
     private static final int maxRotationDifferential = 300;
     private static final int maxRotationDifferentialArm = 300;
-    private static Servo[] differentialServos;
-    public static boolean X;
+    public static Servo[] differentialServos;
+    public static boolean wasPressed = false;
 
     // Initializing
     public static void init(Servo rightDifferential, Servo leftDifferential, Servo rightDifferentialArm, Servo leftDifferentialArm) {
         // Assigning objects to variables
         TestDifferential.differentialServos = new Servo[]{rightDifferential, leftDifferential, rightDifferentialArm, leftDifferentialArm};
     }
+    public static void init(Servo rightDifferential, Servo leftDifferential) {
+        // Assigning objects to variables
+        TestDifferential.differentialServos = new Servo[]{rightDifferential, leftDifferential};
+    }
 
     // Position arrival
     public static boolean isServoInPosition(Servo servo, int position) {return (int) (servo.getPosition() * 1000) == position * 1000;}
+    public static boolean isPressed(boolean key) {
+        if (key && !wasPressed) {
+            wasPressed = true;
+        }
+        if (!key && wasPressed) {
+            wasPressed = false;
+            return true;
+        }
+        return false;
+    }
 
     // Roll movement
     public static void differentialRollMovement(int angleRoll) {

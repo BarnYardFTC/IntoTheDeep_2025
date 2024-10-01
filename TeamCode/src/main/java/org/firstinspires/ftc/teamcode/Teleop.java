@@ -16,24 +16,29 @@ public class Teleop extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            if (gamepad1.x) {
-                TestDifferential.X = true;
+            if (TestDifferential.isPressed(gamepad1.x)) {
+                TestDifferential.differentialServos[TestDifferential.rightDifferential].setPosition(TestDifferential.differentialServos[TestDifferential.rightDifferential].getPosition() + 0.01);
             }
-            else if (TestDifferential.X) {
-//                TestDifferential.differentialArmR(45);
-//                TestDifferential.differentialArmL(45);
-                TestDifferential.differentialYawMovement(45);
-                TestDifferential.differentialRollMovement(45);
-                TestDifferential.X = false;
+            if (TestDifferential.isPressed(gamepad1.a)) {
+                TestDifferential.differentialServos[TestDifferential.leftDifferential].setPosition(TestDifferential.differentialServos[TestDifferential.leftDifferential].getPosition() + 0.01);
             }
+            if (gamepad1.y) {
+                TestDifferential.differentialServos[TestDifferential.rightDifferential].setPosition(0);
+            }
+            if (gamepad1.b) {
+                TestDifferential.differentialServos[TestDifferential.leftDifferential].setPosition(0);
+            }
+            telemetry.addData("R", TestDifferential.differentialServos[TestDifferential.rightDifferential].getPosition());
+            telemetry.addData("L", TestDifferential.differentialServos[TestDifferential.leftDifferential].getPosition());
+            telemetry.update();
         }
     }
 
     public void initTestDifferential() {
         Servo rightDifferential = hardwareMap.get(Servo.class, "rightDifferential");
         Servo leftDifferential = hardwareMap.get(Servo.class, "leftDifferential");
-        Servo rightDifferentialArm = hardwareMap.get(Servo.class, "rightDifferentialArm");
-        Servo leftDifferentialArm = hardwareMap.get(Servo.class, "leftDifferentialArm");
-        TestDifferential.init(rightDifferential, leftDifferential, rightDifferentialArm, leftDifferentialArm);
+//        Servo rightDifferentialArm = hardwareMap.get(Servo.class, "rightDifferentialArm");
+//        Servo leftDifferentialArm = hardwareMap.get(Servo.class, "leftDifferentialArm");
+        TestDifferential.init(rightDifferential, leftDifferential);
     }
 }
