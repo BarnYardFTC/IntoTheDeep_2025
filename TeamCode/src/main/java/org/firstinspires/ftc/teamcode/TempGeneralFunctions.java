@@ -6,15 +6,22 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class TempGeneralFunctions {
     public static boolean wasPressed = false;
+    public static boolean xWasPressed = false;
+    public static boolean yWasPressed = false;
+    public static boolean bWasPressed = false;
+    public static boolean aWasPressed = false;
+    public static boolean rightBumperWasPressed = false;
+    public static boolean leftBumperWasPressed = false;
+    public static boolean dpadUpWasPressed = false;
 
-    // General key press function to prevent multiple inputs in one press
+    // Example for general key press function to prevent multiple inputs in one press
     public static boolean isPressed(boolean key) {
         if (key && !wasPressed) {
             wasPressed = true;
-        }
-        if (!key && wasPressed) {
-            wasPressed = false;
             return true;
+        }
+        if (!key) {
+            wasPressed = false;
         }
         return false;
     }
