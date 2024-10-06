@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import java.lang.Exception;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -20,7 +21,18 @@ public class TempGeneralFunctions {
 
     // Position arrival
     public static boolean isServoInPosition(Servo servo, int position) {return (int) (servo.getPosition() * 1000) == position * 1000;}
-    public static boolean isEncoderBiggerThen(DcMotorEx motorEx, int position) {return motorEx.getCurrentPosition() > position;}
-    public static boolean isEncoderSmallerThen(DcMotorEx motorEx, int position) {return motorEx.getCurrentPosition() < position;}
+    public static boolean isEncoderPosition(DcMotorEx motorEx, int position, String direction) throws Exception {
+        if (direction.equals("<")) {
+            return motorEx.getCurrentPosition() < position;
+        } else if (direction.equals(">")) {
+            return motorEx.getCurrentPosition() > position;
+        } else if (direction.equals("=")){
+            return motorEx.getCurrentPosition() == position;
+        }
+        
+        throw new Exception("No such operation");
+    }
+    
+    public static boolean isEncoderSmallerThan(DcMotorEx motorEx, int position) {return motorEx.getCurrentPosition() < position;}
     public static boolean isEncoderCloseTo(DcMotorEx motorEx, int position) {return motorEx.getCurrentPosition() <= position + 5 || motorEx.getCurrentPosition() >= position - 5;}
 }
