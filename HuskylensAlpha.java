@@ -8,7 +8,6 @@ import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 
 import java.util.concurrent.TimeUnit;
 
-@Autonomous(name = "huskyLensAlpha")
 public class HuskylensAlpha{
 
 }
