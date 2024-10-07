@@ -18,16 +18,31 @@ public class Teleop extends LinearOpMode {
         while (opModeIsActive()) {
             if (gamepad1.x && !TempGeneralFunctions.xWasPressed) {
                 TempGeneralFunctions.xWasPressed = true;
-                TempDifferential.differentialRollMovement(45);
+                TempDifferential.differentialRollMovement(90);
             }
             if (!gamepad1.x) {
                 TempGeneralFunctions.xWasPressed = false;
             }
             if (gamepad1.a && !TempGeneralFunctions.aWasPressed) {
                 TempGeneralFunctions.aWasPressed = true;
-                TempDifferential.differentialYawMovement(45);            }
+                TempDifferential.differentialYawMovement(90);
+            }
             if (!gamepad1.a) {
                 TempGeneralFunctions.aWasPressed = false;
+            }
+            if (gamepad1.y && !TempGeneralFunctions.yWasPressed) {
+                TempGeneralFunctions.yWasPressed = true;
+                TempDifferential.differentialRollMovement(-90);
+            }
+            if (!gamepad1.y) {
+                TempGeneralFunctions.yWasPressed = false;
+            }
+            if (gamepad1.b && !TempGeneralFunctions.bWasPressed) {
+                TempGeneralFunctions.bWasPressed = true;
+                TempDifferential.differentialYawMovement(-90);
+            }
+            if (!gamepad1.b) {
+                TempGeneralFunctions.bWasPressed = false;
             }
             telemetry.addData("r", TempDifferential.differentialServos[TempDifferential.rightDifferential].getPosition());
             telemetry.addData("l", TempDifferential.differentialServos[TempDifferential.leftDifferential].getPosition());

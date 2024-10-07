@@ -8,8 +8,8 @@ public class TempDifferential {
     public static final int rightDifferential = 0;
     public static final int leftDifferential = 1;
     // Servo characteristics
-    private static final int rightDifferentialMaxRotation = 180;
-    private static final int leftDifferentialMaxRotation = 180;
+    private static final int rightDifferentialMaxRotation = 355;
+    private static final int leftDifferentialMaxRotation = 355;
     public static Servo[] differentialServos;
 
     // Initializing
