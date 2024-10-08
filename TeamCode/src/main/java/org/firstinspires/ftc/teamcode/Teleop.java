@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
 // Imports
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 // TeleOp
@@ -11,48 +14,31 @@ public class Teleop extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        initTestDifferential();
-
         waitForStart();
 
         while (opModeIsActive()) {
-            if (gamepad1.x && !TempGeneralFunctions.xWasPressed) {
-                TempGeneralFunctions.xWasPressed = true;
-                TempDifferential.differentialRollMovement(90);
-            }
-            if (!gamepad1.x) {
-                TempGeneralFunctions.xWasPressed = false;
-            }
-            if (gamepad1.a && !TempGeneralFunctions.aWasPressed) {
-                TempGeneralFunctions.aWasPressed = true;
-                TempDifferential.differentialYawMovement(90);
-            }
-            if (!gamepad1.a) {
-                TempGeneralFunctions.aWasPressed = false;
-            }
-            if (gamepad1.y && !TempGeneralFunctions.yWasPressed) {
-                TempGeneralFunctions.yWasPressed = true;
-                TempDifferential.differentialRollMovement(-90);
-            }
-            if (!gamepad1.y) {
-                TempGeneralFunctions.yWasPressed = false;
-            }
-            if (gamepad1.b && !TempGeneralFunctions.bWasPressed) {
-                TempGeneralFunctions.bWasPressed = true;
-                TempDifferential.differentialYawMovement(-90);
-            }
-            if (!gamepad1.b) {
-                TempGeneralFunctions.bWasPressed = false;
-            }
-            telemetry.addData("r", TempDifferential.differentialServos[TempDifferential.rightDifferential].getPosition());
-            telemetry.addData("l", TempDifferential.differentialServos[TempDifferential.leftDifferential].getPosition());
-            telemetry.update();
+
         }
     }
 
-    public void initTestDifferential() {
+    public void initTempDifferential() {
         Servo rightDifferential = hardwareMap.get(Servo.class, "rightDifferential");
         Servo leftDifferential = hardwareMap.get(Servo.class, "leftDifferential");
-        TempDifferential.init(rightDifferential, leftDifferential);
+        AnalogInput analogSensor = hardwareMap.get(AnalogInput.class, "analogSensor");
+        TempDifferential.init(rightDifferential, leftDifferential, analogSensor);
+    }
+    public void initTempDifferentialArm() {
+        Servo rightDifferentialArm = hardwareMap.get(Servo.class, "rightDifferentialArm");
+        Servo leftDifferentialArm = hardwareMap.get(Servo.class, "rightDifferentialArm");
+        TempDifferentialArm.init(rightDifferentialArm, leftDifferentialArm);
+    }
+    public void initTempClaw() {
+        Servo claw = hardwareMap.get(Servo.class, "claw");
+        ColorRangeSensor distanceSensor = hardwareMap.get(ColorRangeSensor.class, "distanceSensor");
+        TempClaw.init(claw, distanceSensor);
+    }
+    public void initLed() {
+        RevBlinkinLedDriver LED = hardwareMap.get(RevBlinkinLedDriver.class, "LED");
+        TempLED.init(LED);
     }
 }
