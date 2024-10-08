@@ -16,23 +16,36 @@ public class Teleop extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            if (TempGeneralFunctions.isPressed(gamepad1.x)) {
-                TempDifferential.differentialServos[TempDifferential.rightDifferential].setPosition(TempDifferential.differentialServos[TempDifferential.rightDifferential].getPosition() + 0.01);
+            if (gamepad1.x && !TempGeneralFunctions.xWasPressed) {
+                TempGeneralFunctions.xWasPressed = true;
+                TempDifferential.differentialRollMovement(90);
             }
-            if (TempGeneralFunctions.isPressed(gamepad1.a)) {
-                TempDifferential.differentialServos[TempDifferential.leftDifferential].setPosition(TempDifferential.differentialServos[TempDifferential.leftDifferential].getPosition() + 0.01);
+            if (!gamepad1.x) {
+                TempGeneralFunctions.xWasPressed = false;
             }
-            if (TempGeneralFunctions.isPressed(gamepad1.y)) {
-                TempDifferential.differentialServos[TempDifferential.rightDifferential].setPosition(TempDifferential.differentialServos[TempDifferential.rightDifferential].getPosition() - 0.01);
+            if (gamepad1.a && !TempGeneralFunctions.aWasPressed) {
+                TempGeneralFunctions.aWasPressed = true;
+                TempDifferential.differentialYawMovement(90);
             }
-            if (TempGeneralFunctions.isPressed(gamepad1.b)) {
-                TempDifferential.differentialServos[TempDifferential.leftDifferential].setPosition(TempDifferential.differentialServos[TempDifferential.leftDifferential].getPosition() - 0.01);
+            if (!gamepad1.a) {
+                TempGeneralFunctions.aWasPressed = false;
             }
-            telemetry.addData("R", TempDifferential.differentialServos[TempDifferential.rightDifferential].getPosition());
-            telemetry.addData("L", TempDifferential.differentialServos[TempDifferential.leftDifferential].getPosition());
-            telemetry.addData("Servo name 0", TempDifferential.differentialServos[TempDifferential.rightDifferential]);
-            telemetry.addData("Servo name 1", TempDifferential.differentialServos[TempDifferential.leftDifferential]);
-            telemetry.addData("Check function", TempGeneralFunctions.isPressed(gamepad1.right_bumper));
+            if (gamepad1.y && !TempGeneralFunctions.yWasPressed) {
+                TempGeneralFunctions.yWasPressed = true;
+                TempDifferential.differentialRollMovement(-90);
+            }
+            if (!gamepad1.y) {
+                TempGeneralFunctions.yWasPressed = false;
+            }
+            if (gamepad1.b && !TempGeneralFunctions.bWasPressed) {
+                TempGeneralFunctions.bWasPressed = true;
+                TempDifferential.differentialYawMovement(-90);
+            }
+            if (!gamepad1.b) {
+                TempGeneralFunctions.bWasPressed = false;
+            }
+            telemetry.addData("r", TempDifferential.differentialServos[TempDifferential.rightDifferential].getPosition());
+            telemetry.addData("l", TempDifferential.differentialServos[TempDifferential.leftDifferential].getPosition());
             telemetry.update();
         }
     }
@@ -40,8 +53,6 @@ public class Teleop extends LinearOpMode {
     public void initTestDifferential() {
         Servo rightDifferential = hardwareMap.get(Servo.class, "rightDifferential");
         Servo leftDifferential = hardwareMap.get(Servo.class, "leftDifferential");
-//        Servo rightDifferentialArm = hardwareMap.get(Servo.class, "rightDifferentialArm");
-//        Servo leftDifferentialArm = hardwareMap.get(Servo.class, "leftDifferentialArm");
         TempDifferential.init(rightDifferential, leftDifferential);
     }
 }
