@@ -10,30 +10,34 @@ import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class EgnitionSystem {
+    
     // Variables
-    static private DcMotorEx[] Motors;
-    static private IMU imu;
-    static private double maxPower;
-    static private double lx;
-    static private double ly;
-    static private double rx;
-    static private double imuHeadingRadians;
-    static private double adjustedLx;
-    static private double adjustedLy;
-    static private final int fl = 0;
-    static private final int fr = 1;
-    static private final int bl = 2;
-    static private final int br = 3;
+    private static final DcMotorEx[] Motors = new DcMotorEx[4];
+    private static IMU imu;
+    private static double maxPower;
+    private static double lx;
+    private static double ly;
+    private static double rx;
+    private static double imuHeadingRadians;
+    private static double adjustedLx;
+    private static double adjustedLy;
+    private static final int FL = 0;
+    private static final int FR = 1;
+    private static final int BL = 2;
+    private static final int BR = 3;
 
     // Initializing function
     public static void init(DcMotorEx leftFront, DcMotorEx rightFront, DcMotorEx leftBack, DcMotorEx rightBack, IMU imu) {
         // Assigning objects to variables
-        EgnitionSystem.Motors = new DcMotorEx[]{leftFront, rightFront, leftBack, rightBack};
+        Motors[FL] = leftFront;
+        Motors[BL] = leftBack;
+        Motors[FR] = rightFront;
+        Motors[BR] = rightBack;
         EgnitionSystem.imu = imu;
 
         // Setting motors behavior
-        EgnitionSystem.Motors[fl].setDirection(DcMotorSimple.Direction.REVERSE);
-        EgnitionSystem.Motors[bl].setDirection(DcMotorSimple.Direction.REVERSE);
+        EgnitionSystem.Motors[FL].setDirection(DcMotorSimple.Direction.REVERSE);
+        EgnitionSystem.Motors[BL].setDirection(DcMotorSimple.Direction.REVERSE);
 
         for (DcMotorEx motor : Motors) {
             motor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
@@ -44,6 +48,7 @@ public class EgnitionSystem {
         EgnitionSystem.imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD)));
+        
         EgnitionSystem.imu.resetYaw();
 
         // Setting variables
@@ -72,9 +77,9 @@ public class EgnitionSystem {
         adjustedLy = ly * Math.cos(imuHeadingRadians) + lx * Math.sin(imuHeadingRadians);
 
         // Giving power to motors
-        Motors[fl].setPower((adjustedLy + adjustedLx + rx) / maxPower);
-        Motors[fr].setPower((adjustedLy - adjustedLx - rx) / maxPower);
-        Motors[bl].setPower((adjustedLy - adjustedLx + rx) / maxPower);
-        Motors[br].setPower((adjustedLy + adjustedLx - rx) / maxPower);
+        Motors[FL].setPower((adjustedLy + adjustedLx + rx) / maxPower);
+        Motors[FR].setPower((adjustedLy - adjustedLx - rx) / maxPower);
+        Motors[BL].setPower((adjustedLy - adjustedLx + rx) / maxPower);
+        Motors[BR].setPower((adjustedLy + adjustedLx - rx) / maxPower);
     }
 }

@@ -5,56 +5,49 @@ import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class TempDifferential {
+    // Angles
+    private static final double RIGHT_DIFFERENTIAL_START_POS = 0.0;
+    private static final double LEFT_DIFFERENTIAL_START_POS = 0.0;
+
+    private static final int ANGLE_PITCH_SPECIMEN_INTAKE = -180;
+    private static final int ANGLE_ROLL_SPECIMEN_UNLOAD = 180;
+    private static final int ANGLE_ROLL_SAMPLE_UNLOAD = 90;
+    private static final int ANGLE_PITCH_SAMPLE_UNLOAD = -180;
+
+    // Servo characteristics
+    private static final int RIGHT_DIFFERENTIAL_MAX_ROTATION = 355;
+    private static final int LEFT_DIFFERENTIAL_MAX_ROTATION = 355;
+
+    public static final Servo[] differentialServos = new Servo[2];
+
     // Servos (starting positions: rightDifferential: 0, leftDifferential: 0.5)
-    public static final int rightDifferential = 0;
-    public static final int leftDifferential = 1;
+    private static final int RIGHT = 0;
+    private static final int LEFT = 1;
+
     // Analog, position equation: position = analogSensor.getVoltage() / 3.3 * 360
     public static AnalogInput analogSensor;
-    // Angles
-    private static final double rightDifferentialStartPos = 0.0;
-    private static final double leftDifferentialStartPos = 0.0;
-    private static final int anglePitchSpecimenIntake = -180;
-    private static final int angleRollSpecimenUnload = 180;
-    private static final int angleRollSampleUnload = 90;
-    private static final int anglePitchSampleUnload = -180;
-    // Servo characteristics
-    private static final int rightDifferentialMaxRotation = 355;
-    private static final int leftDifferentialMaxRotation = 355;
-    public static Servo[] differentialServos;
 
     // Initializing
-    public static void init(Servo rightDifferential, Servo leftDifferential, AnalogInput analogSensor) {
+    public static void init(Servo rightDifferential, Servo leftDifferential, AnalogInput analogSensorConfig) {
         // Assigning objects to variables
-        TempDifferential.differentialServos = new Servo[]{rightDifferential, leftDifferential};
-        TempDifferential.analogSensor = analogSensor;
+        differentialServos[RIGHT] = rightDifferential;
+        differentialServos[LEFT] = leftDifferential;
+        analogSensor = analogSensorConfig;
+
         // Moving Servos to starting position
-        differentialServos[TempDifferential.rightDifferential].setPosition(rightDifferentialStartPos);
-        differentialServos[TempDifferential.leftDifferential].setPosition(leftDifferentialStartPos);
-    }
-    public static void init(Servo rightDifferential, Servo leftDifferential) {
-        // Assigning objects to variables
-        TempDifferential.differentialServos = new Servo[]{rightDifferential, leftDifferential};
-        // Moving Servos to starting position
-        differentialServos[TempDifferential.rightDifferential].setPosition(rightDifferentialStartPos);
-        differentialServos[TempDifferential.leftDifferential].setPosition(leftDifferentialStartPos);
-    }
-    public static void init(Servo rightDifferential, AnalogInput analogSensor) {
-        // Assigning objects to variables
-        TempDifferential.differentialServos = new Servo[]{rightDifferential};
-        TempDifferential.analogSensor = analogSensor;
-        // Moving Servos to starting position
-        differentialServos[TempDifferential.rightDifferential].setPosition(rightDifferentialStartPos);
+        differentialServos[RIGHT].setPosition(RIGHT_DIFFERENTIAL_START_POS);
+        differentialServos[LEFT].setPosition(LEFT_DIFFERENTIAL_START_POS);
     }
 
     // Roll movement
     public static void differentialRollMovement(int angleRoll) {
-        differentialServos[rightDifferential].setPosition(rightDifferentialStartPos + (double) angleRoll / rightDifferentialMaxRotation);
-        differentialServos[leftDifferential].setPosition(leftDifferentialStartPos + (double) angleRoll / leftDifferentialMaxRotation);
+        differentialServos[RIGHT].setPosition(RIGHT_DIFFERENTIAL_START_POS + (double) angleRoll / RIGHT_DIFFERENTIAL_MAX_ROTATION);
+        differentialServos[LEFT].setPosition(LEFT_DIFFERENTIAL_START_POS + (double) angleRoll / LEFT_DIFFERENTIAL_MAX_ROTATION);
     }
 
     // Yaw movement
     public static void differentialPitchMovement(int anglePitch) {
-        differentialServos[rightDifferential].setPosition(rightDifferentialStartPos - (double) anglePitch / rightDifferentialMaxRotation);
-        differentialServos[leftDifferential].setPosition(leftDifferentialStartPos + (double) anglePitch / leftDifferentialMaxRotation);
+        differentialServos[RIGHT].setPosition(RIGHT_DIFFERENTIAL_START_POS - (double) anglePitch / RIGHT_DIFFERENTIAL_MAX_ROTATION);
+        differentialServos[LEFT].setPosition(LEFT_DIFFERENTIAL_START_POS + (double) anglePitch / LEFT_DIFFERENTIAL_MAX_ROTATION);
     }
 }

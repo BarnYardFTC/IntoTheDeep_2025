@@ -1,0 +1,7 @@
+Igal:
+1. Create motor and servo files in module package.
+2. Change variables to private and do getter and setter.
+3. convert functions.
+4. Change code order(public final - private final - public - private - init - set - get - void - boolean - int - string).
+
+Aviv:
