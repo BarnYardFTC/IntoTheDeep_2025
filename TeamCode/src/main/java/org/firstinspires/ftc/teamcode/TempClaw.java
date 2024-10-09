@@ -11,8 +11,8 @@ public class TempClaw {
     public static Servo claw;
     static private ColorRangeSensor distanceSensor;
     // Servo positions
-    public static final int openedClaw = 0;
-    public static final int closedClaw = 0;
+    public static final double openedClaw = 0.0;
+    public static final double closedClaw = 0.0;
     // parameters
     static private final int collectionDistance = 5;
     static public boolean specimenCollected;

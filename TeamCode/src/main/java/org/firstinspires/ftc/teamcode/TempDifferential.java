@@ -12,7 +12,7 @@ public class TempDifferential {
     public static AnalogInput analogSensor;
     // Angles
     private static final double rightDifferentialStartPos = 0.0;
-    private static final double leftDifferentialStartPos = 0.5;
+    private static final double leftDifferentialStartPos = 0.0;
     private static final int anglePitchSpecimenIntake = -180;
     private static final int angleRollSpecimenUnload = 180;
     private static final int angleRollSampleUnload = 90;
@@ -30,6 +30,20 @@ public class TempDifferential {
         // Moving Servos to starting position
         differentialServos[TempDifferential.rightDifferential].setPosition(rightDifferentialStartPos);
         differentialServos[TempDifferential.leftDifferential].setPosition(leftDifferentialStartPos);
+    }
+    public static void init(Servo rightDifferential, Servo leftDifferential) {
+        // Assigning objects to variables
+        TempDifferential.differentialServos = new Servo[]{rightDifferential, leftDifferential};
+        // Moving Servos to starting position
+        differentialServos[TempDifferential.rightDifferential].setPosition(rightDifferentialStartPos);
+        differentialServos[TempDifferential.leftDifferential].setPosition(leftDifferentialStartPos);
+    }
+    public static void init(Servo rightDifferential, AnalogInput analogSensor) {
+        // Assigning objects to variables
+        TempDifferential.differentialServos = new Servo[]{rightDifferential};
+        TempDifferential.analogSensor = analogSensor;
+        // Moving Servos to starting position
+        differentialServos[TempDifferential.rightDifferential].setPosition(rightDifferentialStartPos);
     }
 
     // Roll movement
