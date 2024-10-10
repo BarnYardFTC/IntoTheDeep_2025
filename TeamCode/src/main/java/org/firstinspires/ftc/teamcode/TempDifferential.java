@@ -4,6 +4,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.modules.ServoProps;
+
 public class TempDifferential {
     // Servos (starting positions: right: 0, left: 0.5).
     private static final Servo[] servos = new Servo[2];

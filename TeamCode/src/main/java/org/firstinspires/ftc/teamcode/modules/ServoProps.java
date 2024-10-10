@@ -7,6 +7,7 @@ public class ServoProps {
     // Servo props.
     private static int maxRotation = 355;
     private static double startPosition = 0;
+    private static double rotationRatio = 1;
 
     // Initializing.
     public static void init(int maxRot, double startPos) {
@@ -23,6 +24,10 @@ public class ServoProps {
         startPosition = startPos;
     }
 
+    public static void setRotationRatio(int rotRatio) {
+        rotationRatio = rotRatio;
+    }
+
     // Gets servo props.
     public static int getMaxRotation() {
         return maxRotation;
@@ -30,6 +35,13 @@ public class ServoProps {
 
     public static double getStartPosition() {
         return startPosition;
+    }
+
+    public static double getRotationRatio() {return rotationRatio;}
+
+    // Move servo by angle.
+    public static void movement(int angle, Servo servo, double startPosition, int maxRotation, double rotationRatio) {
+        servo.setPosition(startPosition + (double) angle / maxRotation / rotationRatio);
     }
 
     // Checks if servo is in a given position;
