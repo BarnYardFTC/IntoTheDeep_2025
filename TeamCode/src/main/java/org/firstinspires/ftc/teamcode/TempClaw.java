@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+// Imports.
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -7,49 +8,61 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class TempClaw {
 
-    // Servo (starting positions: claw: 0)
-    public static Servo claw;
-    static private ColorRangeSensor distanceSensor;
+    // Servo (starting positions: claw: 0).
+    private static Servo claw;
 
-    // Servo positions
-    public static final double OPENED_CLAW = 0.0;
-    public static final double CLOSED_CLAW = 0.0;
+    // ColorRangeSensor.
+    private static ColorRangeSensor distanceSensor;
 
-    // parameters
+    // Servo positions.
+    private static final double OPENED_CLAW = 0.0;
+    private static final double CLOSED_CLAW = 0.0;
+
+    // Variables.
     static private final int COLLECTION_DISTANCE = 5;
-    static public boolean specimenCollected;
+    static private boolean specimenCollected;
 
-    // Initializing
+    // Initializing.
     public static void init(Servo claw, ColorRangeSensor distanceSensor) {
-        // Assigning objects to variables
+        // Assigning objects to variables.
         TempClaw.claw = claw;
         TempClaw.distanceSensor = distanceSensor;
 
-        // Moving Servo to starting position
+        // Moving Servo to starting position.
         openClaw();
     }
 
-    // Open claw
+    // Set if specimenCollected.
+    public static void setSpecimenCollected(boolean collected) {
+        specimenCollected = collected;
+    }
+
+    // Get if specimenCollected.
+    public static boolean getSpecimenCollected() {
+        return specimenCollected;
+    }
+
+    // Open claw.
     public static void openClaw() {
         claw.setPosition(OPENED_CLAW);
         specimenCollected = false;
     }
 
-    // Close claw
+    // Close claw.
     public static void closeClaw() {
         claw.setPosition(CLOSED_CLAW);
     }
 
-    // Get distance from sensor
-    public static int getProximityValue() {
-        int proximityValue = (int) distanceSensor.getDistance(DistanceUnit.MM);
-        return proximityValue;
-    }
-
-    // Automated closure of claw
+    // Automated closure of claw.
     public static void collectSpecimen() {
         if (getProximityValue() == COLLECTION_DISTANCE) {closeClaw();
             specimenCollected = true;
         }
+    }
+
+    // Get distance from sensor.
+    public static int getProximityValue() {
+        int proximityValue = (int) distanceSensor.getDistance(DistanceUnit.MM);
+        return proximityValue;
     }
 }

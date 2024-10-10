@@ -1,30 +1,31 @@
 package org.firstinspires.ftc.teamcode;
 
-// Imports
+// Imports.
 
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-// TeleOp
+// TeleOp.
 @TeleOp(name = "IntoTheDeep Temp TeleOp")
 
 public class Teleop extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-
-        initTempDifferential();
+        // Initializing.
 
         waitForStart();
 
+        // Maim loop.
         while (opModeIsActive()) {
             try {
                 telemetry.update();
@@ -38,6 +39,17 @@ public class Teleop extends LinearOpMode {
                 throw e;
             }
         }
+    }
+
+    // Initializing functions.
+    public void initEgnitionSystem() {
+        DcMotorEx leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
+        DcMotorEx leftBack = hardwareMap.get(DcMotorEx.class, "leftBack");
+        DcMotorEx rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
+        DcMotorEx rightBack = hardwareMap.get(DcMotorEx.class, "rightBack");
+        IMU imu = hardwareMap.get(IMU.class, "IMU");
+
+        EgnitionSystem.init(leftFront, rightFront, leftBack, rightBack, imu);
     }
 
     public void initTempDifferential() {
@@ -62,9 +74,18 @@ public class Teleop extends LinearOpMode {
         TempClaw.init(claw, distanceSensor);
     }
 
+    public void initTempIntakeArm() {
+        Servo right = hardwareMap.get(Servo.class, "rightIntakeArm");
+        Servo left = hardwareMap.get(Servo.class, "leftIntakeArm");
+
+        TempIntakeArm.init(right, left);
+    }
+
     public void initLed() {
         RevBlinkinLedDriver LED = hardwareMap.get(RevBlinkinLedDriver.class, "LED");
 
         TempLED.init(LED);
     }
+
+    // Main functions.
 }

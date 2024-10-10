@@ -1,13 +1,11 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.modules;
 
-import java.lang.Exception;
+// Imports.
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.Servo;
 
-public class TempGeneralFunctions {
-    // Position arrival
+public class MotorProps {
 
-
+    // Find if encoder is smaller, bigger or equal to a given position.
     public static boolean isEncoderPosition(DcMotorEx motorEx, int position, String direction) throws Exception {
         switch (direction) {
             case "<":
@@ -17,6 +15,7 @@ public class TempGeneralFunctions {
             case "=":
                 return motorEx.getCurrentPosition() == position;
         }
+
         throw new Exception("No such operation");
     }
 }
