@@ -1,52 +1,60 @@
 package org.firstinspires.ftc.teamcode;
 
-//Imports
+//Imports.
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class EgnitionSystem {
-    // Variables
-    static private DcMotorEx[] Motors;
-    static private IMU imu;
-    static private double maxPower;
-    static private double lx;
-    static private double ly;
-    static private double rx;
-    static private double imuHeadingRadians;
-    static private double adjustedLx;
-    static private double adjustedLy;
-    static private final int fl = 0;
-    static private final int fr = 1;
-    static private final int bl = 2;
-    static private final int br = 3;
 
-    // Initializing function
-    public static void init(DcMotorEx leftFront, DcMotorEx rightFront, DcMotorEx leftBack, DcMotorEx rightBack, IMU imu) {
-        // Assigning objects to variables
-        EgnitionSystem.Motors = new DcMotorEx[]{leftFront, rightFront, leftBack, rightBack};
-        EgnitionSystem.imu = imu;
+    // Motors.
+    private static final DcMotorEx[] Motors = new DcMotorEx[4];
+    private static final int FL = 0;
+    private static final int FR = 1;
+    private static final int BL = 2;
+    private static final int BR = 3;
 
-        // Setting motors behavior
-        EgnitionSystem.Motors[fl].setDirection(DcMotorSimple.Direction.REVERSE);
-        EgnitionSystem.Motors[bl].setDirection(DcMotorSimple.Direction.REVERSE);
+    // IMU.
+    private static IMU imu;
+
+    // Variables.
+    private static double maxPower;
+    private static double lx;
+    private static double ly;
+    private static double rx;
+    private static double imuHeadingRadians;
+    private static double adjustedLx;
+    private static double adjustedLy;
+
+    // Initializing function.
+    public static void init(DcMotorEx leftFront, DcMotorEx rightFront, DcMotorEx leftBack, DcMotorEx rightBack, IMU imuConfig) {
+        // Assigning objects to variables.
+        Motors[FL] = leftFront;
+        Motors[BL] = leftBack;
+        Motors[FR] = rightFront;
+        Motors[BR] = rightBack;
+        EgnitionSystem.imu = imuConfig;
+
+        // Setting motors behavior.
+        EgnitionSystem.Motors[FL].setDirection(DcMotorEx.Direction.REVERSE);
+        EgnitionSystem.Motors[BL].setDirection(DcMotorEx.Direction.REVERSE);
 
         for (DcMotorEx motor : Motors) {
             motor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
             motor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         }
 
-        // Setting imu behavior
+        // Setting imu behavior.
         EgnitionSystem.imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD)));
+
         EgnitionSystem.imu.resetYaw();
 
-        // Setting variables
+        // Setting variables.
         maxPower = 1;
         lx = 0;
         ly = 0;
@@ -56,7 +64,7 @@ public class EgnitionSystem {
         adjustedLy = 0;
     }
 
-    // Main drive function
+    // Main drive function.
     public static void driveTeleOp(Gamepad gamepad1) {
         // Setting variables
         lx = gamepad1.left_stick_x;
@@ -64,17 +72,17 @@ public class EgnitionSystem {
         rx = gamepad1.right_stick_x;
         imuHeadingRadians = -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
-        // Calculating maxPower for saving the ratio of motor powers
+        // Calculating maxPower for saving the ratio of motor powers.
         maxPower = Math.max(Math.abs(lx) + Math.abs(ly) + Math.abs(rx), 1);
 
-        // Calculating adjusted powers for field centric drive
+        // Calculating adjusted powers for field centric drive.
         adjustedLx = -ly * Math.sin(imuHeadingRadians) + lx * Math.cos(imuHeadingRadians);
         adjustedLy = ly * Math.cos(imuHeadingRadians) + lx * Math.sin(imuHeadingRadians);
 
-        // Giving power to motors
-        Motors[fl].setPower((adjustedLy + adjustedLx + rx) / maxPower);
-        Motors[fr].setPower((adjustedLy - adjustedLx - rx) / maxPower);
-        Motors[bl].setPower((adjustedLy - adjustedLx + rx) / maxPower);
-        Motors[br].setPower((adjustedLy + adjustedLx - rx) / maxPower);
+        // Giving power to motors.
+        Motors[FL].setPower((adjustedLy + adjustedLx + rx) / maxPower);
+        Motors[FR].setPower((adjustedLy - adjustedLx - rx) / maxPower);
+        Motors[BL].setPower((adjustedLy - adjustedLx + rx) / maxPower);
+        Motors[BR].setPower((adjustedLy + adjustedLx - rx) / maxPower);
     }
 }
