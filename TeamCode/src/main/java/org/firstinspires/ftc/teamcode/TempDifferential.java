@@ -9,8 +9,8 @@ import org.firstinspires.ftc.teamcode.modules.ServoProps;
 public class TempDifferential {
     // Servos (starting positions: right: 0, left: 0.5).
     private static final Servo[] servos = new Servo[2];
-    private static final int RIGHT = 0;
-    private static final int LEFT = 1;
+    private static final int RIGHT = 0; // ToDo: Maybe change to RIGHT_INDEX to make more understandable?
+    private static final int LEFT = 1; // ToDo: Maybe change to LEFT_INDEX to make more understandable?
 
     // Analog, position equation: position = analogInput.getVoltage() / 3.3 * 360.
     private static AnalogInput analogInput;
@@ -39,10 +39,14 @@ public class TempDifferential {
         // Moving Servos to starting position.
         servos[RIGHT].setPosition(RIGHT_START_POS);
         servos[LEFT].setPosition(LEFT_START_POS);
+
     }
 
     // Movement.
     public static void movement(int angle, String axis) throws Exception {
+
+        // ToDo: It's very hard to understand what this function does
+
         switch (axis) {
             case "pitch":
                 servos[RIGHT].setPosition(RIGHT_START_POS + (double) angle / RIGHT_MAX_ROTATION);
