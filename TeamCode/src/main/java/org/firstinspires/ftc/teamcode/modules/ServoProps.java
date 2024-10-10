@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.modules;
 // Imports.
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.Servo;
-
 public class ServoProps {
     // Servo props.
     private static int maxRotation = 355;

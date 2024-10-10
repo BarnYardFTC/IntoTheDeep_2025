@@ -42,6 +42,7 @@ public class Teleop extends LinearOpMode {
     }
 
     // Initializing functions.
+
     public void initEgnitionSystem() {
         DcMotorEx leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
         DcMotorEx leftBack = hardwareMap.get(DcMotorEx.class, "leftBack");
@@ -53,18 +54,18 @@ public class Teleop extends LinearOpMode {
     }
 
     public void initTempDifferential() {
-        Servo rightDifferential = hardwareMap.get(Servo.class, "rightDifferential");
-        Servo leftDifferential = hardwareMap.get(Servo.class, "leftDifferential");
+        Servo right = hardwareMap.get(Servo.class, "rightDifferential");
+        Servo left = hardwareMap.get(Servo.class, "leftDifferential");
         AnalogInput analogSensor = hardwareMap.get(AnalogInput.class, "analogSensor");
 
-        TempDifferential.init(rightDifferential, leftDifferential, analogSensor);
+        TempDifferential.init(right, left, analogSensor);
     }
 
     public void initTempDifferentialArm() {
-        Servo rightDifferentialArm = hardwareMap.get(Servo.class, "rightDifferentialArm");
-        Servo leftDifferentialArm = hardwareMap.get(Servo.class, "rightDifferentialArm");
+        Servo right = hardwareMap.get(Servo.class, "rightDifferentialArm");
+        Servo left = hardwareMap.get(Servo.class, "rightDifferentialArm");
 
-        TempDifferentialArm.init(rightDifferentialArm, leftDifferentialArm);
+        TempDifferentialArm.init(right, left);
     }
 
     public void initTempClaw() {

@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.modules.ServoProps;
 
 public class TempDifferentialArm extends ServoProps {
 
-    // Servos (starting positions: rightDifferentialArm (reversed): 0.5, leftDifferentialArm: 0.5).
+    // Servos (starting positions: right (reversed): 0.5, left: 0.5).
     private static final int SERVO_AMOUNT = 2;
     private static final Servo[] servos = new Servo[SERVO_AMOUNT];
     private static final int RIGHT = 0;

@@ -8,7 +8,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class TempClaw {
 
-    // Servo (starting positions: claw: 0).
+    // Servo (starting position: claw: 0).
     private static Servo claw;
 
     // ColorRangeSensor.

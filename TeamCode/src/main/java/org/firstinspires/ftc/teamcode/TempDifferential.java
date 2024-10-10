@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class TempDifferential {
-    // Servos (starting positions: rightDifferential: 0, leftDifferential: 0.5).
+    // Servos (starting positions: right: 0, left: 0.5).
     private static final Servo[] servos = new Servo[2];
     private static final int RIGHT = 0;
     private static final int LEFT = 1;
