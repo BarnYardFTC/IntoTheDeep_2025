@@ -10,6 +10,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class EgnitionSystem {
 
+    // ToDo: I assume that this class is not finished because there are too much mistakes
+
     // Motors.
     private static final DcMotorEx[] Motors = new DcMotorEx[4];
     private static final int FL = 0;

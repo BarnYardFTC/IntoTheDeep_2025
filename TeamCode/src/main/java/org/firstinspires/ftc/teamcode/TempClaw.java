@@ -9,14 +9,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class TempClaw {
 
     // Servo (starting position: claw: 0).
-    private static Servo claw;
+    private static Servo claw; // ToDo: Why not make this variable final?
 
     // ColorRangeSensor.
-    private static ColorRangeSensor distanceSensor;
+    private static ColorRangeSensor distanceSensor; // ToDo: Why not make this variable final?
 
     // Servo positions.
-    private static final double OPENED_CLAW = 0.0;
-    private static final double CLOSED_CLAW = 0.0;
+    private static final double OPENED_CLAW = 0.0; // ToDo: OPENED_POS would be more clear
+    private static final double CLOSED_CLAW = 0.0; // ToDo: CLOSED_POS would be more clear
 
     // Variables.
     static private final int COLLECTION_DISTANCE = 5;
@@ -25,10 +25,11 @@ public class TempClaw {
     // Initializing.
     public static void init(Servo claw, ColorRangeSensor distanceSensor) {
         // Assigning objects to variables.
+        // ToDo: Unclear Inconsistency. Here: TempClaw.clas. In TempDifferential: servos[0] (without the name of the class),
         TempClaw.claw = claw;
         TempClaw.distanceSensor = distanceSensor;
 
-        // Moving Servo to starting position.
+        // Moving Servo to starting position.g
         openClaw();
     }
 
@@ -55,7 +56,8 @@ public class TempClaw {
 
     // Automated closure of claw.
     public static void collectSpecimen() {
-        if (getProximityValue() == COLLECTION_DISTANCE) {closeClaw();
+        if (getProximityValue() == COLLECTION_DISTANCE) { // ToDo: Shouldn't it be <= instead of == ?
+            closeClaw();
             specimenCollected = true;
         }
     }
