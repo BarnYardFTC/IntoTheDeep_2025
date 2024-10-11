@@ -25,7 +25,7 @@ public class Teleop extends LinearOpMode {
 
         waitForStart();
 
-        // Maim loop.
+        // Main loop.
         while (opModeIsActive()) {
             try {
                 telemetry.update();

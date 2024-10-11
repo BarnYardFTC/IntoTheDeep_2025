@@ -6,8 +6,6 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 public class MotorProps {
 
-    private static final double ENCODER_LIFT_CM_RATIO = 1; // ToDo: Find real value
-
 
     public static boolean compareEncoderPosition(DcMotorEx motorEx, int position, String operator) throws Exception {
 
@@ -37,22 +35,6 @@ public class MotorProps {
         }
 
         throw new Exception("No such operation");
-    }
-
-    public static int liftCmToEncoder(int cm) {
-        // !! I am very uncertain about whether this function as it is right now !!
-        // !! will be useful. !!
-        /*
-          Find out by how much the encoder position of a motor needs to change
-          in order for the lift to move X cm.
-
-          param cm: By how many cm the lift needs to move
-                     A positive cm value = movement up.
-                     A negative value = movement down.
-
-          return by how much the encoder position needs to change in order for the lift to move X cm.
-         */
-        return (int) (cm * ENCODER_LIFT_CM_RATIO);
     }
 
     public static boolean setPosition(DcMotorEx motorEx, int position, double power) {
