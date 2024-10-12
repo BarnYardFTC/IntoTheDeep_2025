@@ -42,14 +42,12 @@ public class TempVerticalLift {
         HIGH
     }
 
-
     // Motors Powers constant
     public static final double RUNNING_POWER = 0.4; // ToDo: Find real value
     public static final double BRAKING_POWER = 0.4; // ToDo: Find real value
 
     // By how much you need to multiply a given centimeters value to get a corresponding encoder value
     private static final double CM_TO_ENCODER_RATIO = 25; // ToDo: Find real value
-
 
     /*
     ================ MAIN METHODS ====================
