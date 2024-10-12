@@ -10,8 +10,8 @@ public class TempDifferentialArm extends ServoProps {
     // Servos (starting positions: right (reversed): 0.5, left: 0.5).
     private static final int SERVO_AMOUNT = 2;
     private static final Servo[] servos = new Servo[SERVO_AMOUNT];
-    private static final int RIGHT = 0; // ToDo: Maybe change to RIGHT_INDEX to make more understandable?
-    private static final int LEFT = 1; // ToDo: Maybe change to LEFT_INDEX to make more understandable?
+    private static final int RIGHT = 0;
+    private static final int LEFT = 1;
 
     // Start positions.
     private static final double RIGHT_START_POS = 0.0;
