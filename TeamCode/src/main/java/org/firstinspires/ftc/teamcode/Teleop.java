@@ -44,13 +44,14 @@ public class Teleop extends LinearOpMode {
     // Initializing functions.
 
     public void initEgnitionSystem() {
-        DcMotorEx leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
-        DcMotorEx leftBack = hardwareMap.get(DcMotorEx.class, "leftBack");
-        DcMotorEx rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
-        DcMotorEx rightBack = hardwareMap.get(DcMotorEx.class, "rightBack");
+        // ToDo: Change names of motor in configuration
+        DcMotorEx frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft");
+        DcMotorEx frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
+        DcMotorEx backLeft = hardwareMap.get(DcMotorEx.class, "backLeft");
+        DcMotorEx backRight = hardwareMap.get(DcMotorEx.class, "backRight");
         IMU imu = hardwareMap.get(IMU.class, "IMU");
 
-        EgnitionSystem.init(leftFront, rightFront, leftBack, rightBack, imu);
+        EgnitionSystem.init(frontLeft, frontRight, backLeft, backRight, imu);
     }
 
     public void initTempDifferential() {
