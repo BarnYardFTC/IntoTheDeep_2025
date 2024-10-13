@@ -26,47 +26,22 @@ public class Teleop extends LinearOpMode {
     public void runOpMode() {
         // Initializing
 
-        initVerticalLift();
         waitForStart();
 
-        boolean A_held = false;
         // Main Loop
         while (opModeIsActive()) {
+            try {
 
-            if (gamepad1.b){
-                TempVerticalLift.brake();
+                telemetry.update();
+            } catch (Exception e) {
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
+                String stackTrace = sw.toString();
+                telemetry.addData("stackTrace", stackTrace);
+                telemetry.update();
+                throw e;
             }
-            else if (!A_held && gamepad1.a && gamepad1.dpad_down){
-                TempVerticalLift.setPosition(TempVerticalLift.Position.BOTTOM);
-                A_held = true;
-            }
-            else if (!A_held && gamepad1.a && gamepad1.dpad_up){
-                TempVerticalLift.setPosition(TempVerticalLift.Position.HIGH);
-                A_held = true;
-            }
-            else if (!A_held && gamepad1.a && (gamepad1.dpad_left||gamepad1.dpad_right)){
-                TempVerticalLift.setPosition(TempVerticalLift.Position.LOW);
-                A_held = true;
-            }
-            else if (!gamepad1.a){
-                A_held = false;
-            }
-
-
-            printLiftData(telemetry);
-            printLiftCommends(telemetry);
-            telemetry.update();
-//            try {
-//                telemetry.update();
-//            } catch (Exception e) {
-//                StringWriter sw = new StringWriter();
-//                PrintWriter pw = new PrintWriter(sw);
-//                e.printStackTrace(pw);
-//                String stackTrace = sw.toString();
-//                telemetry.addData("stackTrace", stackTrace);
-//                telemetry.update();
-//                throw e;
-//            }
         }
     }
 
@@ -117,30 +92,13 @@ public class Teleop extends LinearOpMode {
 
         TempLED.init(LED);
     }
+
     public void initVerticalLift(){
-        DcMotorEx left = hardwareMap.get(DcMotorEx.class, "leftLift");
-        DcMotorEx right = hardwareMap.get(DcMotorEx.class, "rightLift");
+        DcMotorEx left = hardwareMap.get(DcMotorEx.class, "leftVerticalLift");
+        DcMotorEx right = hardwareMap.get(DcMotorEx.class, "rightVerticalLift");
+
         TempVerticalLift.init(left, right);
     }
+
     // Main Functions
-
-
-    // Test Functions
-
-    public void printLiftData(Telemetry telemetry){
-        telemetry.addLine("Lift Data:");
-        telemetry.addData("Motors' Encoders Position: ", TempVerticalLift.getEncoderPosition());
-        telemetry.addData("Position In Cm: ", TempVerticalLift.getEncoderToCm());
-        telemetry.addData("Encoder Position (based on cm): ", TempVerticalLift.getCmToEncoder());
-        telemetry.addData("Position: ", TempVerticalLift.getCurrentPosition());
-    }
-    public void printLiftCommends(Telemetry telemetry) {
-        telemetry.addLine("Lift Commands:");
-        telemetry.addData("Set Position: ", "Press A+Position");
-        telemetry.addLine("*Position values:");
-        telemetry.addData("dpad up: ", "HIGH POSITION");
-        telemetry.addData("dpad left/right: ", "LOW POSITION");
-        telemetry.addData("dpad down: ", "BOTTOM");
-        telemetry.addData("Brake", "Hold B");
-    }
 }

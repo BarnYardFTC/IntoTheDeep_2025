@@ -5,39 +5,45 @@ import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.Servo;
 public class ServoProps {
     // Servo props.
-    private static int maxRotation = 355;
-    private static double startPosition = 0;
-    private static double rotationRatio = 1;
+    private int maxRotation;
+    private double startPosition;
+    private double rotationRatio;
 
     // Initializing.
-    public static void init(int maxRot, double startPos) {
-        maxRotation = maxRot;
-        startPosition = startPos;
+    public ServoProps(int maxRotation, double startPosition, double rotationRatio) {
+        this.maxRotation = maxRotation;
+        this.startPosition = startPosition;
+        this.rotationRatio = rotationRatio;
+    }
+    public ServoProps() {
+        this.maxRotation = 355;
+        this.startPosition = 0;
+        this.rotationRatio = 1;
     }
 
     // Sets servo props.
-    public static void setMaxRotation(int maxRot) {
-        maxRotation = maxRot;
+    public void setMaxRotation(int maxRotation) {
+        this.maxRotation = maxRotation;
     }
 
-    public static void setStartPosition(int startPos) {
-        startPosition = startPos;
+    public void setStartPosition(int startPosition) {
+        this.startPosition = startPosition;
     }
 
-    public static void setRotationRatio(int rotRatio) {
-        rotationRatio = rotRatio;
+    public void setRotationRatio(int rotationRatio) {
+        this.rotationRatio = rotationRatio;
     }
 
     // Gets servo props.
-    public static int getMaxRotation() {
+    public int getMaxRotation() {
         return maxRotation;
     }
 
-    public static double getStartPosition() {
+    public double getStartPosition() {
         return startPosition;
     }
 
-    public static double getRotationRatio() {return rotationRatio;}
+    public double getRotationRatio() {return rotationRatio;}
 
     // Move servo by angle.
     public static void movement(int angle, Servo servo, double startPosition, int maxRotation, double rotationRatio) {

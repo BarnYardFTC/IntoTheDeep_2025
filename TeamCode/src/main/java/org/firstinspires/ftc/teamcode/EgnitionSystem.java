@@ -74,7 +74,7 @@ public class EgnitionSystem {
         This function is built to reset all the inconstant variables of the class.
         This function is essential to enable reuse of the class without restarting the robot.
          */
-        maxPower = 0;
+        maxPower = 1;
         lx = 0;
         ly = 0;
         rx = 0;

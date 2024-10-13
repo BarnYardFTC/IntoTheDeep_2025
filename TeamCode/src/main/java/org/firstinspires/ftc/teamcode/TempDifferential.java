@@ -11,17 +11,11 @@ public class TempDifferential {
     private static final Servo[] servos = new Servo[2];
     private static final int RIGHT = 0;
     private static final int LEFT = 1;
+    private static final ServoProps RIGHT_PROPS = new ServoProps();
+    private static final ServoProps LEFT_PROPS = new ServoProps();
 
     // Analog, position equation: position = analogInput.getVoltage() / 3.3 * 360.
     private static AnalogInput analogInput;
-
-    // Start positions.
-    private static final double RIGHT_START_POS = 0.0;
-    private static final double LEFT_START_POS = 0.0;
-
-    // Servo characteristics.
-    private static final int RIGHT_MAX_ROTATION = 355;
-    private static final int LEFT_MAX_ROTATION = 355;
 
     // Angles.
     private static final int ANGLE_PITCH_SPECIMEN_INTAKE = -180;
@@ -37,23 +31,33 @@ public class TempDifferential {
         analogInput = analogSensor;
 
         // Moving Servos to starting position.
-        servos[RIGHT].setPosition(RIGHT_START_POS);
-        servos[LEFT].setPosition(LEFT_START_POS);
-
+        servos[RIGHT].setPosition(RIGHT_PROPS.getStartPosition());
+        servos[LEFT].setPosition(LEFT_PROPS.getStartPosition());
     }
 
-    // Movement.
+    // Get value of angles for movement of arm.
+    public static int getAnglePitchSpecimenIntake() {
+        return ANGLE_PITCH_SPECIMEN_INTAKE;
+    }
+    public static int getAngleRollSpecimenUnload() {
+        return ANGLE_ROLL_SPECIMEN_UNLOAD;
+    }
+    public static int getAngleRollSampleUnload() {
+        return ANGLE_ROLL_SAMPLE_UNLOAD;
+    }
+    public static int getAnglePitchSampleUnload() {
+        return ANGLE_PITCH_SAMPLE_UNLOAD;
+    }
+
+    // Movement of differential system based on a given axis and angle.
     public static void movement(int angle, String axis) throws Exception {
-
-        // ToDo: It's very hard to understand what this function does
-
         switch (axis) {
             case "pitch":
-                servos[RIGHT].setPosition(RIGHT_START_POS + (double) angle / RIGHT_MAX_ROTATION);
-                servos[LEFT].setPosition(LEFT_START_POS + (double) angle / LEFT_MAX_ROTATION);
+                servos[RIGHT].setPosition(RIGHT_PROPS.getStartPosition() + (double) angle / RIGHT_PROPS.getMaxRotation() * RIGHT_PROPS.getRotationRatio());
+                servos[LEFT].setPosition(LEFT_PROPS.getStartPosition() + (double) angle / LEFT_PROPS.getMaxRotation() * LEFT_PROPS.getRotationRatio());
             case "roll":
-                servos[RIGHT].setPosition(RIGHT_START_POS - (double) angle / RIGHT_MAX_ROTATION);
-                servos[LEFT].setPosition(LEFT_START_POS + (double) angle / LEFT_MAX_ROTATION);
+                servos[RIGHT].setPosition(RIGHT_PROPS.getStartPosition() - (double) angle / RIGHT_PROPS.getMaxRotation() * RIGHT_PROPS.getRotationRatio());
+                servos[LEFT].setPosition(LEFT_PROPS.getStartPosition() + (double) angle / LEFT_PROPS.getMaxRotation() * LEFT_PROPS.getRotationRatio());
         }
 
         throw new Exception("No such operation");
