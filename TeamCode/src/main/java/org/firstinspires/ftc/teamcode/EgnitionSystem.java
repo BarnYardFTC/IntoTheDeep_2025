@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 //Imports.
+
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -9,9 +10,6 @@ import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class EgnitionSystem {
-
-    // ToDo: I assume that this class is not finished because there are too much mistakes
-
     // Motors initialization constants
     private static final int MOTORS_AMOUNT = 4;
     private static final DcMotorEx[] motors = new DcMotorEx[MOTORS_AMOUNT];
@@ -25,9 +23,9 @@ public class EgnitionSystem {
 
     // Variables needed to calculate the power that each motor is given
     private static double maxPower;
-    private static double lx;
-    private static double ly;
-    private static double rx;
+    private static double lx; // rc left x-axis
+    private static double ly; // rc left y-axis
+    private static double rx; // rc right x-axis
     private static double robotHeading; // Measurement unit: Radians
     private static double adjustedLx;
     private static double adjustedLy;
@@ -46,11 +44,11 @@ public class EgnitionSystem {
         motors[FR] = frontRight;
         motors[BL] = backLeft;
         motors[BR] = backRight;
-        EgnitionSystem.imu = imuConfig;
+        imu = imuConfig;
 
         // Reversing some motors so that positive power = positive-direction wheel spin.
-        EgnitionSystem.motors[FL].setDirection(DcMotorEx.Direction.REVERSE);
-        EgnitionSystem.motors[BL].setDirection(DcMotorEx.Direction.REVERSE);
+        motors[FL].setDirection(DcMotorEx.Direction.REVERSE);
+        motors[BL].setDirection(DcMotorEx.Direction.REVERSE);
 
         // Setting motors attributes
         for (DcMotorEx motor : motors) {
@@ -60,16 +58,15 @@ public class EgnitionSystem {
 
         // Setting imu attributes.
         // ToDo: Make sure to update the orientation attributes
-        EgnitionSystem.imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD)));
+        imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP, RevHubOrientationOnRobot.UsbFacingDirection.FORWARD)));
 
-        EgnitionSystem.imu.resetYaw();
+        imu.resetYaw();
 
         // Setting initial values to the variables.
         resetVariables();
     }
-    public static void resetVariables(){
+
+    public static void resetVariables() {
         /*
         This function is built to reset all the inconstant variables of the class.
         This function is essential to enable reuse of the class without restarting the robot.
@@ -82,6 +79,7 @@ public class EgnitionSystem {
         adjustedLx = 0;
         adjustedLy = 0;
     }
+
     public static void operateTeleop(Gamepad gamepad1) {
         /*
         The giving of power to the different motors that move the wheels of the robot.

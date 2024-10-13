@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 // Imports.
+
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.modules.ServoProps;
@@ -9,10 +10,10 @@ public class TempIntakeArm {
     // Servos (starting positions: right (reversed): 0.5, left: 0.5).
     private static final int SERVO_AMOUNT = 2;
     private static final Servo[] servos = new Servo[SERVO_AMOUNT];
-    private static final int RIGHT = 0;
-    private static final int LEFT = 1;
     private static final ServoProps RIGHT_PROPS = new ServoProps();
     private static final ServoProps LEFT_PROPS = new ServoProps();
+    private static final int RIGHT = 0;
+    private static final int LEFT = 1;
 
     // Angles.
     private static final int ANGLE_INTAKE = 0;

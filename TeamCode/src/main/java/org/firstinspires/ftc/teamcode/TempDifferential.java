@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 // Imports.
+
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -9,19 +10,19 @@ import org.firstinspires.ftc.teamcode.modules.ServoProps;
 public class TempDifferential {
     // Servos (starting positions: right: 0, left: 0.5).
     private static final Servo[] servos = new Servo[2];
-    private static final int RIGHT = 0;
-    private static final int LEFT = 1;
     private static final ServoProps RIGHT_PROPS = new ServoProps();
     private static final ServoProps LEFT_PROPS = new ServoProps();
-
-    // Analog, position equation: position = analogInput.getVoltage() / 3.3 * 360.
-    private static AnalogInput analogInput;
+    private static final int RIGHT = 0;
+    private static final int LEFT = 1;
 
     // Angles.
     private static final int ANGLE_PITCH_SPECIMEN_INTAKE = -180;
     private static final int ANGLE_ROLL_SPECIMEN_UNLOAD = 180;
     private static final int ANGLE_ROLL_SAMPLE_UNLOAD = 90;
     private static final int ANGLE_PITCH_SAMPLE_UNLOAD = -180;
+
+    // Analog, position equation: position = analogInput.getVoltage() / 3.3 * 360.
+    private static AnalogInput analogInput;
 
     // Initializing.
     public static void init(Servo right, Servo left, AnalogInput analogSensor) {
@@ -39,12 +40,15 @@ public class TempDifferential {
     public static int getAnglePitchSpecimenIntake() {
         return ANGLE_PITCH_SPECIMEN_INTAKE;
     }
+
     public static int getAngleRollSpecimenUnload() {
         return ANGLE_ROLL_SPECIMEN_UNLOAD;
     }
+
     public static int getAngleRollSampleUnload() {
         return ANGLE_ROLL_SAMPLE_UNLOAD;
     }
+
     public static int getAnglePitchSampleUnload() {
         return ANGLE_PITCH_SAMPLE_UNLOAD;
     }

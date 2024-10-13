@@ -8,11 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -93,7 +90,7 @@ public class Teleop extends LinearOpMode {
         TempLED.init(LED);
     }
 
-    public void initVerticalLift(){
+    public void initVerticalLift() {
         DcMotorEx left = hardwareMap.get(DcMotorEx.class, "leftVerticalLift");
         DcMotorEx right = hardwareMap.get(DcMotorEx.class, "rightVerticalLift");
 

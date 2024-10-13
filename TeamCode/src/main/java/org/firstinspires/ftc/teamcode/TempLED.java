@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 // Imports.
+
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 public class TempLED {
 
@@ -13,21 +13,21 @@ public class TempLED {
     private static int LEDTime = 16;
 
     // Initializing.
-    public static void init(RevBlinkinLedDriver LED) {
-        TempLED.LED = LED;
+    public static void init(RevBlinkinLedDriver LEDConfig) {
+        LED = LEDConfig;
 
         // Changing color to default.
         LED.setPattern(RevBlinkinLedDriver.BlinkinPattern.DARK_RED);
     }
 
-    // Set LED blink time
-    public static void setLEDTime(int time) {
-        LEDTime = time;
-    }
-
     // Get LED blink time
     public static int getLEDTime() {
         return LEDTime;
+    }
+
+    // Set LED blink time
+    public static void setLEDTime(int time) {
+        LEDTime = time;
     }
 
     // Color change functions.

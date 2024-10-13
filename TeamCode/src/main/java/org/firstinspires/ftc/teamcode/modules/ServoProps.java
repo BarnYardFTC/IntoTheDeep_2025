@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.modules;
 
 // Imports.
+
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.Servo;
+
 public class ServoProps {
     // Servo props.
     private int maxRotation;
@@ -10,40 +12,19 @@ public class ServoProps {
     private double rotationRatio;
 
     // Initializing.
-    public ServoProps(int maxRotation, double startPosition, double rotationRatio) {
-        this.maxRotation = maxRotation;
-        this.startPosition = startPosition;
-        this.rotationRatio = rotationRatio;
-    }
+    // Default constructor for standard servo.
     public ServoProps() {
         this.maxRotation = 355;
         this.startPosition = 0;
         this.rotationRatio = 1;
     }
 
-    // Sets servo props.
-    public void setMaxRotation(int maxRotation) {
+    // For non standard servo.
+    public ServoProps(int maxRotation, double startPosition, double rotationRatio) {
         this.maxRotation = maxRotation;
-    }
-
-    public void setStartPosition(int startPosition) {
         this.startPosition = startPosition;
-    }
-
-    public void setRotationRatio(int rotationRatio) {
         this.rotationRatio = rotationRatio;
     }
-
-    // Gets servo props.
-    public int getMaxRotation() {
-        return maxRotation;
-    }
-
-    public double getStartPosition() {
-        return startPosition;
-    }
-
-    public double getRotationRatio() {return rotationRatio;}
 
     // Move servo by angle.
     public static void movement(int angle, Servo servo, double startPosition, int maxRotation, double rotationRatio) {
@@ -61,5 +42,31 @@ public class ServoProps {
     public static boolean isAnalogInPosition(AnalogInput analogInput, int angle) {
         int analogInputAngle = (int) (analogInput.getVoltage() / 3.3 * 360);
         return analogInputAngle == angle;
+    }
+
+    // Gets servo props.
+    public int getMaxRotation() {
+        return maxRotation;
+    }
+
+    // Sets servo props.
+    public void setMaxRotation(int maxRotation) {
+        this.maxRotation = maxRotation;
+    }
+
+    public double getStartPosition() {
+        return startPosition;
+    }
+
+    public void setStartPosition(int startPosition) {
+        this.startPosition = startPosition;
+    }
+
+    public double getRotationRatio() {
+        return rotationRatio;
+    }
+
+    public void setRotationRatio(int rotationRatio) {
+        this.rotationRatio = rotationRatio;
     }
 }
