@@ -54,16 +54,23 @@ public class TempDifferential {
     }
 
     // Movement of differential system based on a given axis and angle.
-    public static void movement(int angle, String axis) throws Exception {
-        switch (axis) {
-            case "pitch":
+    public static void movement(int angle, axis ax) throws Exception {
+        switch (ax) {
+            case PITCH:
                 servos[RIGHT].setPosition(RIGHT_PROPS.getStartPosition() + (double) angle / RIGHT_PROPS.getMaxRotation() * RIGHT_PROPS.getRotationRatio());
                 servos[LEFT].setPosition(LEFT_PROPS.getStartPosition() + (double) angle / LEFT_PROPS.getMaxRotation() * LEFT_PROPS.getRotationRatio());
-            case "roll":
+                break;
+            case ROLL:
                 servos[RIGHT].setPosition(RIGHT_PROPS.getStartPosition() - (double) angle / RIGHT_PROPS.getMaxRotation() * RIGHT_PROPS.getRotationRatio());
                 servos[LEFT].setPosition(LEFT_PROPS.getStartPosition() + (double) angle / LEFT_PROPS.getMaxRotation() * LEFT_PROPS.getRotationRatio());
+                break;
         }
 
         throw new Exception("No such operation");
+    }
+
+    // enum for giving an axis to the systems movement.
+    public static enum axis {
+        PITCH, ROLL
     }
 }

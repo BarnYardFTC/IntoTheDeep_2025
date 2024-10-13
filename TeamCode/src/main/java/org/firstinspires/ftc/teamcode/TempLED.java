@@ -31,18 +31,27 @@ public class TempLED {
     }
 
     // Color change functions.
-    public static void changeLEDColor(String color) throws Exception {
+    public static void changeLEDColor(LEDColor color) throws Exception {
         switch (color) {
-            case "red":
+            case RED:
                 LED.setPattern(RevBlinkinLedDriver.BlinkinPattern.DARK_RED);
-            case "green":
+                break;
+            case GREEN:
                 LED.setPattern(RevBlinkinLedDriver.BlinkinPattern.GREEN);
-            case "purple":
+                break;
+            case PURPLE:
                 LED.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLUE_VIOLET);
-            case "black":
+                break;
+            case BLACK:
                 LED.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLACK);
+                break;
         }
 
         throw new Exception("No such operation");
+    }
+
+    // enum for giving a wanted color to the LED strip.
+    public enum LEDColor {
+        RED, GREEN, PURPLE, BLACK
     }
 }
