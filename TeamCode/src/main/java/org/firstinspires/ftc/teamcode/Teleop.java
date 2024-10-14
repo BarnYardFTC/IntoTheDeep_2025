@@ -14,10 +14,64 @@ import com.qualcomm.robotcore.hardware.Servo;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-
 @TeleOp(name = "IntoTheDeep Temp TeleOp")
 
 public class Teleop extends LinearOpMode {
+    // Initializing Functions
+    public void initIgnitionSystem() {
+        // TODO: Change names of motor in configuration
+        DcMotorEx frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft");
+        DcMotorEx frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
+        DcMotorEx backLeft = hardwareMap.get(DcMotorEx.class, "backLeft");
+        DcMotorEx backRight = hardwareMap.get(DcMotorEx.class, "backRight");
+        IMU imu = hardwareMap.get(IMU.class, "IMU");
+
+        IgnitionSystem.init(frontLeft, frontRight, backLeft, backRight, imu);
+    }
+
+    public void initDifferential() {
+        Servo right = hardwareMap.get(Servo.class, "rightDifferential");
+        Servo left = hardwareMap.get(Servo.class, "leftDifferential");
+        AnalogInput analogSensor = hardwareMap.get(AnalogInput.class, "analogSensor");
+
+        Differential.init(right, left, analogSensor);
+    }
+
+    public void initDifferentialArm() {
+        Servo right = hardwareMap.get(Servo.class, "rightDifferentialArm");
+        Servo left = hardwareMap.get(Servo.class, "leftDifferentialArm");
+
+        DifferentialArm.init(right, left);
+    }
+
+    public void initClaw() {
+        Servo claw = hardwareMap.get(Servo.class, "claw");
+        ColorRangeSensor distanceSensor = hardwareMap.get(ColorRangeSensor.class, "distanceSensor");
+
+        Claw.init(claw, distanceSensor);
+    }
+
+    public void initIntakeArm() {
+        Servo right = hardwareMap.get(Servo.class, "rightIntakeArm");
+        Servo left = hardwareMap.get(Servo.class, "leftIntakeArm");
+
+        IntakeArm.init(right, left);
+    }
+
+    public void initLED() {
+        RevBlinkinLedDriver LED = hardwareMap.get(RevBlinkinLedDriver.class, "LED");
+
+        org.firstinspires.ftc.teamcode.LED.init(LED);
+    }
+
+    public void initVerticalLift() {
+        DcMotorEx left = hardwareMap.get(DcMotorEx.class, "leftVerticalLift");
+        DcMotorEx right = hardwareMap.get(DcMotorEx.class, "rightVerticalLift");
+
+        TempVerticalLift.init(left, right);
+    }
+
+    // Main Functions
 
     @Override
     public void runOpMode() {
@@ -27,6 +81,7 @@ public class Teleop extends LinearOpMode {
 
         // Main Loop
         while (opModeIsActive()) {
+
             try {
 
                 telemetry.update();
@@ -41,61 +96,4 @@ public class Teleop extends LinearOpMode {
             }
         }
     }
-
-    // Initializing Functions
-
-    public void initEgnitionSystem() {
-        // ToDo: Change names of motor in configuration
-        DcMotorEx frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft");
-        DcMotorEx frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
-        DcMotorEx backLeft = hardwareMap.get(DcMotorEx.class, "backLeft");
-        DcMotorEx backRight = hardwareMap.get(DcMotorEx.class, "backRight");
-        IMU imu = hardwareMap.get(IMU.class, "IMU");
-
-        EgnitionSystem.init(frontLeft, frontRight, backLeft, backRight, imu);
-    }
-
-    public void initTempDifferential() {
-        Servo right = hardwareMap.get(Servo.class, "rightDifferential");
-        Servo left = hardwareMap.get(Servo.class, "leftDifferential");
-        AnalogInput analogSensor = hardwareMap.get(AnalogInput.class, "analogSensor");
-
-        TempDifferential.init(right, left, analogSensor);
-    }
-
-    public void initTempDifferentialArm() {
-        Servo right = hardwareMap.get(Servo.class, "rightDifferentialArm");
-        Servo left = hardwareMap.get(Servo.class, "rightDifferentialArm");
-
-        TempDifferentialArm.init(right, left);
-    }
-
-    public void initTempClaw() {
-        Servo claw = hardwareMap.get(Servo.class, "claw");
-        ColorRangeSensor distanceSensor = hardwareMap.get(ColorRangeSensor.class, "distanceSensor");
-
-        TempClaw.init(claw, distanceSensor);
-    }
-
-    public void initTempIntakeArm() {
-        Servo right = hardwareMap.get(Servo.class, "rightIntakeArm");
-        Servo left = hardwareMap.get(Servo.class, "leftIntakeArm");
-
-        TempIntakeArm.init(right, left);
-    }
-
-    public void initLed() {
-        RevBlinkinLedDriver LED = hardwareMap.get(RevBlinkinLedDriver.class, "LED");
-
-        TempLED.init(LED);
-    }
-
-    public void initVerticalLift() {
-        DcMotorEx left = hardwareMap.get(DcMotorEx.class, "leftVerticalLift");
-        DcMotorEx right = hardwareMap.get(DcMotorEx.class, "rightVerticalLift");
-
-        TempVerticalLift.init(left, right);
-    }
-
-    // Main Functions
 }

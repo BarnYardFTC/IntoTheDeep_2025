@@ -4,7 +4,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 
-public class TempLED {
+public class LED {
 
     // LED object.
     private static RevBlinkinLedDriver LED;

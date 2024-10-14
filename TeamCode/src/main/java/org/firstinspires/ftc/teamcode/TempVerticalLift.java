@@ -44,11 +44,11 @@ public class TempVerticalLift {
     }
 
     // Motors Powers constant
-    private static final double RUNNING_POWER = 0.1; // ToDo: Find real value
-    private static final double BRAKING_POWER = 0.1; // ToDo: Find real value
+    private static final double RUNNING_POWER = 0.1; // TODO: Find real value
+    private static final double BRAKING_POWER = 0.1; // TODO: Find real value
 
     // By how much you need to multiply a given centimeters value to get a corresponding encoder value
-    private static final double CM_TO_ENCODER_RATIO = 25; // ToDo: Find real value
+    private static final double CM_TO_ENCODER_RATIO = 25; // TODO: Find real value
 
     /*
     ================ MAIN METHODS ====================
@@ -64,7 +64,7 @@ public class TempVerticalLift {
         /*
         Initialize the two motors that the system has so that the lift could be used.
         Left motor is reversed so that: positive encoder=movement up for both motors.
-        ToDo: Find out which motor needs to be reversed
+        TODO: Find out which motor needs to be reversed
 
         @param left: left motor.
         @param right: right motor
@@ -180,6 +180,6 @@ public class TempVerticalLift {
    }
    public static void measureEncoderCmRatio(Gamepad gamepad){
 
-        // ToDo: When the lift is complete, program this method to help measure the encoder-cm ratio
+        // TODO: When the lift is complete, program this method to help measure the encoder-cm ratio
     }
 }

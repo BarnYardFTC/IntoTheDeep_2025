@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-public class EgnitionSystem {
+public class IgnitionSystem {
     // Motors initialization constants
     private static final int MOTORS_AMOUNT = 4;
     private static final DcMotorEx[] motors = new DcMotorEx[MOTORS_AMOUNT];
@@ -57,7 +57,7 @@ public class EgnitionSystem {
         }
 
         // Setting imu attributes.
-        // ToDo: Make sure to update the orientation attributes
+        // TODO: Make sure to update the orientation attributes
         imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP, RevHubOrientationOnRobot.UsbFacingDirection.FORWARD)));
 
         imu.resetYaw();
@@ -80,7 +80,7 @@ public class EgnitionSystem {
         adjustedLy = 0;
     }
 
-    public static void operateTeleop(Gamepad gamepad1) {
+    public static void moveDriveTrain(Gamepad gamepad1) {
         /*
         The giving of power to the different motors that move the wheels of the robot.
         @param gamepad1: the gamepad that provides manual inputs.
