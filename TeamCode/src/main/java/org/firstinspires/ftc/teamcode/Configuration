@@ -1,0 +1,11 @@
+frontLeft - 0.
+frontRight - 1.
+backLeft - 2.
+backRight - 3.
+leftVerticalLift - 4.
+rightVerticalLift - 5.
+
+IMU - 0.
+distanceSensor - 1.
+
+analogSensor - 0.
