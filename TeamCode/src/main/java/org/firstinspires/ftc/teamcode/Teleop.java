@@ -18,7 +18,7 @@ import java.io.StringWriter;
 
 public class Teleop extends LinearOpMode {
     // Initializing Functions
-    public void initIgnitionSystem() {
+    public void initEgnitionSystem() {
         // TODO: Change names of motor in configuration
         DcMotorEx frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft");
         DcMotorEx frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");

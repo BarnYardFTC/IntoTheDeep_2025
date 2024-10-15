@@ -5,10 +5,6 @@ package org.firstinspires.ftc.teamcode;
      IMPORTANT NOTES
     =================
 
-    - The logic in the class is built based on the assumption that the motor can hold the lift
-      just using the 'setZeroPowerBehaviour(BRAKE)' method.
-      Yet, there is a a brake option if needed
-
     - The methods from this class were not tested on the robot yet.
 
  */
@@ -18,6 +14,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.modules.Algorithm;
 import org.firstinspires.ftc.teamcode.modules.MotorProps;
 
@@ -29,24 +26,13 @@ public class TempVerticalLift {
     private static final int LEFT_INDEX = 1;
 
     // Lift Positions constant values in centimeters
-    private static final double BOTTOM_POSITION_CM = 0;
-    private static final double LOW_POSITION_CM = 20;
-    private static final double HIGH_POSITION_CM = 400;
-    private static final double[] POSITIONS_ARR = {BOTTOM_POSITION_CM,
-            LOW_POSITION_CM,
-            HIGH_POSITION_CM};
-
-    // Lift positions
-    public static enum Position {
-        BOTTOM,
-        LOW,
-        HIGH
-    }
-
+    private static final double BOTTOM_POSITION_CM = 0; // TODO: Find real value
+    private static final double LOW_POSITION_CM = 20; // TODO: Find real value
+    private static final double HIGH_POSITION_CM = 40; // TODO: Find real value
+    private static final double[] POSITIONS_ARR = {BOTTOM_POSITION_CM, LOW_POSITION_CM, HIGH_POSITION_CM};
     // Motors Powers constant
     private static final double RUNNING_POWER = 0.1; // TODO: Find real value
     private static final double BRAKING_POWER = 0.1; // TODO: Find real value
-
     // By how much you need to multiply a given centimeters value to get a corresponding encoder value
     private static final double CM_TO_ENCODER_RATIO = 25; // TODO: Find real value
 
@@ -78,34 +64,21 @@ public class TempVerticalLift {
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
     }
-    public static boolean setPosition(Position position) {
+
+    public static boolean setPosition(double position) {
 
         /*
-        Set the position of the lift (3 options)
+        Set the position of the lift in cm
         @param position: Desired position (DEFAULT/LOW_UNLOADING/HIGH_UNLOADING)
         @return true if the lift arrived the specified position, false otherwise.
          */
         boolean arrived_position = false;
-        switch (position) {
-            case BOTTOM:
-                for (DcMotorEx motor : motors) {
-                    arrived_position = MotorProps.runToPosition(motor, cmToEncoder(BOTTOM_POSITION_CM), RUNNING_POWER);
-                }
-                return arrived_position;
-            case LOW:
-                for (DcMotorEx motor : motors) {
-                    arrived_position = MotorProps.runToPosition(motor, cmToEncoder(LOW_POSITION_CM), RUNNING_POWER);
-                }
-                return arrived_position;
-            case HIGH:
-                for (DcMotorEx motor : motors) {
-                    arrived_position = MotorProps.runToPosition(motor, cmToEncoder(HIGH_POSITION_CM), RUNNING_POWER);
-                }
-                return arrived_position;
-            default:
-                return false;
+        for (DcMotorEx motor : motors) {
+            arrived_position = MotorProps.runToPosition(motor, cmToEncoder(position), RUNNING_POWER);
         }
+        return arrived_position;
     }
+
     public static boolean brake() {
         int position = cmToEncoder(getCurrentPositionValue());
         boolean maintaining_position = false;
@@ -114,15 +87,34 @@ public class TempVerticalLift {
         }
         return maintaining_position;
     }
-    public static Position getCurrentPosition() {
 
-        // @return The position of the lift currently
-
-        return Position.values()[Algorithm.closestTo(
-                POSITIONS_ARR,
-                motors[0].getCurrentPosition()
-        )];
+    public static String getCurrentPositionCm() {
+        /* @return The position of the lift currently */
+        double position = Algorithm.closestTo(POSITIONS_ARR, motors[0].getCurrentPosition());
+        if (position == HIGH_POSITION_CM) {
+            return "HIGH";
+        } else if (position == LOW_POSITION_CM) {
+            return "LOW";
+        } else {
+            return "BOTTOM";
+        }
     }
+
+    public static double getPositionCm(String position) {
+        /* Get the cm value of each position (HIGH/LOW/BOTTOM).
+        @param position: The specified position (HIGH/LOW/BOTTOM).
+        @return the cm value of the specified position
+        */
+        switch (position) {
+            case "HIGH":
+                return HIGH_POSITION_CM;
+            case "LOW":
+                return LOW_POSITION_CM;
+            default:
+                return BOTTOM_POSITION_CM;
+        }
+    }
+
 
     /*
     ================ HELPER METHODS ====================
@@ -147,17 +139,16 @@ public class TempVerticalLift {
          */
         return (int) (cm * CM_TO_ENCODER_RATIO);
     }
+
     private static double encoderToCm(int encoder) {
         return (double) encoder / CM_TO_ENCODER_RATIO;
     }
+
     private static double getCurrentPositionValue() {
         /*
         @return the cm value which is the closest to the lift position (bottom cm/low cm/high cm).
          */
-        return POSITIONS_ARR[Algorithm.closestTo(
-                POSITIONS_ARR,
-                encoderToCm(motors[0].getCurrentPosition())
-        )];
+        return POSITIONS_ARR[Algorithm.closestTo(POSITIONS_ARR, encoderToCm(motors[0].getCurrentPosition()))];
     }
 
     /*
@@ -169,17 +160,19 @@ public class TempVerticalLift {
 
     ==================================================
      */
-   public static int getEncoderPosition(){
-       return motors[0].getCurrentPosition();
-   }
-   public static double getEncoderToCm(){
-       return encoderToCm(motors[0].getCurrentPosition());
-   }
-   public static int getCmToEncoder(){
-       return cmToEncoder(getEncoderToCm());
-   }
-   public static void measureEncoderCmRatio(Gamepad gamepad){
+    public static int getEncoderPosition() {
+        return motors[0].getCurrentPosition();
+    }
 
-        // TODO: When the lift is complete, program this method to help measure the encoder-cm ratio
+    public static double getEncoderToCm() {
+        return encoderToCm(motors[0].getCurrentPosition());
+    }
+
+    public static int getCmToEncoder() {
+        return cmToEncoder(getEncoderToCm());
+    }
+
+    public static void measureEncoderCmRatio(Gamepad gamepad, Telemetry telemetry) {
+        // TODO: When the lift is built, program this method to help measure the encoder-cm ratio
     }
 }
