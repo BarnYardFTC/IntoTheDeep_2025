@@ -53,11 +53,13 @@ public class LED {
                 LED.setPattern(RevBlinkinLedDriver.BlinkinPattern.GREEN);
                 break;
             case PURPLE:
-                LED.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLUE_VIOLET);
+                LED.setPattern(RevBlinkinLedDriver.BlinkinPattern.VIOLET);
                 break;
             case BLACK:
                 LED.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLACK);
                 break;
+            case BLUE:
+                LED.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLUE);
         }
     }
 
@@ -65,6 +67,6 @@ public class LED {
      * Enum for giving a color to the LED strip.
      */
     public enum LEDColor {
-        RED, GREEN, PURPLE, BLACK
+        RED, GREEN, PURPLE, BLACK, BLUE
     }
 }
