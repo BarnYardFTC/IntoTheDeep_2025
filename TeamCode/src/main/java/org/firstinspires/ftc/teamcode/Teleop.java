@@ -75,9 +75,10 @@ public class Teleop extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        // Initializing
 
         waitForStart();
+
+        // Initializing
 
         // Main Loop
         while (opModeIsActive()) {
