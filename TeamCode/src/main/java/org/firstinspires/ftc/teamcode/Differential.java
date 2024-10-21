@@ -8,23 +8,29 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.modules.ServoProps;
 
 public class Differential {
-    // Servos (starting positions: right: 0, left: 0.5).
-    private static final Servo[] servos = new Servo[2];
-    private static final ServoProps RIGHT_PROPS = new ServoProps();
-    private static final ServoProps LEFT_PROPS = new ServoProps();
-    private static final int RIGHT = 0;
-    private static final int LEFT = 1;
+    private static final int SERVO_AMOUNT = 2; // Amount of servos used.
+    private static final Servo[] servos = new Servo[SERVO_AMOUNT]; // Servos array.
+    private static final ServoProps RIGHT_SERVO = new ServoProps(); // Right's servo props.
+    private static final ServoProps LEFT_SERVO = new ServoProps(355, 0.5, 1); // Left's servo props.
+    private static final int RIGHT = 0; // Right's servo index.
+    private static final int LEFT = 1; // Left's servo index.
 
-    // Angles.
-    private static final int ANGLE_PITCH_SPECIMEN_INTAKE = -180;
-    private static final int ANGLE_ROLL_SPECIMEN_UNLOAD = 180;
-    private static final int ANGLE_ROLL_SAMPLE_UNLOAD = 90;
-    private static final int ANGLE_PITCH_SAMPLE_UNLOAD = -180;
+    // Angles for moving the differential.
+    private static final int PITCH_ANGLE_SPECIMEN_INTAKE = -180;
+    private static final int ROLL_ANGLE_SPECIMEN_UNLOAD = 180;
+    private static final int ROLL_ANGLE_SAMPLE_UNLOAD = 90;
+    private static final int PITCH_ANGLE_SAMPLE_UNLOAD = -180;
 
     // Analog, position equation: position = analogInput.getVoltage() / 3.3 * 360.
     private static AnalogInput analogInput;
 
-    // Initializing.
+    /**
+     * Initializing all hardware.
+     *
+     * @param right        - Hardware for right servo.
+     * @param left         - Hardware for left servo.
+     * @param analogSensor - Hardware for analogInput.
+     */
     public static void init(Servo right, Servo left, AnalogInput analogSensor) {
         // Assigning objects to variables.
         servos[RIGHT] = right;
@@ -32,44 +38,68 @@ public class Differential {
         analogInput = analogSensor;
 
         // Moving Servos to starting position.
-        servos[RIGHT].setPosition(RIGHT_PROPS.getStartPosition());
-        servos[LEFT].setPosition(LEFT_PROPS.getStartPosition());
+        move(0, axis.PITCH);
     }
 
-    // Get value of angles for movement of arm.
-    public static int getAnglePitchSpecimenIntake() {
-        return ANGLE_PITCH_SPECIMEN_INTAKE;
+    /**
+     * Get the value of the PITCH_ANGLE_SPECIMEN_INTAKE parameter.
+     *
+     * @return - The PITCH_ANGLE_SPECIMEN_INTAKE value.
+     */
+    public static int getPitchAngleSpecimenIntake() {
+        return PITCH_ANGLE_SPECIMEN_INTAKE;
     }
 
-    public static int getAngleRollSpecimenUnload() {
-        return ANGLE_ROLL_SPECIMEN_UNLOAD;
+    /**
+     * Get the value of the ROLL_ANGLE_SPECIMEN_UNLOAD parameter.
+     *
+     * @return - The ROLL_ANGLE_SPECIMEN_UNLOAD value.
+     */
+    public static int getRollAngleSpecimenUnload() {
+        return ROLL_ANGLE_SPECIMEN_UNLOAD;
     }
 
-    public static int getAngleRollSampleUnload() {
-        return ANGLE_ROLL_SAMPLE_UNLOAD;
+    /**
+     * Get the value of the ROLL_ANGLE_SAMPLE_UNLOAD parameter.
+     *
+     * @return - The ROLL_ANGLE_SAMPLE_UNLOAD value.
+     */
+    public static int getRollAngleSampleUnload() {
+        return ROLL_ANGLE_SAMPLE_UNLOAD;
     }
 
-    public static int getAnglePitchSampleUnload() {
-        return ANGLE_PITCH_SAMPLE_UNLOAD;
+    /**
+     * Get the value of the PITCH_ANGLE_SAMPLE_UNLOAD parameter.
+     *
+     * @return - The PITCH_ANGLE_SAMPLE_UNLOAD value.
+     */
+    public static int getPitchAngleSampleUnload() {
+        return PITCH_ANGLE_SAMPLE_UNLOAD;
     }
 
-    // Movement of differential system based on a given axis and angle.
-    public static void movement(int angle, axis ax) throws Exception {
+    /**
+     * Move each servo based on a given target angle and an axis for movement.
+     * The logic for the movement is in the class ServoProps.
+     *
+     * @param angle - Wanted end angle of the differential.
+     * @param ax    - Wanted movement axis of the differential.
+     */
+    public static void move(int angle, axis ax) {
         switch (ax) {
             case PITCH:
-                servos[RIGHT].setPosition(RIGHT_PROPS.getStartPosition() + (double) angle / RIGHT_PROPS.getMaxRotation() * RIGHT_PROPS.getRotationRatio());
-                servos[LEFT].setPosition(LEFT_PROPS.getStartPosition() + (double) angle / LEFT_PROPS.getMaxRotation() * LEFT_PROPS.getRotationRatio());
+                RIGHT_SERVO.move(angle, servos[RIGHT]);
+                LEFT_SERVO.move(angle, servos[LEFT]);
                 break;
             case ROLL:
-                servos[RIGHT].setPosition(RIGHT_PROPS.getStartPosition() - (double) angle / RIGHT_PROPS.getMaxRotation() * RIGHT_PROPS.getRotationRatio());
-                servos[LEFT].setPosition(LEFT_PROPS.getStartPosition() + (double) angle / LEFT_PROPS.getMaxRotation() * LEFT_PROPS.getRotationRatio());
+                RIGHT_SERVO.move(-angle, servos[RIGHT]);
+                LEFT_SERVO.move(angle, servos[LEFT]);
                 break;
         }
-
-        throw new Exception("No such operation");
     }
 
-    // enum for giving an axis to the systems movement.
+    /**
+     * Enum for giving an axis to the systems movement.
+     */
     public enum axis {
         PITCH, ROLL
     }

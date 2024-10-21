@@ -14,10 +14,15 @@ import com.qualcomm.robotcore.hardware.Servo;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+// TeleOp name.
 @TeleOp(name = "IntoTheDeep Temp TeleOp")
 
 public class Teleop extends LinearOpMode {
-    // Initializing Functions
+    /**
+     * Functions for initialization of the hardware.
+     * Each function gets the name of the hardware and assigns it to a variable.
+     * The variables are given to a each classes inner initialization function.
+     */
     public void initEgnitionSystem() {
         // TODO: Change names of motor in configuration
         DcMotorEx frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft");
@@ -71,7 +76,11 @@ public class Teleop extends LinearOpMode {
         TempVerticalLift.init(left, right);
     }
 
-    // Main Functions
+    /**
+     * Functions with work based on a rc input.
+     * Each action can use multiple functions and systems.
+     */
+
 
     @Override
     public void runOpMode() {
@@ -83,9 +92,9 @@ public class Teleop extends LinearOpMode {
         // Main Loop
         while (opModeIsActive()) {
 
+            // We use a try & catch block so that any error in the main loop will stop the robot and add the error line to the telemetry.
             try {
 
-                telemetry.update();
             } catch (Exception e) {
                 StringWriter sw = new StringWriter();
                 PrintWriter pw = new PrintWriter(sw);
