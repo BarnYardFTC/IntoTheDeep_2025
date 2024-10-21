@@ -9,8 +9,8 @@ import org.firstinspires.ftc.teamcode.modules.ServoProps;
 public class IntakeArm {
     private static final int SERVO_AMOUNT = 2; // Amount of servos used.
     private static final Servo[] servos = new Servo[SERVO_AMOUNT]; // Servos array.
-    private static final ServoProps RIGHT_SERVO = new ServoProps(355, 0.5, 1);
-    private static final ServoProps LEFT_SERVO = new ServoProps(355, 0.5, 1);
+    private static final ServoProps RIGHT_SERVO = new ServoProps(355, 0.5, 1); // Right's servo props.
+    private static final ServoProps LEFT_SERVO = new ServoProps(355, 0.5, 1); // Left's servo props.
     private static final int RIGHT = 0; // Right's servo index.
     private static final int LEFT = 1; // Left's servo index.
 
