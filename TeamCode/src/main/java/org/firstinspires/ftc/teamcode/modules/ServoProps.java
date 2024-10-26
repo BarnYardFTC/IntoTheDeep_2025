@@ -6,12 +6,9 @@ import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class ServoProps {
-    // Servo props.
     private int maxRotation; // Max rotation of the servo.
     private double startPosition; // Servo's start position.
     private double gearRatio; // The ratio between the part we want to move and the servo's rotation. we calculate it by dividing one rotation of the part by the amount of rotations the servo does for one rotation of the part.
-
-    // Constructors
 
     /**
      * Default constructor for standard servo.
@@ -36,8 +33,6 @@ public class ServoProps {
         this.maxRotation = maxRotation;
         this.startPosition = startPosition;
     }
-
-    // Checks if servo is in a given position;
 
     /**
      * Checks if a servo reached its position while ignoring any deviation.
@@ -78,8 +73,6 @@ public class ServoProps {
     public void move(int angle, Servo servo) {
         servo.setPosition(this.startPosition + (double) angle / this.maxRotation / this.gearRatio);
     }
-
-    // Getter & setter.
 
     /**
      * Get the value of the maxRotation parameter.

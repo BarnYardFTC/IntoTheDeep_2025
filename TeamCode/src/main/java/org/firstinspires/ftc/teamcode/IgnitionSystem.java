@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class IgnitionSystem {
-    // Motors initialization constants
     private static final int MOTORS_AMOUNT = 4; // Amount of motors used.
     private static final DcMotorEx[] motors = new DcMotorEx[MOTORS_AMOUNT]; // Motors array.
     private static final int FL = 0; // Front left's motor index.

@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class Claw {
-    // Variables.
     static private final int COLLECTION_DISTANCE = 5; // Specimen collection distance.
 
     // Servo positions.
