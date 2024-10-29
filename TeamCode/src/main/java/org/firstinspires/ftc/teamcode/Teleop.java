@@ -23,8 +23,8 @@ public class Teleop extends LinearOpMode {
      * Each function gets the name of the hardware and assigns it to a variable.
      * The variables are given to a each classes inner initialization function.
      */
-    public void initEgnitionSystem() {
-        // TODO: Change names of motor in configuration
+    // TODO: Change names of all hardware in configuration.
+    public void initIgnitionSystem() {
         DcMotorEx frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft");
         DcMotorEx frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
         DcMotorEx backLeft = hardwareMap.get(DcMotorEx.class, "backLeft");
@@ -77,8 +77,8 @@ public class Teleop extends LinearOpMode {
     }
 
     /**
-     * Functions with work based on a rc input.
-     * Each action can use multiple functions and systems.
+     * Functions which work based on a rc input.
+     * Each main functions can use multiple functions and systems.
      */
 
 

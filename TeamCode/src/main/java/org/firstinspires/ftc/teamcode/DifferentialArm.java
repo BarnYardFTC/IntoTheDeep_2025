@@ -79,7 +79,7 @@ public class DifferentialArm {
      * @param angle - Wanted end angle of the arm.
      */
     public static void move(int angle) {
-        RIGHT_SERVO.move(angle, servos[RIGHT]);
-        LEFT_SERVO.move(angle, servos[LEFT]);
+        servos[RIGHT].setPosition(RIGHT_SERVO.getServoTargetPosition(angle));
+        servos[LEFT].setPosition(LEFT_SERVO.getServoTargetPosition(angle));
     }
 }

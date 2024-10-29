@@ -63,15 +63,16 @@ public class ServoProps {
     /**
      * A positive angle is measured counter clockwise.
      * This function gets the angle for the objects movement so some servos may need to get the wanted angle multiplied by -1 (opposite direction).
-     * Sets the part moved by the servo to an angle relative to the servo's start position.
+     * Calculates the needed position of the servo so the part moved by the servo gets to the wanted angle.
      * For example: if a servo starts at a position of 0, max rotation of 360 degrees, a rotation ratio of 1, and we want it the part to be in move 180 degrees.
      * The calculation is: 0 + 180 / 360 / 1. it will move the servo to the position os 0.5 which is also 180 degrees.
      *
      * @param angle - Wanted end angle of the servo.
-     * @param servo - Servo moved.
      */
-    public void move(int angle, Servo servo) {
-        servo.setPosition(this.startPosition + (double) angle / this.maxRotation / this.gearRatio);
+    public double getServoTargetPosition(int angle) {
+        if (this.startPosition + (double) angle / this.maxRotation / this.gearRatio <= 1 && this.startPosition + (double) angle / this.maxRotation / this.gearRatio >= 0)
+            return this.startPosition + (double) angle / this.maxRotation / this.gearRatio;
+        throw new IllegalArgumentException("Servo position must be between 0 and 1.");
     }
 
     /**
