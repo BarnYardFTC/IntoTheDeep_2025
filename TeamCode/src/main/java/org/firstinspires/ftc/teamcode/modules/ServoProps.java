@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class ServoProps {
     private int maxRotation; // Max rotation of the servo.
     private double startPosition; // Servo's start position.
-    private double gearRatio; // The ratio between the part we want to move and the servo's rotation. we calculate it by dividing one rotation of the part by the amount of rotations the servo does for one rotation of the part.
+    private double gearRatio; // The ratio between the part we want to move and the servo's rotation. We calculate it by dividing one rotation of the part by the amount of rotations the servo does for one rotation of the part.
 
     /**
      * Default constructor for standard servo.
@@ -49,15 +49,18 @@ public class ServoProps {
     }
 
     /**
-     * Checks if analog is a given angle.
+     * Checks if analog has a bigger difference than 30 between it's reading and a given angle.
+     * 30 is an exaggeration for minor errors.
+     * The functions tests a difference and not equality because the sensor is inaccurate.
      *
      * @param analogInput - Analog sensor which is part of the servo and can give the servo's current angle, the max voltage of the analog sensor is 3.3.
      * @param angle       - The target angle.
      * @return - If the servo reached the target angle (if the values of the parameters are equal).
      */
-    public static boolean isAnalogInPosition(AnalogInput analogInput, int angle) {
+    public static boolean isAnalogInPosition(AnalogInput analogInput, double angle) {
         int analogInputAngle = (int) (analogInput.getVoltage() / 3.3 * 360);
-        return analogInputAngle == angle;
+        if (Math.abs(analogInputAngle - angle) >= 30) return analogInputAngle == angle;
+        return false;
     }
 
     /**
@@ -69,9 +72,9 @@ public class ServoProps {
      *
      * @param angle - Wanted end angle of the servo.
      */
-    public double getServoTargetPosition(int angle) {
-        if (this.startPosition + (double) angle / this.maxRotation / this.gearRatio <= 1 && this.startPosition + (double) angle / this.maxRotation / this.gearRatio >= 0)
-            return this.startPosition + (double) angle / this.maxRotation / this.gearRatio;
+    public double getServoTargetPosition(double angle) {
+        if (this.startPosition + angle / this.maxRotation / this.gearRatio <= 1 && this.startPosition + angle / this.maxRotation / this.gearRatio >= 0)
+            return this.startPosition + angle / this.maxRotation / this.gearRatio;
         throw new IllegalArgumentException("Servo position must be between 0 and 1.");
     }
 

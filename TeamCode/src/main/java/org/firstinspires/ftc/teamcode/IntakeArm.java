@@ -14,7 +14,7 @@ public class IntakeArm {
     private static final int RIGHT = 0; // Right's servo index.
     private static final int LEFT = 1; // Left's servo index.
 
-    // Angles.
+    // Angle for moving the intake arm to the intake position.
     private static final int ANGLE_INTAKE = 0;
 
     /**
@@ -29,27 +29,23 @@ public class IntakeArm {
         servos[LEFT] = left;
         servos[RIGHT].setDirection(Servo.Direction.REVERSE); // Reversing right servo's direction so that both servos can get the same angle value.
 
-        // Moving servos to starting position.
-        move(0);
+        // Moving Servos to their starting position.
+        reset();
     }
 
     /**
-     * Get the value of the ANGLE_INTAKE parameter.
-     *
-     * @return - The ANGLE_INTAKE value.
+     * Moves intake arm to the intake position.
      */
-    public static int getAngleIntake() {
-        return ANGLE_INTAKE;
+    public static void collect() {
+        servos[RIGHT].setPosition(RIGHT_SERVO.getServoTargetPosition(ANGLE_INTAKE));
+        servos[LEFT].setPosition(LEFT_SERVO.getServoTargetPosition(ANGLE_INTAKE));
     }
 
     /**
-     * Move each servo based on a given target angle.
-     * The logic for the movement is in the class ServoProps.
-     *
-     * @param angle - Wanted end angle of the arm.
+     * Resets differential arm to it's starting position.
      */
-    public static void move(int angle) {
-        servos[RIGHT].setPosition(RIGHT_SERVO.getServoTargetPosition(angle));
-        servos[LEFT].setPosition(LEFT_SERVO.getServoTargetPosition(angle));
+    public static void reset() {
+        servos[RIGHT].setPosition(RIGHT_SERVO.getServoTargetPosition(0));
+        servos[LEFT].setPosition(LEFT_SERVO.getServoTargetPosition(0));
     }
 }

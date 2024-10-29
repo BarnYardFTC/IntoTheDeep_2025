@@ -16,10 +16,10 @@ public class Differential {
     private static final int LEFT = 1; // Left's servo index.
 
     // Angles for moving the differential.
-    private static final int PITCH_ANGLE_SPECIMEN_INTAKE = -180;
+    private static final int PITCH_ANGLE_SPECIMEN_INTAKE = 180;
     private static final int ROLL_ANGLE_SPECIMEN_UNLOAD = 180;
+    private static final int PITCH_ANGLE_SPECIMEN_UNLOAD = 90;
     private static final int ROLL_ANGLE_SAMPLE_UNLOAD = 90;
-    private static final int PITCH_ANGLE_SAMPLE_UNLOAD = -180;
 
     // Analog, position equation: position = analogInput.getVoltage() / 3.3 * 360.
     private static AnalogInput analogInput;
@@ -37,8 +37,8 @@ public class Differential {
         servos[LEFT] = left;
         analogInput = analogSensor;
 
-        // Moving Servos to starting position.
-        move(0, axis.PITCH);
+        // Moving Servos to their starting position.
+        reset();
     }
 
     /**
@@ -69,12 +69,12 @@ public class Differential {
     }
 
     /**
-     * Get the value of the PITCH_ANGLE_SAMPLE_UNLOAD parameter.
+     * Get the value of the analogInput parameter.
      *
-     * @return - The PITCH_ANGLE_SAMPLE_UNLOAD value.
+     * @return - The analogInput value.
      */
-    public static int getPitchAngleSampleUnload() {
-        return PITCH_ANGLE_SAMPLE_UNLOAD;
+    public static AnalogInput getAnalogInput() {
+        return analogInput;
     }
 
     /**
@@ -84,7 +84,7 @@ public class Differential {
      * @param angle - Wanted end angle of the differential.
      * @param ax    - Wanted movement axis of the differential.
      */
-    public static void move(int angle, axis ax) {
+    private static void move(int angle, axis ax) {
         switch (ax) {
             case PITCH:
                 servos[RIGHT].setPosition(RIGHT_SERVO.getServoTargetPosition(angle));
@@ -95,6 +95,49 @@ public class Differential {
                 servos[LEFT].setPosition(LEFT_SERVO.getServoTargetPosition(angle));
                 break;
         }
+    }
+
+    /**
+     * Moves differential to the specimen intake position.
+     */
+    public static void specimenIntake() {
+        move(PITCH_ANGLE_SPECIMEN_INTAKE, axis.PITCH);
+    }
+
+    /**
+     * Moves differential to the specimen unload position.
+     * The function checks when the differential finished it's movement in a certain axis before initiating the movement in another axis.
+     */
+    public static void specimenUnload() {
+        move(ROLL_ANGLE_SPECIMEN_UNLOAD, axis.ROLL);
+        if (ServoProps.isAnalogInPosition(analogInput, ROLL_ANGLE_SPECIMEN_UNLOAD)) {
+            reset();
+            if (ServoProps.isAnalogInPosition(analogInput, 0)) {
+                if (servos[RIGHT].getDirection() == Servo.Direction.FORWARD) {
+                    servos[RIGHT].setDirection(Servo.Direction.REVERSE);
+                    servos[LEFT].setDirection(Servo.Direction.REVERSE);
+                }
+                move(PITCH_ANGLE_SPECIMEN_UNLOAD, axis.PITCH);
+            }
+        }
+    }
+
+    /**
+     * Moves differential to the sample intake position.
+     */
+    public static void sampleIntake() {
+        move(ROLL_ANGLE_SAMPLE_UNLOAD, axis.ROLL);
+        if (ServoProps.isAnalogInPosition(analogInput, ROLL_ANGLE_SAMPLE_UNLOAD)) {
+            reset();
+        }
+    }
+
+    /**
+     * Resets differential to it's starting position.
+     */
+    private static void reset() {
+        servos[RIGHT].setPosition(RIGHT_SERVO.getServoTargetPosition(0));
+        servos[LEFT].setPosition(LEFT_SERVO.getServoTargetPosition(0));
     }
 
     /**
