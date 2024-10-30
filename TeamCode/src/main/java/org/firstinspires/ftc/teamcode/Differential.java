@@ -8,8 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.modules.ServoProps;
 
 public class Differential {
-    private static final int SERVO_AMOUNT = 2; // Amount of servos used.
-    private static final Servo[] servos = new Servo[SERVO_AMOUNT]; // Servos array.
+    private static final Servo[] servos = new Servo[2]; // Servos array.
     private static final ServoProps RIGHT_SERVO = new ServoProps(); // Right's servo props.
     private static final ServoProps LEFT_SERVO = new ServoProps(355, 0.5, 1); // Left's servo props.
     private static final int RIGHT = 0; // Right's servo index.
@@ -109,7 +108,7 @@ public class Differential {
      * Resets differential to it's starting position.
      * The action set the servos position once in a loop until the reseted value is changed.
      */
-    private static void reset() {
+    public static void reset() {
         if (!reseted) {
             servos[RIGHT].setPosition(RIGHT_SERVO.getServoTargetPosition(0));
             servos[LEFT].setPosition(LEFT_SERVO.getServoTargetPosition(0));
@@ -120,7 +119,7 @@ public class Differential {
     /**
      * Moves differential to the specimen intake position.
      */
-    public static void specimenIntake() {
+    public static void collectSpecimen() {
         move(PITCH_ANGLE_SPECIMEN_INTAKE, axis.PITCH);
     }
 
@@ -128,7 +127,7 @@ public class Differential {
      * Moves differential to the specimen unload position.
      * The function checks when the differential finished it's movement in a certain axis before initiating the movement in another axis.
      */
-    public static void specimenUnload() {
+    public static void unloadSpecimen() {
         move(ROLL_ANGLE_SPECIMEN_UNLOAD, axis.ROLL);
         if (ServoProps.isAnalogInPosition(analogInput, ROLL_ANGLE_SPECIMEN_UNLOAD)) {
             reset();
@@ -144,7 +143,7 @@ public class Differential {
     /**
      * Moves differential to the sample unload position.
      */
-    public static void sampleUnload() {
+    public static void unloadSample() {
         move(ROLL_ANGLE_SAMPLE_UNLOAD, axis.ROLL);
         if (ServoProps.isAnalogInPosition(analogInput, ROLL_ANGLE_SAMPLE_UNLOAD)) {
             reset();

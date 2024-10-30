@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 // Imports.
 
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -57,7 +58,9 @@ public class Claw {
     public static void open() {
         if (isClosed()) {
             claw.setPosition(OPENED_POSITION);
+            LED.changeColor(RevBlinkinLedDriver.BlinkinPattern.DARK_RED);
             specimenCollected = false;
+            TempHuskyLens.setSampleCollected(false);
             Differential.moved = false;
             Differential.reseted = false;
         }
@@ -69,7 +72,8 @@ public class Claw {
     public static void close() {
         if (isOpened()) {
             claw.setPosition(CLOSED_POSITION);
-            specimenCollected = false;
+            LED.changeColor(RevBlinkinLedDriver.BlinkinPattern.GREEN);
+            specimenCollected = true;
             Differential.moved = false;
             Differential.reseted = false;
         }
@@ -79,8 +83,9 @@ public class Claw {
      * Automated closure of claw when a specimen is close enough.
      */
     public static void collectSpecimen() {
-        if (getProximityValue() <= COLLECTION_DISTANCE) {
+        if (getProximityValue() <= COLLECTION_DISTANCE && !specimenCollected) {
             close();
+            Differential.reset();
             specimenCollected = true;
         }
     }
