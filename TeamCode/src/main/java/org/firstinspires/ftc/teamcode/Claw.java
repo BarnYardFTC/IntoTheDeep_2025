@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.modules.ServoProps;
 
 public class Claw {
     static private final int COLLECTION_DISTANCE = 5; // Specimen collection distance.
@@ -16,7 +17,7 @@ public class Claw {
 
     private static Servo claw; // Servo (starting position: claw: 0).
     private static ColorRangeSensor distanceSensor; // ColorRangeSensor.
-    static private boolean specimenCollected; // State of whether or not a specimen is currently collected and is controlled by the robot.
+    private static boolean specimenCollected; // State of whether or not a specimen is currently collected and is controlled by the robot.
 
     /**
      * Initializing.
@@ -54,15 +55,24 @@ public class Claw {
      * Open claw.
      */
     public static void open() {
-        claw.setPosition(OPENED_POSITION);
-        specimenCollected = false;
+        if (isClosed()) {
+            claw.setPosition(OPENED_POSITION);
+            specimenCollected = false;
+            Differential.moved = false;
+            Differential.reseted = false;
+        }
     }
 
     /**
      * Close claw.
      */
     public static void close() {
-        claw.setPosition(CLOSED_POSITION);
+        if (isOpened()) {
+            claw.setPosition(CLOSED_POSITION);
+            specimenCollected = false;
+            Differential.moved = false;
+            Differential.reseted = false;
+        }
     }
 
     /**
@@ -73,6 +83,24 @@ public class Claw {
             close();
             specimenCollected = true;
         }
+    }
+
+    /**
+     * Checks if the claw is in the closed position.
+     *
+     * @return - If the claw is closed.
+     */
+    private static boolean isClosed() {
+        return ServoProps.isServoInPosition(claw, CLOSED_POSITION);
+    }
+
+    /**
+     * Checks if the claw is in the opened position.
+     *
+     * @return - If the claw is opened.
+     */
+    private static boolean isOpened() {
+        return ServoProps.isServoInPosition(claw, OPENED_POSITION);
     }
 
     /**

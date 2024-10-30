@@ -35,17 +35,32 @@ public class IntakeArm {
 
     /**
      * Moves intake arm to the intake position.
+     * The action set the servos position once in a loop until the moved value is changed.
      */
     public static void collect() {
-        servos[RIGHT].setPosition(RIGHT_SERVO.getServoTargetPosition(ANGLE_INTAKE));
-        servos[LEFT].setPosition(LEFT_SERVO.getServoTargetPosition(ANGLE_INTAKE));
+        if (isReseted()) {
+            servos[RIGHT].setPosition(RIGHT_SERVO.getServoTargetPosition(ANGLE_INTAKE));
+            servos[LEFT].setPosition(LEFT_SERVO.getServoTargetPosition(ANGLE_INTAKE));
+        }
     }
 
     /**
      * Resets differential arm to it's starting position.
+     * The action set the servos position once in a loop until the reseted value is changed.
      */
     public static void reset() {
-        servos[RIGHT].setPosition(RIGHT_SERVO.getServoTargetPosition(0));
-        servos[LEFT].setPosition(LEFT_SERVO.getServoTargetPosition(0));
+        if (!isReseted()) {
+            servos[RIGHT].setPosition(RIGHT_SERVO.getServoTargetPosition(0));
+            servos[LEFT].setPosition(LEFT_SERVO.getServoTargetPosition(0));
+        }
+    }
+
+    /**
+     * Checks if the intake arm is in the reseted position.
+     *
+     * @return - If the intake arm is reseted.
+     */
+    private static boolean isReseted() {
+        return ServoProps.isServoInPosition(servos[RIGHT], 0);
     }
 }
