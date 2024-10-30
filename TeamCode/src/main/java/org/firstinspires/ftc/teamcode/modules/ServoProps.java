@@ -59,23 +59,7 @@ public class ServoProps {
      */
     public static boolean isAnalogInPosition(AnalogInput analogInput, double angle) {
         int analogInputAngle = (int) (analogInput.getVoltage() / 3.3 * 360);
-        if (Math.abs(analogInputAngle - angle) >= 30) return analogInputAngle == angle;
-        return false;
-    }
-
-    /**
-     * A positive angle is measured counter clockwise.
-     * This function gets the angle for the objects movement so some servos may need to get the wanted angle multiplied by -1 (opposite direction).
-     * Calculates the needed position of the servo so the part moved by the servo gets to the wanted angle.
-     * For example: if a servo starts at a position of 0, max rotation of 360 degrees, a rotation ratio of 1, and we want it the part to be in move 180 degrees.
-     * The calculation is: 0 + 180 / 360 / 1. it will move the servo to the position os 0.5 which is also 180 degrees.
-     *
-     * @param angle - Wanted end angle of the servo.
-     */
-    public double getServoTargetPosition(double angle) {
-        if (this.startPosition + angle / this.maxRotation / this.gearRatio <= 1 && this.startPosition + angle / this.maxRotation / this.gearRatio >= 0)
-            return this.startPosition + angle / this.maxRotation / this.gearRatio;
-        throw new IllegalArgumentException("Servo position must be between 0 and 1.");
+        return Math.abs(analogInputAngle - angle) <= 30;
     }
 
     /**
@@ -134,5 +118,20 @@ public class ServoProps {
         if (gearRatio <= 0)
             throw new IllegalArgumentException("Gear ratio must be greater than zero.");
         this.gearRatio = gearRatio;
+    }
+
+    /**
+     * A positive angle is measured counter clockwise.
+     * This function gets the angle for the objects movement so some servos may need to get the wanted angle multiplied by -1 (opposite direction).
+     * Calculates the needed position of the servo so the part moved by the servo gets to the wanted angle.
+     * For example: if a servo starts at a position of 0, max rotation of 360 degrees, a rotation ratio of 1, and we want it the part to be in move 180 degrees.
+     * The calculation is: 0 + 180 / 360 / 1. it will move the servo to the position os 0.5 which is also 180 degrees.
+     *
+     * @param angle - Wanted end angle of the servo.
+     */
+    public double getServoTargetPosition(double angle) {
+        if (this.startPosition + angle / this.maxRotation / this.gearRatio <= 1 && this.startPosition + angle / this.maxRotation / this.gearRatio >= 0)
+            return this.startPosition + angle / this.maxRotation / this.gearRatio;
+        throw new IllegalArgumentException("Servo position must be between 0 and 1.");
     }
 }
