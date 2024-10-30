@@ -1,14 +1,25 @@
 package org.firstinspires.ftc.teamcode;
 
-/*
-    DISCLAIMER: This class is theoretical as fuck and has a very low likelihood of working as it is
-                right now.
- */
-
-//Imports
-
+// Imports.
 
 public class TempHuskyLens {
+    private static boolean sampleCollected; // State of whether or not a sample is currently collected and is controlled by the robot.
 
+    /**
+     * Get the value of the collected parameter.
+     *
+     * @return - If a specimen was collected and controlled by the robot or not.
+     */
+    public static boolean getSampleCollected() {
+        return sampleCollected;
+    }
 
+    /**
+     * Set the value of the specimenCollected parameter.
+     *
+     * @param collected - The state of whether a specimen is collected and controlled by the robot or not.
+     */
+    public static void setSampleCollected(boolean collected) {
+        sampleCollected = collected;
+    }
 }

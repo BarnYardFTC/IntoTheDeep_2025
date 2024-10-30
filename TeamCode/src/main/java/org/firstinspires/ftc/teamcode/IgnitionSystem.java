@@ -10,8 +10,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class IgnitionSystem {
-    private static final int MOTORS_AMOUNT = 4; // Amount of motors used.
-    private static final DcMotorEx[] motors = new DcMotorEx[MOTORS_AMOUNT]; // Motors array.
+    private static final DcMotorEx[] motors = new DcMotorEx[4]; // Motors array.
     private static final int FL = 0; // Front left's motor index.
     private static final int FR = 1; // Front right's motor index.
     private static final int BL = 2; // Back left's motor index.
@@ -81,13 +80,13 @@ public class IgnitionSystem {
     /**
      * Moves the drive train based on manual inputs from the rc and data from the IMU.
      *
-     * @param gamepad1 - Rc inputs for all needed joysticks and axis of said joysticks.
+     * @param gamepad - Rc inputs for all needed joysticks and axis of said joysticks.
      */
-    public static void move(Gamepad gamepad1) {
+    public static void move(Gamepad gamepad) {
         // Setting variables
-        lx = gamepad1.left_stick_x;
-        ly = -gamepad1.left_stick_y;
-        rx = gamepad1.right_stick_x;
+        lx = gamepad.left_stick_x;
+        ly = -gamepad.left_stick_y;
+        rx = gamepad.right_stick_x;
         robotHeading = -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
         // Calculating maxPower for saving the ratio of motor powers.
