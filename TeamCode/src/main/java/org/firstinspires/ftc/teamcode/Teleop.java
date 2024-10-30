@@ -24,6 +24,10 @@ public class Teleop extends LinearOpMode {
      * The variables are given to a each classes inner initialization function.
      */
     // TODO: Change names of all hardware in configuration.
+
+    /**
+     * Initializes ignition system.
+     */
     private void initIgnitionSystem() {
         DcMotorEx frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft");
         DcMotorEx frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
@@ -34,6 +38,9 @@ public class Teleop extends LinearOpMode {
         IgnitionSystem.init(frontLeft, frontRight, backLeft, backRight, imu);
     }
 
+    /**
+     * Initializes differential system.
+     */
     private void initDifferential() {
         Servo right = hardwareMap.get(Servo.class, "rightDifferential");
         Servo left = hardwareMap.get(Servo.class, "leftDifferential");
@@ -42,6 +49,9 @@ public class Teleop extends LinearOpMode {
         Differential.init(right, left, analogSensor);
     }
 
+    /**
+     * Initializes differential arm system.
+     */
     private void initDifferentialArm() {
         Servo right = hardwareMap.get(Servo.class, "rightDifferentialArm");
         Servo left = hardwareMap.get(Servo.class, "leftDifferentialArm");
@@ -49,6 +59,9 @@ public class Teleop extends LinearOpMode {
         DifferentialArm.init(right, left);
     }
 
+    /**
+     * Initializes claw system.
+     */
     private void initClaw() {
         Servo claw = hardwareMap.get(Servo.class, "claw");
         ColorRangeSensor distanceSensor = hardwareMap.get(ColorRangeSensor.class, "distanceSensor");
@@ -56,6 +69,9 @@ public class Teleop extends LinearOpMode {
         Claw.init(claw, distanceSensor);
     }
 
+    /**
+     * Initializes intake arm system.
+     */
     private void initIntakeArm() {
         Servo right = hardwareMap.get(Servo.class, "rightIntakeArm");
         Servo left = hardwareMap.get(Servo.class, "leftIntakeArm");
@@ -63,12 +79,18 @@ public class Teleop extends LinearOpMode {
         IntakeArm.init(right, left);
     }
 
+    /**
+     * Initializes LED system.
+     */
     private void initLED() {
         RevBlinkinLedDriver LED = hardwareMap.get(RevBlinkinLedDriver.class, "LED");
 
         org.firstinspires.ftc.teamcode.LED.init(LED);
     }
 
+    /**
+     * Initializes vertical lift system.
+     */
     private void initVerticalLift() {
         DcMotorEx left = hardwareMap.get(DcMotorEx.class, "leftVerticalLift");
         DcMotorEx right = hardwareMap.get(DcMotorEx.class, "rightVerticalLift");
@@ -76,12 +98,40 @@ public class Teleop extends LinearOpMode {
         TempVerticalLift.init(left, right);
     }
 
+    /**
+     * Initializes horizontal lift system.
+     */
+    private void initHorizontalLift() {
+
+    }
+
+    /**
+     * Initializes hang system.
+     */
+    private void initHang() {
+
+    }
+
+    /**
+     * Initializes husky lens system.
+     */
+    private void initHuskyLens() {
+
+    }
+
+    /**
+     * Initializes intake system.
+     */
+    private void initIntake() {
+
+    }
+
     // Functions which work based on a rc input.
     // Each main functions can use multiple functions and systems.
 
     /**
-     * Function for moving all part to be ready for intake.
-     * The function allows automated collection of a specimen via a colorRange sensor inside the claw.
+     * Moves all parts to be ready for specimen intake.
+     * Allows automated collection of a specimen.
      *
      * @param x - Gampad1 x button input.
      */
@@ -91,45 +141,63 @@ public class Teleop extends LinearOpMode {
     }
 
     /**
+     * Moves all parts to be ready for sample intake.
+     * Allows automated collection of an alliance colored sample.
      *
      * @param a - Gampad1 a button input.
      */
     private void collectAllianceColoredSample(boolean a) {
-        IntakeArm.collect();
-        if (TempHuskyLens.getSampleCollected()) {
-            IntakeArm.reset();
-        }
+
     }
 
     /**
+     * Moves all parts to be ready for sample intake.
+     * Allows automated collection of a yellow colored sample.
      *
      * @param y - Gampad1 y button input.
      */
-    private void collectYellowColoredSample(boolean y) {}
+    private void collectYellowColoredSample(boolean y) {
+
+    }
 
     /**
+     * Unloads a sample and resets all parts of the robot.
      *
      * @param b - Gampad1 b button input.
      */
-    private void unload(boolean b) {}
+    private void unload(boolean b) {
+
+    }
 
     /**
+     * Moves all parts to be ready for sample or specimen unload in their high position.
+     * It check rather a sample or a specimen needs to be unloaded.
      *
      * @param rBumper - Gampad1 rBumper button input.
      */
-    private void moveToHighUnloadingPosition(boolean rBumper) {}
+    private void moveToHighUnloadingPosition(boolean rBumper) {
+
+    }
 
     /**
+     * Moves all parts to be ready for sample or specimen unload in their low position.
+     * It check rather a sample or a specimen needs to be unloaded.
      *
      * @param lBumper - Gampad1 lBumper button input.
      */
-    private void moveToLowUnloadingPosition(boolean lBumper) {}
+    private void moveToLowUnloadingPosition(boolean lBumper) {
+
+    }
 
     /**
+     * Starts 2nd level ascend.
+     * If pressed again it goes for 3rd level ascend.
      *
      * @param dpadUp - Gampad1 dpadUp button input.
      */
-    private void climb(boolean dpadUp) {}
+    private void climb(boolean dpadUp) {
+
+    }
 
     @Override
     public void runOpMode() {
@@ -151,8 +219,7 @@ public class Teleop extends LinearOpMode {
                 moveToLowUnloadingPosition(gamepad1.left_bumper);
                 unload(gamepad1.b);
                 climb(gamepad1.dpad_up);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 StringWriter sw = new StringWriter();
                 PrintWriter pw = new PrintWriter(sw);
                 e.printStackTrace(pw);
