@@ -149,6 +149,7 @@ public class Differential {
     public static void collectSpecimen() {
         move(ROLL_ANGLE_SPECIMEN_INTAKE, axis.ROLL);
         if (ServoProps.isAnalogInPosition(analogInput, ROLL_ANGLE_SPECIMEN_INTAKE)) {
+            Claw.close();
             move(PITCH_ANGLE_SPECIMEN_INTAKE, axis.PITCH);
             if (ServoProps.isAnalogInPosition(analogInput, PITCH_ANGLE_SPECIMEN_INTAKE)) {
                 Claw.open();

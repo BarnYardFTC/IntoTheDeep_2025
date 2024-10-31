@@ -31,7 +31,7 @@ public class Claw {
         claw = clawConfig;
         distanceSensor = distanceSensorConfig;
 
-        close(); // Moving Servo to closed position.
+        open(); // Moving Servo to opened position.
     }
 
     /**
