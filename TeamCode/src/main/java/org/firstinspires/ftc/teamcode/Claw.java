@@ -86,7 +86,6 @@ public class Claw {
         if (getProximityValue() <= COLLECTION_DISTANCE && !specimenCollected) {
             close();
             Differential.reset();
-            specimenCollected = true;
         }
     }
 
