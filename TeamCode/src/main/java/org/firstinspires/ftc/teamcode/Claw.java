@@ -31,7 +31,7 @@ public class Claw {
         claw = clawConfig;
         distanceSensor = distanceSensorConfig;
 
-        open(); // Moving Servo to starting position.
+        close(); // Moving Servo to closed position.
     }
 
     /**
@@ -83,7 +83,7 @@ public class Claw {
      * Automated closure of claw when a specimen is close enough.
      */
     public static void collectSpecimen() {
-        if (getProximityValue() <= COLLECTION_DISTANCE && !specimenCollected) {
+        if (getProximityValue() <= COLLECTION_DISTANCE && !specimenCollected && isOpened()) {
             close();
             Differential.reset();
         }

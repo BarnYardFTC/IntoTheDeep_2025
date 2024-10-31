@@ -9,13 +9,13 @@ import org.firstinspires.ftc.teamcode.modules.ServoProps;
 public class IntakeArm {
     private static final int SERVO_AMOUNT = 2; // Amount of servos used.
     private static final Servo[] servos = new Servo[SERVO_AMOUNT]; // Servos array.
-    private static final ServoProps RIGHT_SERVO = new ServoProps(355, 0.5, 1); // Right's servo props.
-    private static final ServoProps LEFT_SERVO = new ServoProps(355, 0.5, 1); // Left's servo props.
+    private static final ServoProps RIGHT_SERVO = new ServoProps(180, 0.5, 1); // Right's servo props.
+    private static final ServoProps LEFT_SERVO = new ServoProps(180, 0.5, 1); // Left's servo props.
     private static final int RIGHT = 0; // Right's servo index.
     private static final int LEFT = 1; // Left's servo index.
 
     // Angle for moving the intake arm to the intake position.
-    private static final int ANGLE_INTAKE = 0;
+    private static final int ANGLE_INTAKE = 30;
 
     /**
      * Initializing all hardware.
@@ -31,6 +31,34 @@ public class IntakeArm {
 
         // Moving Servos to their starting position.
         reset();
+    }
+
+    /**
+     * Get the value of the ANGLE_INTAKE parameter.
+     *
+     * @return - The ANGLE_INTAKE value.
+     */
+    public static int getAngleIntake() {
+        return ANGLE_INTAKE;
+    }
+
+
+    /**
+     * Get the values of the right servo properties object.
+     *
+     * @return - The right servo properties.
+     */
+    public static ServoProps getRightServo() {
+        return RIGHT_SERVO;
+    }
+
+    /**
+     * Get the values of the left servo properties object.
+     *
+     * @return - The left servo properties.
+     */
+    public static ServoProps getLeftServo() {
+        return LEFT_SERVO;
     }
 
     /**

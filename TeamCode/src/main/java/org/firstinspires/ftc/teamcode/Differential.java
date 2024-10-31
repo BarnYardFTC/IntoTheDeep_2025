@@ -9,14 +9,14 @@ import org.firstinspires.ftc.teamcode.modules.ServoProps;
 
 public class Differential {
     private static final Servo[] servos = new Servo[2]; // Servos array.
-    private static final ServoProps RIGHT_SERVO = new ServoProps(); // Right's servo props.
-    private static final ServoProps LEFT_SERVO = new ServoProps(355, 0.5, 1); // Left's servo props.
+    private static final ServoProps RIGHT_SERVO = new ServoProps(355, (double) 175 / 355, 1); // Right's servo props.
+    private static final ServoProps LEFT_SERVO = new ServoProps(); // Left's servo props.
     private static final int RIGHT = 0; // Right's servo index.
     private static final int LEFT = 1; // Left's servo index.
 
     // Angles for moving the differential.
-    private static final int PITCH_ANGLE_SPECIMEN_INTAKE = 180;
-    private static final int ROLL_ANGLE_SPECIMEN_UNLOAD = 180;
+    private static final int PITCH_ANGLE_SPECIMEN_INTAKE = 175;
+    private static final int ROLL_ANGLE_SPECIMEN_INTAKE = 180;
     private static final int PITCH_ANGLE_SPECIMEN_UNLOAD = 90;
     private static final int ROLL_ANGLE_SAMPLE_UNLOAD = 90;
     public static boolean moved; // Meant to prevent the move method be ran in a loop multiple times when unneeded.
@@ -57,8 +57,8 @@ public class Differential {
      *
      * @return - The ROLL_ANGLE_SPECIMEN_UNLOAD value.
      */
-    public static int getRollAngleSpecimenUnload() {
-        return ROLL_ANGLE_SPECIMEN_UNLOAD;
+    public static int getRollAngleSpecimenIntake() {
+        return ROLL_ANGLE_SPECIMEN_INTAKE;
     }
 
     /**
@@ -71,12 +71,39 @@ public class Differential {
     }
 
     /**
+     * Get the value of the PITCH_ANGLE_SPECIMEN_UNLOAD parameter.
+     *
+     * @return - The PITCH_ANGLE_SPECIMEN_UNLOAD value.
+     */
+    public static int getPitchAngleSpecimenUnload() {
+        return PITCH_ANGLE_SPECIMEN_UNLOAD;
+    }
+
+    /**
      * Get the value of the analogInput parameter.
      *
      * @return - The analogInput value.
      */
     public static AnalogInput getAnalogInput() {
         return analogInput;
+    }
+
+    /**
+     * Get the values of the right servo properties object.
+     *
+     * @return - The right servo properties.
+     */
+    public static ServoProps getRightServo() {
+        return RIGHT_SERVO;
+    }
+
+    /**
+     * Get the values of the left servo properties object.
+     *
+     * @return - The left servo properties.
+     */
+    public static ServoProps getLeftServo() {
+        return LEFT_SERVO;
     }
 
     /**
@@ -120,7 +147,14 @@ public class Differential {
      * Moves differential to the specimen intake position.
      */
     public static void collectSpecimen() {
-        move(PITCH_ANGLE_SPECIMEN_INTAKE, axis.PITCH);
+        move(ROLL_ANGLE_SPECIMEN_INTAKE, axis.ROLL);
+        if (ServoProps.isAnalogInPosition(analogInput, ROLL_ANGLE_SPECIMEN_INTAKE)) {
+            move(PITCH_ANGLE_SPECIMEN_INTAKE, axis.PITCH);
+            if (ServoProps.isAnalogInPosition(analogInput, PITCH_ANGLE_SPECIMEN_INTAKE)) {
+                Claw.open();
+            }
+        }
+
     }
 
     /**
@@ -128,11 +162,6 @@ public class Differential {
      * The function checks when the differential finished it's movement in a certain axis before initiating the movement in another axis.
      */
     public static void unloadSpecimen() {
-        move(ROLL_ANGLE_SPECIMEN_UNLOAD, axis.ROLL);
-        if (ServoProps.isAnalogInPosition(analogInput, ROLL_ANGLE_SPECIMEN_UNLOAD)) {
-            reset();
-            reseted = true;
-        }
         if (ServoProps.isAnalogInPosition(analogInput, 0)) {
             servos[RIGHT].setDirection(Servo.Direction.REVERSE);
             servos[LEFT].setDirection(Servo.Direction.REVERSE);

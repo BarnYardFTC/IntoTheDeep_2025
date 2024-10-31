@@ -9,13 +9,13 @@ import org.firstinspires.ftc.teamcode.modules.ServoProps;
 public class DifferentialArm {
     private static final int SERVO_AMOUNT = 2; // Amount of servos used.
     private static final Servo[] servos = new Servo[SERVO_AMOUNT]; // Servos array.
-    private static final ServoProps RIGHT_SERVO = new ServoProps(355, 0.5, 1); // Right's servo props.
-    private static final ServoProps LEFT_SERVO = new ServoProps(355, 0.5, 1); // Left's servo props.
+    private static final ServoProps RIGHT_SERVO = new ServoProps(180, 0.5, 1); // Right's servo props.
+    private static final ServoProps LEFT_SERVO = new ServoProps(180, 0.5, 1); // Left's servo props.
     private static final int RIGHT = 0; // Right's servo index.
     private static final int LEFT = 1; // Left's servo index.
 
     // Angle for moving the differential arm to the specimen unloading position.
-    private static final int ANGLE_SPECIMEN_UNLOAD = 0;
+    private static final int ANGLE_SPECIMEN_UNLOAD = 90;
 
     /**
      * Initializing all hardware.
@@ -27,6 +27,7 @@ public class DifferentialArm {
         // Assigning objects to variables.
         servos[RIGHT] = right;
         servos[LEFT] = left;
+        servos[RIGHT].setDirection(Servo.Direction.REVERSE); // Reversing right servo's direction so that both servos can get the same angle value.
 
         // Moving Servos to their starting position.
         reset();
@@ -39,6 +40,24 @@ public class DifferentialArm {
      */
     public static int getAngleSpecimenUnload() {
         return ANGLE_SPECIMEN_UNLOAD;
+    }
+
+    /**
+     * Get the values of the right servo properties object.
+     *
+     * @return - The right servo properties.
+     */
+    public static ServoProps getRightServo() {
+        return RIGHT_SERVO;
+    }
+
+    /**
+     * Get the values of the left servo properties object.
+     *
+     * @return - The left servo properties.
+     */
+    public static ServoProps getLeftServo() {
+        return LEFT_SERVO;
     }
 
     /**
