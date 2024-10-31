@@ -15,7 +15,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 // TeleOp name.
-@TeleOp(name = "IntoTheDeep Temp TeleOp")
+@TeleOp(name = "INTO_THE_DEEP")
 
 public class Teleop extends LinearOpMode {
     /**

@@ -39,7 +39,7 @@ public class Claw {
      *
      * @return - If a specimen was collected and controlled by the robot or not.
      */
-    public static boolean getSpecimenCollected() {
+    public static boolean isSpecimenCollected() {
         return specimenCollected;
     }
 
@@ -60,7 +60,7 @@ public class Claw {
             claw.setPosition(OPENED_POSITION);
             LED.changeColor(RevBlinkinLedDriver.BlinkinPattern.DARK_RED);
             specimenCollected = false;
-            TempHuskyLens.setSampleCollected(false);
+            TempIntake.setSampleCollected(false);
             Differential.moved = false;
             Differential.reseted = false;
         }
