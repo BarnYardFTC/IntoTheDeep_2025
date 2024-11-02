@@ -11,6 +11,13 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.subSystems.Claw;
+import org.firstinspires.ftc.teamcode.subSystems.Differential;
+import org.firstinspires.ftc.teamcode.subSystems.DifferentialArm;
+import org.firstinspires.ftc.teamcode.subSystems.Drivetrain;
+import org.firstinspires.ftc.teamcode.subSystems.IntakeArm;
+import org.firstinspires.ftc.teamcode.subSystems.TempVerticalLift;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -35,7 +42,7 @@ public class Teleop extends LinearOpMode {
         DcMotorEx backRight = hardwareMap.get(DcMotorEx.class, "backRight");
         IMU imu = hardwareMap.get(IMU.class, "IMU");
 
-        IgnitionSystem.init(frontLeft, frontRight, backLeft, backRight, imu);
+        Drivetrain.init(frontLeft, frontRight, backLeft, backRight, imu);
     }
 
     /**
@@ -85,7 +92,7 @@ public class Teleop extends LinearOpMode {
     private void initLED() {
         RevBlinkinLedDriver LED = hardwareMap.get(RevBlinkinLedDriver.class, "LED");
 
-        org.firstinspires.ftc.teamcode.LED.init(LED);
+        org.firstinspires.ftc.teamcode.subSystems.LED.init(LED);
     }
 
     /**
@@ -211,7 +218,7 @@ public class Teleop extends LinearOpMode {
 
             // We use a try & catch block so that any error in the main loop will stop the robot and add the error line to the telemetry.
             try {
-                IgnitionSystem.move(gamepad1);
+                Drivetrain.move(gamepad1);
                 collectAllianceColoredSample(gamepad1.a);
                 collectYellowColoredSample(gamepad1.y);
                 collectSpecimen(gamepad1.x);
@@ -224,6 +231,7 @@ public class Teleop extends LinearOpMode {
                 PrintWriter pw = new PrintWriter(sw);
                 e.printStackTrace(pw);
                 String stackTrace = sw.toString();
+                telemetry.log().clear();
                 telemetry.addData("stackTrace", stackTrace);
                 telemetry.update();
                 throw e;
