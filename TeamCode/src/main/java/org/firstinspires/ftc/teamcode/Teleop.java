@@ -235,6 +235,7 @@ public class Teleop extends LinearOpMode {
     @Override
     public void runOpMode() {
         initialized = false;
+        LED.changeColor(LED.getAllianceColor());
         waitForStart();
 
         // Main Loop

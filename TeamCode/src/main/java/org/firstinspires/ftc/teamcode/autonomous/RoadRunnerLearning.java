@@ -8,10 +8,12 @@ import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.roadRunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.subSystems.LED;
 
 @Config
 @Autonomous(name = "ROAD_RUNNER_LEARNING", group = "Autonomous")
@@ -19,6 +21,10 @@ public class RoadRunnerLearning extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        LED.changeAllianceColor(RevBlinkinLedDriver.BlinkinPattern.BLUE);
+
+        waitForStart();
+
         Pose2d initialPose = new Pose2d(11.8, 61.7, Math.toRadians(90));
         MecanumDrive ignitionSystem = new MecanumDrive(hardwareMap, initialPose);
 

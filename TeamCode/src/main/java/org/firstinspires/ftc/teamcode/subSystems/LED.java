@@ -6,8 +6,7 @@ import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 
 public class LED {
     private static RevBlinkinLedDriver LED; // LED strip.
-
-    private static int blinkTime = 16; // Meant to create blinking by for changing color when the blinkTime is an equal number while constantly decreasing its value (reset when it's smaller the zero).
+    private static RevBlinkinLedDriver.BlinkinPattern allianceColor; // LED strip.
 
     /**
      * Initializing.
@@ -17,26 +16,17 @@ public class LED {
     public static void init(RevBlinkinLedDriver LEDConfig) {
         LED = LEDConfig;
 
-        // Changing LED color to default color (red).
-        LED.setPattern(RevBlinkinLedDriver.BlinkinPattern.DARK_RED);
+        // Changing LED color to default color.
+        changeColor(RevBlinkinLedDriver.BlinkinPattern.DARK_RED);
     }
 
     /**
-     * Get the value of the blinkTime parameter.
+     * Gets the current alliance color.
      *
-     * @return - The blinkTime value.
+     * @return - the alliance color;
      */
-    public static int getBlinkTime() {
-        return blinkTime;
-    }
-
-    /**
-     * Set the value of the blinkTime parameter.
-     *
-     * @param time - The wanted blinkTime after reset.
-     */
-    public static void setBlinkTime(int time) {
-        blinkTime = time;
+    public static RevBlinkinLedDriver.BlinkinPattern getAllianceColor() {
+        return allianceColor;
     }
 
     /**
@@ -47,19 +37,25 @@ public class LED {
     public static void changeColor(RevBlinkinLedDriver.BlinkinPattern color) {
         switch (color) {
             case DARK_RED:
-                LED.setPattern(RevBlinkinLedDriver.BlinkinPattern.DARK_RED);
+                LED.setPattern(RevBlinkinLedDriver.BlinkinPattern.DARK_RED); // Default and at start of teleop, depends on alliance color.
                 break;
             case GREEN:
-                LED.setPattern(RevBlinkinLedDriver.BlinkinPattern.GREEN);
+                LED.setPattern(RevBlinkinLedDriver.BlinkinPattern.GREEN); // When a sample or specimen is collected.
                 break;
             case VIOLET:
-                LED.setPattern(RevBlinkinLedDriver.BlinkinPattern.VIOLET);
-                break;
-            case BLACK:
-                LED.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLACK);
+                LED.setPattern(RevBlinkinLedDriver.BlinkinPattern.VIOLET); // When hanging / being in a unloading position.
                 break;
             case BLUE:
-                LED.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLUE);
+                LED.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLUE); // At start of teleop, depends on alliance color.
         }
+    }
+
+    /**
+     * Gives the drive team an indicator of the alliance side since it affects the collection of samples.
+     *
+     * @param autonomousAllianceColor - the color of the current alliance.
+     */
+    public static void changeAllianceColor(RevBlinkinLedDriver.BlinkinPattern autonomousAllianceColor) {
+        allianceColor = autonomousAllianceColor;
     }
 }
