@@ -16,6 +16,8 @@ import org.firstinspires.ftc.teamcode.subSystems.Differential;
 import org.firstinspires.ftc.teamcode.subSystems.DifferentialArm;
 import org.firstinspires.ftc.teamcode.subSystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subSystems.IntakeArm;
+import org.firstinspires.ftc.teamcode.subSystems.LED;
+import org.firstinspires.ftc.teamcode.subSystems.TempIntake;
 import org.firstinspires.ftc.teamcode.subSystems.TempVerticalLift;
 
 import java.io.PrintWriter;
@@ -25,7 +27,9 @@ import java.io.StringWriter;
 @TeleOp(name = "INTO_THE_DEEP")
 
 public class Teleop extends LinearOpMode {
-    /**
+    private boolean initialized; // Initialize the hardware only once.
+
+    /*
      * Functions for initialization of the hardware.
      * Each function gets the name of the hardware and assigns it to a variable.
      * The variables are given to a each classes inner initialization function.
@@ -35,7 +39,7 @@ public class Teleop extends LinearOpMode {
     /**
      * Initializes ignition system.
      */
-    private void initIgnitionSystem() {
+    private void initDriveTrain() {
         DcMotorEx frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft");
         DcMotorEx frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
         DcMotorEx backLeft = hardwareMap.get(DcMotorEx.class, "backLeft");
@@ -154,7 +158,9 @@ public class Teleop extends LinearOpMode {
      * @param a - Gampad1 a button input.
      */
     private void collectAllianceColoredSample(boolean a) {
-
+        if (TempIntake.isSampleCollected()) {
+            IntakeArm.reset();
+        }
     }
 
     /**
@@ -164,7 +170,9 @@ public class Teleop extends LinearOpMode {
      * @param y - Gampad1 y button input.
      */
     private void collectYellowColoredSample(boolean y) {
-
+        if (TempIntake.isSampleCollected()) {
+            IntakeArm.reset();
+        }
     }
 
     /**
@@ -173,7 +181,9 @@ public class Teleop extends LinearOpMode {
      * @param b - Gampad1 b button input.
      */
     private void unload(boolean b) {
-
+        Claw.open();
+        Differential.reset();
+        DifferentialArm.reset();
     }
 
     /**
@@ -183,7 +193,15 @@ public class Teleop extends LinearOpMode {
      * @param rBumper - Gampad1 rBumper button input.
      */
     private void moveToHighUnloadingPosition(boolean rBumper) {
-
+        if (Claw.isSpecimenCollected()) {
+            Differential.unloadSpecimen();
+            DifferentialArm.unload();
+            LED.changeColor(RevBlinkinLedDriver.BlinkinPattern.VIOLET);
+        }
+        if (TempIntake.isSampleCollected()) {
+            Differential.unloadSample();
+            LED.changeColor(RevBlinkinLedDriver.BlinkinPattern.VIOLET);
+        }
     }
 
     /**
@@ -193,7 +211,15 @@ public class Teleop extends LinearOpMode {
      * @param lBumper - Gampad1 lBumper button input.
      */
     private void moveToLowUnloadingPosition(boolean lBumper) {
-
+        if (Claw.isSpecimenCollected()) {
+            Differential.unloadSpecimen();
+            DifferentialArm.unload();
+            LED.changeColor(RevBlinkinLedDriver.BlinkinPattern.VIOLET);
+        }
+        if (TempIntake.isSampleCollected()) {
+            Differential.unloadSample();
+            LED.changeColor(RevBlinkinLedDriver.BlinkinPattern.VIOLET);
+        }
     }
 
     /**
@@ -203,21 +229,32 @@ public class Teleop extends LinearOpMode {
      * @param dpadUp - Gampad1 dpadUp button input.
      */
     private void climb(boolean dpadUp) {
-
+        LED.changeColor(RevBlinkinLedDriver.BlinkinPattern.VIOLET);
     }
 
     @Override
     public void runOpMode() {
-
+        initialized = false;
         waitForStart();
-
-        // Initializing
 
         // Main Loop
         while (opModeIsActive()) {
-
             // We use a try & catch block so that any error in the main loop will stop the robot and add the error line to the telemetry.
             try {
+                if (!initialized) {
+                    initClaw();
+                    initDifferential();
+                    initDifferentialArm();
+                    initHorizontalLift();
+                    initVerticalLift();
+                    initHang();
+                    initHuskyLens();
+                    initDriveTrain();
+                    initIntake();
+                    initIntakeArm();
+                    initLED();
+                    initialized = true;
+                }
                 Drivetrain.move(gamepad1);
                 collectAllianceColoredSample(gamepad1.a);
                 collectYellowColoredSample(gamepad1.y);
