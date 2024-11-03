@@ -19,6 +19,7 @@ public class Differential {
     private static final int ROLL_ANGLE_SPECIMEN_INTAKE = 180;
     private static final int PITCH_ANGLE_SPECIMEN_UNLOAD = 90;
     private static final int ROLL_ANGLE_SAMPLE_UNLOAD = 90;
+    private static final int PITCH_ANGLE_SAMPLE_UNLOAD = 140;
     public static boolean moved; // Meant to prevent the move method be ran in a loop multiple times when unneeded.
     public static boolean reseted; // Meant to prevent the reset method be ran in a loop multiple times when unneeded.
     // Analog, position equation: position = analogInput.getVoltage() / 3.3 * 360.
@@ -80,6 +81,15 @@ public class Differential {
     }
 
     /**
+     * Get the value of the PITCH_ANGLE_SAMPLE_UNLOAD parameter.
+     *
+     * @return - The PITCH_ANGLE_SAMPLE_UNLOAD value.
+     */
+    public static int getPitchAngleSampleUnload() {
+        return PITCH_ANGLE_SAMPLE_UNLOAD;
+    }
+
+    /**
      * Get the value of the analogInput parameter.
      *
      * @return - The analogInput value.
@@ -111,23 +121,14 @@ public class Differential {
      * The logic for the movement is in the class ServoProps.
      * The action set the servos position once in a loop until the moved value is changed.
      *
-     * @param angle - Wanted end angle of the differential.
-     * @param ax    - Wanted movement axis of the differential.
+     * @param angleRoll - Wanted end angle of the differential on the roll axis.
+     * @param anglePitch - Wanted end angle of the differential on the pitch axis.
      */
-    private static void move(int angle, axis ax) {
+    private static void move(int angleRoll, int anglePitch) {
         if (!moved) {
-            switch (ax) {
-                case PITCH:
-                    servos[RIGHT].setPosition(RIGHT_SERVO.getServoTargetPosition(angle));
-                    servos[LEFT].setPosition(LEFT_SERVO.getServoTargetPosition(angle));
-                    moved = true;
-                    break;
-                case ROLL:
-                    servos[RIGHT].setPosition(RIGHT_SERVO.getServoTargetPosition(-angle));
-                    servos[LEFT].setPosition(LEFT_SERVO.getServoTargetPosition(angle));
-                    moved = true;
-                    break;
-            }
+            servos[RIGHT].setPosition(RIGHT_SERVO.getServoTargetPosition(angleRoll - anglePitch));
+            servos[LEFT].setPosition(LEFT_SERVO.getServoTargetPosition(angleRoll + anglePitch));
+            moved = true;
         }
     }
 
@@ -137,6 +138,8 @@ public class Differential {
      */
     public static void reset() {
         if (!reseted) {
+            servos[RIGHT].setDirection(Servo.Direction.FORWARD);
+            servos[LEFT].setDirection(Servo.Direction.FORWARD);
             servos[RIGHT].setPosition(RIGHT_SERVO.getServoTargetPosition(0));
             servos[LEFT].setPosition(LEFT_SERVO.getServoTargetPosition(0));
             reseted = true;
@@ -147,15 +150,11 @@ public class Differential {
      * Moves differential to the specimen intake position.
      */
     public static void collectSpecimen() {
-        move(ROLL_ANGLE_SPECIMEN_INTAKE, axis.ROLL);
-        if (ServoProps.isAnalogInPosition(analogInput, ROLL_ANGLE_SPECIMEN_INTAKE)) {
-            Claw.close();
-            move(PITCH_ANGLE_SPECIMEN_INTAKE, axis.PITCH);
-            if (ServoProps.isAnalogInPosition(analogInput, PITCH_ANGLE_SPECIMEN_INTAKE)) {
-                Claw.open();
-            }
+        Claw.close();
+        move(ROLL_ANGLE_SPECIMEN_INTAKE, PITCH_ANGLE_SPECIMEN_INTAKE);
+        if (ServoProps.isAnalogInPosition(analogInput, PITCH_ANGLE_SPECIMEN_INTAKE)) {
+            Claw.open();
         }
-
     }
 
     /**
@@ -166,7 +165,7 @@ public class Differential {
         if (ServoProps.isAnalogInPosition(analogInput, 0)) {
             servos[RIGHT].setDirection(Servo.Direction.REVERSE);
             servos[LEFT].setDirection(Servo.Direction.REVERSE);
-            move(PITCH_ANGLE_SPECIMEN_UNLOAD, axis.PITCH);
+            move(0, PITCH_ANGLE_SPECIMEN_UNLOAD);
         }
     }
 
@@ -174,10 +173,7 @@ public class Differential {
      * Moves differential to the sample unload position.
      */
     public static void unloadSample() {
-        move(ROLL_ANGLE_SAMPLE_UNLOAD, axis.ROLL);
-        if (ServoProps.isAnalogInPosition(analogInput, ROLL_ANGLE_SAMPLE_UNLOAD)) {
-            reset();
-        }
+        move(ROLL_ANGLE_SAMPLE_UNLOAD, PITCH_ANGLE_SAMPLE_UNLOAD);
     }
 
     /**
@@ -187,12 +183,5 @@ public class Differential {
      */
     private static boolean isReseted() {
         return ServoProps.isServoInPosition(servos[RIGHT], 0);
-    }
-
-    /**
-     * Enum for giving an axis to the systems movement.
-     */
-    public enum axis {
-        PITCH, ROLL
     }
 }

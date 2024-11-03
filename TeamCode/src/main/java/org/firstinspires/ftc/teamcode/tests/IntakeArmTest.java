@@ -19,4 +19,14 @@ class IntakeArmTest {
     void rightReset() {
         Assertions.assertEquals(0.5, IntakeArm.getRightServo().getServoTargetPosition(0));
     }
+
+    @Test
+    void leftCollect() {
+        Assertions.assertEquals(0.5 + (double) 30 / 180, IntakeArm.getLeftServo().getServoTargetPosition(IntakeArm.getAngleIntake()));
+    }
+
+    @Test
+    void leftReset() {
+        Assertions.assertEquals(0.5, IntakeArm.getLeftServo().getServoTargetPosition(0));
+    }
 }

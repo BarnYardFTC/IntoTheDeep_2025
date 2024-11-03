@@ -38,6 +38,11 @@ class DifferentialTest {
     }
 
     @Test
+    void rightPitchSampleUnload() {
+        assertEquals((double) 140 / 355 + (double) 175 / 355, Differential.getRightServo().getServoTargetPosition(Differential.getPitchAngleSampleUnload()));
+    }
+
+    @Test
     void leftReset() {
         Assertions.assertEquals(0, Differential.getLeftServo().getServoTargetPosition(0));
     }
@@ -60,5 +65,10 @@ class DifferentialTest {
     @Test
     void leftPitchSpecimenUnload() {
         assertEquals((double) 90 / 355, Differential.getLeftServo().getServoTargetPosition(Differential.getPitchAngleSpecimenUnload()));
+    }
+
+    @Test
+    void leftPitchSampleUnload() {
+        assertEquals((double) 140 / 355, Differential.getLeftServo().getServoTargetPosition(Differential.getPitchAngleSampleUnload()));
     }
 }

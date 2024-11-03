@@ -22,11 +22,11 @@ class DifferentialArmTest {
 
     @Test
     void leftUnload() {
-        Assertions.assertEquals(1, DifferentialArm.getRightServo().getServoTargetPosition(DifferentialArm.getAngleSpecimenUnload()));
+        Assertions.assertEquals(1, DifferentialArm.getLeftServo().getServoTargetPosition(DifferentialArm.getAngleSpecimenUnload()));
     }
 
     @Test
     void leftReset() {
-        Assertions.assertEquals(0.5, DifferentialArm.getRightServo().getServoTargetPosition(0));
+        Assertions.assertEquals(0.5, DifferentialArm.getLeftServo().getServoTargetPosition(0));
     }
 }
