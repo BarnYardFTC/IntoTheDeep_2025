@@ -10,7 +10,7 @@ public class TempIntake {
      *
      * @return - If a specimen was collected and controlled by the robot or not.
      */
-    public static boolean getSampleCollected() {
+    public static boolean isSampleCollected() {
         return sampleCollected;
     }
 

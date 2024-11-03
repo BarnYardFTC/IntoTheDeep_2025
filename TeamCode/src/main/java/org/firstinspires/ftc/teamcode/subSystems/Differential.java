@@ -152,7 +152,7 @@ public class Differential {
     public static void collectSpecimen() {
         Claw.close();
         move(ROLL_ANGLE_SPECIMEN_INTAKE, PITCH_ANGLE_SPECIMEN_INTAKE);
-        if (ServoProps.isAnalogInPosition(analogInput, PITCH_ANGLE_SPECIMEN_INTAKE)) {
+        if (isInSpecimenCollectPos()) {
             Claw.open();
         }
     }
@@ -162,7 +162,7 @@ public class Differential {
      * The function checks when the differential finished it's movement in a certain axis before initiating the movement in another axis.
      */
     public static void unloadSpecimen() {
-        if (ServoProps.isAnalogInPosition(analogInput, 0)) {
+        if (isReseted()) {
             servos[RIGHT].setDirection(Servo.Direction.REVERSE);
             servos[LEFT].setDirection(Servo.Direction.REVERSE);
             move(0, PITCH_ANGLE_SPECIMEN_UNLOAD);
@@ -181,7 +181,16 @@ public class Differential {
      *
      * @return - If the differential is reseted.
      */
-    private static boolean isReseted() {
-        return ServoProps.isServoInPosition(servos[RIGHT], 0);
+    public static boolean isReseted() {
+        return ServoProps.isAnalogInPosition(analogInput, 0);
+    }
+
+    /**
+     * Checks if the differential is in the position to collect a specimen.
+     *
+     * @return - If the differential is in the position to collect a specimen.
+     */
+    public static boolean isInSpecimenCollectPos() {
+        return ServoProps.isAnalogInPosition(analogInput, PITCH_ANGLE_SPECIMEN_INTAKE + ROLL_ANGLE_SPECIMEN_INTAKE);
     }
 }
