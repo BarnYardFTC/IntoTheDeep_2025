@@ -102,4 +102,14 @@ public class Drivetrain {
         motors[LB].setPower((adjustedLy - adjustedLx + rx) / maxPower);
         motors[RB].setPower((adjustedLy + adjustedLx - rx) / maxPower);
     }
+
+    /**
+     * Reset imu heading.
+     *
+     * @param b - B button.
+     */
+    public static void resetImu(boolean b) {
+        imu.resetYaw();
+        imu.resetYaw();
+    }
 }

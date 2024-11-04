@@ -44,7 +44,7 @@ public class Teleop extends LinearOpMode {
         DcMotorEx rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
         DcMotorEx leftBack = hardwareMap.get(DcMotorEx.class, "leftBack");
         DcMotorEx rightBack = hardwareMap.get(DcMotorEx.class, "rightBack");
-        IMU imu = hardwareMap.get(IMU.class, "IMU");
+        IMU imu = hardwareMap.get(IMU.class, "imu");
 
         Drivetrain.init(leftFront, rightFront, leftBack, rightBack, imu);
     }
@@ -241,6 +241,7 @@ public class Teleop extends LinearOpMode {
 
         // Main Loop
         while (opModeIsActive()) {
+            Drivetrain.resetImu(gamepad1.b);
             Drivetrain.move(gamepad1);
             // We use a try & catch block so that any error in the main loop will stop the robot and add the error line to the telemetry.
 //            try {
