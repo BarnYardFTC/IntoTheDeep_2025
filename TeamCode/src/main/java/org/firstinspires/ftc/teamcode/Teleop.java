@@ -234,46 +234,48 @@ public class Teleop extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        initialized = false;
-        LED.changeColor(LED.getAllianceColor());
+//        initialized = false;
+//        LED.changeColor(LED.getAllianceColor());
+        initDriveTrain();
         waitForStart();
 
         // Main Loop
         while (opModeIsActive()) {
+            Drivetrain.move(gamepad1);
             // We use a try & catch block so that any error in the main loop will stop the robot and add the error line to the telemetry.
-            try {
-                if (!initialized) {
-                    initClaw();
-                    initDifferential();
-                    initDifferentialArm();
-                    initHorizontalLift();
-                    initVerticalLift();
-                    initHang();
-                    initHuskyLens();
-                    initDriveTrain();
-                    initIntake();
-                    initIntakeArm();
-                    initLED();
-                    initialized = true;
-                }
-                Drivetrain.move(gamepad1);
-                collectAllianceColoredSample(gamepad1.a);
-                collectYellowColoredSample(gamepad1.y);
-                collectSpecimen(gamepad1.x);
-                moveToHighUnloadingPosition(gamepad1.right_bumper);
-                moveToLowUnloadingPosition(gamepad1.left_bumper);
-                unload(gamepad1.b);
-                climb(gamepad1.dpad_up);
-            } catch (Exception e) {
-                StringWriter sw = new StringWriter();
-                PrintWriter pw = new PrintWriter(sw);
-                e.printStackTrace(pw);
-                String stackTrace = sw.toString();
-                telemetry.log().clear();
-                telemetry.addData("stackTrace", stackTrace);
-                telemetry.update();
-                throw e;
-            }
+//            try {
+//                if (!initialized) {
+//                    initClaw();
+//                    initDifferential();
+//                    initDifferentialArm();
+//                    initHorizontalLift();
+//                    initVerticalLift();
+//                    initHang();
+//                    initHuskyLens();
+//                    initDriveTrain();
+//                    initIntake();
+//                    initIntakeArm();
+//                    initLED();
+//                    initialized = true;
+//                }
+//                Drivetrain.move(gamepad1);
+//                collectAllianceColoredSample(gamepad1.a);
+//                collectYellowColoredSample(gamepad1.y);
+//                collectSpecimen(gamepad1.x);
+//                moveToHighUnloadingPosition(gamepad1.right_bumper);
+//                moveToLowUnloadingPosition(gamepad1.left_bumper);
+//                unload(gamepad1.b);
+//                climb(gamepad1.dpad_up);
+//            } catch (Exception e) {
+//                StringWriter sw = new StringWriter();
+//                PrintWriter pw = new PrintWriter(sw);
+//                e.printStackTrace(pw);
+//                String stackTrace = sw.toString();
+//                telemetry.log().clear();
+//                telemetry.addData("stackTrace", stackTrace);
+//                telemetry.update();
+//                throw e;
+//            }
         }
     }
 }
