@@ -11,10 +11,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class Drivetrain {
     private static final DcMotorEx[] motors = new DcMotorEx[4]; // Motors array.
-    private static final int FL = 0; // Front left's motor index.
-    private static final int FR = 1; // Front right's motor index.
-    private static final int BL = 2; // Back left's motor index.
-    private static final int BR = 3; // Back right's motor index.
+    private static final int LF = 0; // Front left's motor index.
+    private static final int RF = 1; // Front right's motor index.
+    private static final int LB = 2; // Back left's motor index.
+    private static final int RB = 3; // Back right's motor index.
 
     private static IMU imu; // IMU.
 
@@ -30,23 +30,23 @@ public class Drivetrain {
     /**
      * Initializing all hardware.
      *
-     * @param frontLeft  - Hardware for front left motor.
-     * @param frontRight - Hardware for front right motor.
-     * @param backLeft   - Hardware for back left motor.
-     * @param backRight  - Hardware for back right motor.
+     * @param leftFront  - Hardware for front left motor.
+     * @param rightFront - Hardware for front right motor.
+     * @param leftBack   - Hardware for back left motor.
+     * @param rightBack  - Hardware for back right motor.
      * @param imuConfig  - Hardware for imu.
      */
-    public static void init(DcMotorEx frontLeft, DcMotorEx frontRight, DcMotorEx backLeft, DcMotorEx backRight, IMU imuConfig) {
+    public static void init(DcMotorEx leftFront, DcMotorEx rightFront, DcMotorEx leftBack, DcMotorEx rightBack, IMU imuConfig) {
         // Assigning the given motors to the motors in the class.
-        motors[FL] = frontLeft;
-        motors[FR] = frontRight;
-        motors[BL] = backLeft;
-        motors[BR] = backRight;
+        motors[LF] = leftFront;
+        motors[RF] = rightFront;
+        motors[LB] = leftBack;
+        motors[RB] = rightBack;
         imu = imuConfig;
 
         // Reversing some motors so that positive power = positive-direction wheel spin.
-        motors[FL].setDirection(DcMotorEx.Direction.REVERSE);
-        motors[BL].setDirection(DcMotorEx.Direction.REVERSE);
+        motors[LF].setDirection(DcMotorEx.Direction.REVERSE);
+        motors[LB].setDirection(DcMotorEx.Direction.REVERSE);
 
         // Setting motors attributes
         for (DcMotorEx motor : motors) {
@@ -97,9 +97,9 @@ public class Drivetrain {
         adjustedLy = ly * Math.cos(robotHeading) + lx * Math.sin(robotHeading);
 
         // Giving power to motors.
-        motors[FL].setPower((adjustedLy + adjustedLx + rx) / maxPower);
-        motors[FR].setPower((adjustedLy - adjustedLx - rx) / maxPower);
-        motors[BL].setPower((adjustedLy - adjustedLx + rx) / maxPower);
-        motors[BR].setPower((adjustedLy + adjustedLx - rx) / maxPower);
+        motors[LF].setPower((adjustedLy + adjustedLx + rx) / maxPower);
+        motors[RF].setPower((adjustedLy - adjustedLx - rx) / maxPower);
+        motors[LB].setPower((adjustedLy - adjustedLx + rx) / maxPower);
+        motors[RB].setPower((adjustedLy + adjustedLx - rx) / maxPower);
     }
 }

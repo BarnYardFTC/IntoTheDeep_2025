@@ -40,13 +40,13 @@ public class Teleop extends LinearOpMode {
      * Initializes ignition system.
      */
     private void initDriveTrain() {
-        DcMotorEx frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft");
-        DcMotorEx frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
-        DcMotorEx backLeft = hardwareMap.get(DcMotorEx.class, "backLeft");
-        DcMotorEx backRight = hardwareMap.get(DcMotorEx.class, "backRight");
+        DcMotorEx leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
+        DcMotorEx rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
+        DcMotorEx leftBack = hardwareMap.get(DcMotorEx.class, "leftBack");
+        DcMotorEx rightBack = hardwareMap.get(DcMotorEx.class, "rightBack");
         IMU imu = hardwareMap.get(IMU.class, "IMU");
 
-        Drivetrain.init(frontLeft, frontRight, backLeft, backRight, imu);
+        Drivetrain.init(leftFront, rightFront, leftBack, rightBack, imu);
     }
 
     /**
