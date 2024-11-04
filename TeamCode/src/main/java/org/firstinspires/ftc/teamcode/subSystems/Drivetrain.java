@@ -64,6 +64,15 @@ public class Drivetrain {
     }
 
     /**
+     * Get the robot heading given from the imu.
+     *
+     * @return - Current robot heading.
+     */
+    public static double getRobotHeading() {
+        return robotHeading;
+    }
+
+    /**
      * This function is built to reset all the inconstant variables of the class.
      * This function is essential to enable reuse of the class without restarting the robot.
      */
@@ -105,10 +114,11 @@ public class Drivetrain {
 
     /**
      * Reset imu heading.
+     * Current heading is only for testing.
      *
-     * @param b - B button.
+     * @param button - Gamepad1 B button input.
      */
-    public static void resetImu(boolean b) {
+    public static void resetImu(boolean button) {
         imu.resetYaw();
         imu.resetYaw();
     }

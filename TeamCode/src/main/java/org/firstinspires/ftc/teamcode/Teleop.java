@@ -144,9 +144,9 @@ public class Teleop extends LinearOpMode {
      * Moves all parts to be ready for specimen intake.
      * Allows automated collection of a specimen.
      *
-     * @param x - Gampad1 x button input.
+     * @param button - Gampad1 x button input.
      */
-    private void collectSpecimen(boolean x) {
+    private void collectSpecimen(boolean button) {
         Differential.collectSpecimen();
         Claw.collectSpecimen();
     }
@@ -155,9 +155,9 @@ public class Teleop extends LinearOpMode {
      * Moves all parts to be ready for sample intake.
      * Allows automated collection of an alliance colored sample.
      *
-     * @param a - Gampad1 a button input.
+     * @param button - Gampad1 a button input.
      */
-    private void collectAllianceColoredSample(boolean a) {
+    private void collectAllianceColoredSample(boolean button) {
         if (TempIntake.isSampleCollected()) {
             IntakeArm.reset();
         }
@@ -167,9 +167,9 @@ public class Teleop extends LinearOpMode {
      * Moves all parts to be ready for sample intake.
      * Allows automated collection of a yellow colored sample.
      *
-     * @param y - Gampad1 y button input.
+     * @param button - Gampad1 y button input.
      */
-    private void collectYellowColoredSample(boolean y) {
+    private void collectYellowColoredSample(boolean button) {
         if (TempIntake.isSampleCollected()) {
             IntakeArm.reset();
         }
@@ -178,9 +178,9 @@ public class Teleop extends LinearOpMode {
     /**
      * Unloads a sample and resets all parts of the robot.
      *
-     * @param b - Gampad1 b button input.
+     * @param button - Gampad1 b button input.
      */
-    private void unload(boolean b) {
+    private void unload(boolean button) {
         Claw.open();
         Differential.reset();
         DifferentialArm.reset();
@@ -234,18 +234,17 @@ public class Teleop extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-//        initialized = false;
+        initialized = false;
 //        LED.changeColor(LED.getAllianceColor());
         initDriveTrain();
         waitForStart();
 
         // Main Loop
         while (opModeIsActive()) {
-            Drivetrain.resetImu(gamepad1.b);
-            Drivetrain.move(gamepad1);
+
             // We use a try & catch block so that any error in the main loop will stop the robot and add the error line to the telemetry.
-//            try {
-//                if (!initialized) {
+            try {
+                if (!initialized) {
 //                    initClaw();
 //                    initDifferential();
 //                    initDifferentialArm();
@@ -253,13 +252,14 @@ public class Teleop extends LinearOpMode {
 //                    initVerticalLift();
 //                    initHang();
 //                    initHuskyLens();
-//                    initDriveTrain();
+                    initDriveTrain();
 //                    initIntake();
 //                    initIntakeArm();
 //                    initLED();
-//                    initialized = true;
-//                }
-//                Drivetrain.move(gamepad1);
+                    initialized = true;
+                }
+                Drivetrain.move(gamepad1);
+                Drivetrain.resetImu(gamepad1.b);
 //                collectAllianceColoredSample(gamepad1.a);
 //                collectYellowColoredSample(gamepad1.y);
 //                collectSpecimen(gamepad1.x);
@@ -267,16 +267,19 @@ public class Teleop extends LinearOpMode {
 //                moveToLowUnloadingPosition(gamepad1.left_bumper);
 //                unload(gamepad1.b);
 //                climb(gamepad1.dpad_up);
-//            } catch (Exception e) {
-//                StringWriter sw = new StringWriter();
-//                PrintWriter pw = new PrintWriter(sw);
-//                e.printStackTrace(pw);
-//                String stackTrace = sw.toString();
-//                telemetry.log().clear();
-//                telemetry.addData("stackTrace", stackTrace);
-//                telemetry.update();
-//                throw e;
-//            }
+                telemetry.log().clear();
+                telemetry.addData("Heading", Drivetrain.getRobotHeading());
+                telemetry.update();
+            } catch (Exception e) {
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
+                String stackTrace = sw.toString();
+                telemetry.log().clear();
+                telemetry.addData("stackTrace", stackTrace);
+                telemetry.update();
+                throw e;
+            }
         }
     }
 }
