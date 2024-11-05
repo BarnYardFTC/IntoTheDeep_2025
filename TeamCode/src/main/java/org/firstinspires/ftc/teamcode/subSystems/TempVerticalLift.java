@@ -127,23 +127,17 @@ public class TempVerticalLift {
 
     ====================================================
      */
+
+    private static final double GEAR_RATIO = 19.6;
+    private static final double RADIUS = 0.5;
+    private static final double CM_TO_ENCODER_CONVERSION_CONSTANT = GEAR_RATIO/(2*Math.PI*RADIUS);
     private static int cmToEncoder(double cm) {
 
-        /*
-          Find out by how much the encoder position of a motor needs to change
-          in order for the lift to move X cm.
-
-          param cm: By how many cm the lift needs to move
-                     A positive cm value = movement up.
-                     A negative value = movement down.
-
-          return by how much the encoder position needs to change in order for the lift to move X cm.
-         */
-        return (int) (cm * CM_TO_ENCODER_RATIO);
+        return (int) (cm*CM_TO_ENCODER_CONVERSION_CONSTANT);
     }
 
     private static double encoderToCm(int encoder) {
-        return (double) encoder / CM_TO_ENCODER_RATIO;
+        return 1/(encoder*CM_TO_ENCODER_CONVERSION_CONSTANT);
     }
 
     private static double getCurrentPositionValue() {
@@ -174,7 +168,5 @@ public class TempVerticalLift {
         return cmToEncoder(getEncoderToCm());
     }
 
-    public static void measureEncoderCmRatio(Gamepad gamepad, Telemetry telemetry) {
-        // TODO: When the lift is built, program this method to help measure the encoder-cm ratio
-    }
+
 }
