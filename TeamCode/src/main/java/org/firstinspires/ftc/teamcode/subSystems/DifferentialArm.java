@@ -27,7 +27,6 @@ public class DifferentialArm {
         // Assigning objects to variables.
         servos[RIGHT] = right;
         servos[LEFT] = left;
-        servos[RIGHT].setDirection(Servo.Direction.REVERSE); // Reversing right servo's direction so that both servos can get the same angle value.
 
         // Moving Servos to their starting position.
         reset();

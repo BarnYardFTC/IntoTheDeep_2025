@@ -269,6 +269,7 @@ public class Teleop extends LinearOpMode {
 //                climb(gamepad1.dpad_up);
                 telemetry.log().clear();
                 telemetry.addData("Heading", Drivetrain.getRobotHeading());
+                telemetry.addData("Init", initialized);
                 telemetry.update();
             } catch (Exception e) {
                 StringWriter sw = new StringWriter();

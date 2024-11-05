@@ -18,8 +18,10 @@ public class Drivetrain {
 
     private static IMU imu; // IMU.
 
-    // Variables needed to calculate the power that each motor is given
-    private static double maxPower; // Max power that a motor will get.
+    // MaxPower is the largest motor power (absolute value) or 1
+    // This ensures all the powers maintain the same ratio,
+    // But only if at least one is out of the range [-1, 1]
+    private static double maxPower;
     private static double lx; // Rc left x-axis.
     private static double ly; // Rc left y-axis.
     private static double rx; // Rc right x-axis.
@@ -59,8 +61,6 @@ public class Drivetrain {
         imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP, RevHubOrientationOnRobot.UsbFacingDirection.FORWARD)));
 
         imu.resetYaw(); // Reset imu heading.
-
-        resetVariables(); // Setting initial values to the variables.
     }
 
     /**
@@ -70,20 +70,6 @@ public class Drivetrain {
      */
     public static double getRobotHeading() {
         return robotHeading;
-    }
-
-    /**
-     * This function is built to reset all the inconstant variables of the class.
-     * This function is essential to enable reuse of the class without restarting the robot.
-     */
-    public static void resetVariables() {
-        maxPower = 1;
-        lx = 0;
-        ly = 0;
-        rx = 0;
-        robotHeading = 0;
-        adjustedLx = 0;
-        adjustedLy = 0;
     }
 
     /**
