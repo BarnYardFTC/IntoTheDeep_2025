@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.TrajectoryBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
@@ -17,7 +18,7 @@ import org.firstinspires.ftc.teamcode.subSystems.LED;
 
 @Config
 @Autonomous(name = "ROAD_RUNNER_LEARNING", group = "Autonomous")
-public class RoadRunnerLearning extends LinearOpMode {
+public class RoadRunnerTesting extends LinearOpMode {
 
     @Override
     public void runOpMode() {
@@ -25,10 +26,10 @@ public class RoadRunnerLearning extends LinearOpMode {
 
         waitForStart();
 
-        Pose2d initialPose = new Pose2d(11.8, 61.7, Math.toRadians(90));
+        Pose2d initialPose = new Pose2d(12, 62, Math.toRadians(90));
         MecanumDrive ignitionSystem = new MecanumDrive(hardwareMap, initialPose);
 
-        TrajectoryActionBuilder tab = ignitionSystem.actionBuilder(initialPose)
+        TrajectoryActionBuilder tab1 = ignitionSystem.actionBuilder(initialPose)
                 .lineToYSplineHeading(33, Math.toRadians(0))
                 .setTangent(Math.toRadians(90))
                 .lineToY(48)
@@ -42,6 +43,6 @@ public class RoadRunnerLearning extends LinearOpMode {
 
         if (isStopRequested()) return;
 
-        Actions.runBlocking(new SequentialAction(tab.build()));
+        Actions.runBlocking(new SequentialAction(tab1.build()));
     }
 }
