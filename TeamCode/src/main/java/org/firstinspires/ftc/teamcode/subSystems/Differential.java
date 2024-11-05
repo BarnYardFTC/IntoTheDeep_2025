@@ -39,9 +39,6 @@ public class Differential {
         analogInput = analogSensor;
         moved = false;
         reseted = false;
-
-        // Moving Servos to their starting position.
-        reset();
     }
 
     /**

@@ -27,9 +27,6 @@ public class IntakeArm {
         // Assigning objects to variables.
         servos[RIGHT] = right;
         servos[LEFT] = left;
-
-        // Moving Servos to their starting position.
-        reset();
     }
 
     /**

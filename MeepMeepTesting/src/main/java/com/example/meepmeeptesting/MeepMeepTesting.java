@@ -23,6 +23,7 @@ public class MeepMeepTesting {
 
         bot1.runAction(bot1.getDrive().actionBuilder(initialPose1)
                 .lineToYSplineHeading(33, Math.toRadians(0))
+                .waitSeconds(2)
                 .setTangent(Math.toRadians(90))
                 .lineToY(48)
                 .setTangent(Math.toRadians(0))
@@ -30,17 +31,19 @@ public class MeepMeepTesting {
                 .strafeTo(new Vector2d(44.5, 30))
                 .turn(Math.toRadians(180))
                 .lineToX(47.5)
+                .waitSeconds(3)
+                .strafeTo(new Vector2d(48, 12))
                 .build());
 
         botTest.runAction(botTest.getDrive().actionBuilder(initialPose2)
-                .setTangent(Math.toRadians(90))
-                .splineTo(new Vector2d(-48, 48), Math.toRadians(180))
+                .setTangent(90)
+                .splineToConstantHeading(new Vector2d(-48, 48), Math.PI)
                 .build());
 
-        meepMeep.setBackground(MeepMeep.Background.FIELD_INTO_THE_DEEP_JUICE_DARK)
+        meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_JUICE_DARK)
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
-                .addEntity(botTest)
+                .addEntity(bot1)
                 .start();
     }
 }

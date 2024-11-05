@@ -30,8 +30,6 @@ public class Claw {
         // Assigning objects to variables.
         claw = clawConfig;
         distanceSensor = distanceSensorConfig;
-
-        open(); // Moving Servo to opened position.
     }
 
     /**

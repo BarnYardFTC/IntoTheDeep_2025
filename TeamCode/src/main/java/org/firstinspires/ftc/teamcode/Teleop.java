@@ -27,14 +27,23 @@ import java.io.StringWriter;
 @TeleOp(name = "INTO_THE_DEEP")
 
 public class Teleop extends LinearOpMode {
-    private boolean initialized; // Initialize the hardware only once.
-
     /*
      * Functions for initialization of the hardware.
      * Each function gets the name of the hardware and assigns it to a variable.
      * The variables are given to a each classes inner initialization function.
      */
     // TODO: Change names of all hardware in configuration.
+
+    /**
+     * Move all robot parts to their starting position.
+     * This function is made so the robot doesn't move between auto and teleop period.
+     */
+    public void resetRobot() {
+        Claw.open();
+        Differential.reset();
+        DifferentialArm.reset();
+        IntakeArm.reset();
+    }
 
     /**
      * Initializes ignition system.
@@ -234,30 +243,24 @@ public class Teleop extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        initialized = false;
-//        LED.changeColor(LED.getAllianceColor());
+        LED.changeColor(LED.getAllianceColor());
+//        initClaw();
+//        initDifferential();
+//        initDifferentialArm();
+//        initHorizontalLift();
+//        initVerticalLift();
+//        initHang();
+//        initHuskyLens();
         initDriveTrain();
+//        initIntake();
+//        initIntakeArm();
+//        initLED();
         waitForStart();
 
         // Main Loop
         while (opModeIsActive()) {
-
             // We use a try & catch block so that any error in the main loop will stop the robot and add the error line to the telemetry.
             try {
-                if (!initialized) {
-//                    initClaw();
-//                    initDifferential();
-//                    initDifferentialArm();
-//                    initHorizontalLift();
-//                    initVerticalLift();
-//                    initHang();
-//                    initHuskyLens();
-                    initDriveTrain();
-//                    initIntake();
-//                    initIntakeArm();
-//                    initLED();
-                    initialized = true;
-                }
                 Drivetrain.move(gamepad1);
                 Drivetrain.resetImu(gamepad1.b);
 //                collectAllianceColoredSample(gamepad1.a);
@@ -269,7 +272,6 @@ public class Teleop extends LinearOpMode {
 //                climb(gamepad1.dpad_up);
                 telemetry.log().clear();
                 telemetry.addData("Heading", Drivetrain.getRobotHeading());
-                telemetry.addData("Init", initialized);
                 telemetry.update();
             } catch (Exception e) {
                 StringWriter sw = new StringWriter();
