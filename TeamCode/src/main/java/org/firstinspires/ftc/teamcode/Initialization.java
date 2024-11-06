@@ -48,7 +48,7 @@ public class Initialization {
 
     /**
      * Move all robot parts to their starting position.
-     * This function is made so the robot doesn't move between auto and teleop period.
+     * Makes the robot not move between auto and teleop period and instead at start of teleop.
      */
     public static void resetRobot() {
         if (reseted) {

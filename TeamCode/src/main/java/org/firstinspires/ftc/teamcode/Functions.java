@@ -20,6 +20,9 @@ public class Functions {
     // Functions which work based on a rc input.
     // Each main functions can use multiple functions and systems.
 
+    /**
+     * Operate all robot systems.
+     */
     public static void runAll() {
         Drivetrain.move(gamepadEx1.gamepad);
         if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
@@ -82,7 +85,7 @@ public class Functions {
 
     /**
      * Moves all parts to be ready for sample or specimen unload in their high position.
-     * It check rather a sample or a specimen needs to be unloaded.
+     * Checks rather a sample or a specimen needs to be unloaded.
      */
     public static void moveToHighUnloadingPosition() {
         if (gamepadEx1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
@@ -100,7 +103,7 @@ public class Functions {
 
     /**
      * Moves all parts to be ready for sample or specimen unload in their low position.
-     * It check rather a sample or a specimen needs to be unloaded.
+     * Checks rather a sample or a specimen needs to be unloaded.
      */
     public static void moveToLowUnloadingPosition() {
         if (gamepadEx1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {

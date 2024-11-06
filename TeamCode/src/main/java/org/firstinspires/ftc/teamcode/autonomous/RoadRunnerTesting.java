@@ -25,10 +25,22 @@ public class RoadRunnerTesting extends LinearOpMode {
 
         waitForStart();
 
-        Pose2d initialPose = new Pose2d(12, 62, Math.toRadians(90));
+        Pose2d initialPose = new Pose2d(-24, -58, Math.toRadians(90));
         MecanumDrive ignitionSystem = new MecanumDrive(hardwareMap, initialPose);
 
-        TrajectoryActionBuilder tab1 = ignitionSystem.actionBuilder(initialPose).lineToYSplineHeading(33, Math.toRadians(0)).setTangent(Math.toRadians(90)).lineToY(48).setTangent(Math.toRadians(0)).lineToX(32).strafeTo(new Vector2d(44.5, 30)).turn(Math.toRadians(180)).lineToX(47.5);
+        TrajectoryActionBuilder tab1 = ignitionSystem.actionBuilder(initialPose)
+                .setTangent(0)
+                .splineToConstantHeading(new Vector2d(-10, -37), Math.toRadians(90))
+                .waitSeconds(2)
+                .setTangent(Math.toRadians(0))
+                .strafeTo(new Vector2d(-48, -40))
+                .waitSeconds(2)
+                .turn(Math.toRadians(-45))
+                .strafeTo(new Vector2d(-55, -55))
+                .waitSeconds(2)
+                .lineToY(-50)
+                .turn(Math.toRadians(45))
+                .strafeTo(new Vector2d(-24, -58));
 
         waitForStart();
 

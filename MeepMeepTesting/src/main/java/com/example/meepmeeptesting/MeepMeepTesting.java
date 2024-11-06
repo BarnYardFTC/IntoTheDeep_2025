@@ -10,17 +10,28 @@ public class MeepMeepTesting {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(500);
 
-        RoadRunnerBotEntity bot1 = new DefaultBotBuilder(meepMeep).setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15).build();
-
         RoadRunnerBotEntity botTest = new DefaultBotBuilder(meepMeep).setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15).build();
 
-        Pose2d initialPose1 = new Pose2d(12, 62, Math.toRadians(90));
-        Pose2d initialPose2 = new Pose2d(0, 0, Math.toRadians(180));
+        Pose2d initialPose = new Pose2d(-24, -58, Math.toRadians(90));
 
-        bot1.runAction(bot1.getDrive().actionBuilder(initialPose1).lineToYSplineHeading(33, Math.toRadians(0)).waitSeconds(2).setTangent(Math.toRadians(90)).lineToY(48).setTangent(Math.toRadians(0)).lineToX(32).strafeTo(new Vector2d(44.5, 30)).turn(Math.toRadians(180)).lineToX(47.5).waitSeconds(3).strafeTo(new Vector2d(48, 12)).build());
+        botTest.runAction(botTest.getDrive().actionBuilder(initialPose)
+                .setTangent(0)
+                .splineToConstantHeading(new Vector2d(-10, -37), Math.toRadians(90))
+                .waitSeconds(2)
+                .setTangent(Math.toRadians(0))
+                .strafeTo(new Vector2d(-48, -40))
+                .waitSeconds(2)
+                .turn(Math.toRadians(-45))
+                .strafeTo(new Vector2d(-55, -55))
+                .waitSeconds(2)
+                .lineToY(-50)
+                .turn(Math.toRadians(45))
+                .strafeTo(new Vector2d(-24, -58))
+                .build());
 
-        botTest.runAction(botTest.getDrive().actionBuilder(initialPose2).setTangent(90).splineToConstantHeading(new Vector2d(-48, 48), Math.PI).build());
-
-        meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_JUICE_DARK).setDarkMode(true).setBackgroundAlpha(0.95f).addEntity(bot1).start();
+        meepMeep.setBackground(MeepMeep.Background.FIELD_INTO_THE_DEEP_JUICE_DARK)
+                .setDarkMode(true)
+                .setBackgroundAlpha(0.95f)
+                .addEntity(botTest).start();
     }
 }
