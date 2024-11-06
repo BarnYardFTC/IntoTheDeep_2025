@@ -30,42 +30,12 @@ public class IntakeArm {
     }
 
     /**
-     * Get the value of the ANGLE_INTAKE parameter.
-     *
-     * @return - The ANGLE_INTAKE value.
-     */
-    public static int getAngleIntake() {
-        return ANGLE_INTAKE;
-    }
-
-
-    /**
-     * Get the values of the right servo properties object.
-     *
-     * @return - The right servo properties.
-     */
-    public static ServoProps getRightServo() {
-        return RIGHT_SERVO;
-    }
-
-    /**
-     * Get the values of the left servo properties object.
-     *
-     * @return - The left servo properties.
-     */
-    public static ServoProps getLeftServo() {
-        return LEFT_SERVO;
-    }
-
-    /**
      * Moves intake arm to the intake position.
      * The action set the servos position once in a loop until the moved value is changed.
      */
     public static void collect() {
-        if (isReseted()) {
-            servos[RIGHT].setPosition(RIGHT_SERVO.getServoTargetPosition(ANGLE_INTAKE));
-            servos[LEFT].setPosition(LEFT_SERVO.getServoTargetPosition(ANGLE_INTAKE));
-        }
+        servos[RIGHT].setPosition(RIGHT_SERVO.getServoTargetPosition(ANGLE_INTAKE));
+        servos[LEFT].setPosition(LEFT_SERVO.getServoTargetPosition(ANGLE_INTAKE));
     }
 
     /**
@@ -73,18 +43,7 @@ public class IntakeArm {
      * The action set the servos position once in a loop until the reseted value is changed.
      */
     public static void reset() {
-        if (!isReseted()) {
-            servos[RIGHT].setPosition(RIGHT_SERVO.getServoTargetPosition(0));
-            servos[LEFT].setPosition(LEFT_SERVO.getServoTargetPosition(0));
-        }
-    }
-
-    /**
-     * Checks if the intake arm is in the reseted position.
-     *
-     * @return - If the intake arm is reseted.
-     */
-    private static boolean isReseted() {
-        return ServoProps.isServoInPosition(servos[RIGHT], 0);
+        servos[RIGHT].setPosition(RIGHT_SERVO.getServoTargetPosition(0));
+        servos[LEFT].setPosition(LEFT_SERVO.getServoTargetPosition(0));
     }
 }

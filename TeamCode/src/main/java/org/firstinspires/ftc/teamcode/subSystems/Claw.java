@@ -13,7 +13,7 @@ public class Claw {
     static private final int COLLECTION_DISTANCE = 5; // Specimen collection distance.
 
     // Servo positions.
-    private static final double OPENED_POSITION = 0.0; // Opened claw position.
+    private static final double OPENED_POSITION = 1; // Opened claw position.
     private static final double CLOSED_POSITION = 0.0; // Closed claw position.
 
     private static Servo claw; // Servo (starting position: claw: 0).
@@ -42,58 +42,32 @@ public class Claw {
     }
 
     /**
-     * Set the value of the specimenCollected parameter.
-     *
-     * @param collected - The state of whether a specimen is collected and controlled by the robot or not.
-     */
-    public static void setSpecimenCollected(boolean collected) {
-        specimenCollected = collected;
-    }
-
-    /**
      * Open claw.
      */
     public static void open() {
-        if (isClosed()) {
-            claw.setPosition(OPENED_POSITION);
-            LED.changeColor(RevBlinkinLedDriver.BlinkinPattern.DARK_RED);
-            specimenCollected = false;
-            TempIntake.setSampleCollected(false);
-            Differential.moved = false;
-            Differential.reseted = false;
-        }
+        claw.setPosition(OPENED_POSITION);
+        LED.changeColor(RevBlinkinLedDriver.BlinkinPattern.DARK_RED);
+        specimenCollected = false;
+        TempIntake.setSampleCollected(false);
     }
 
     /**
      * Close claw.
      */
     public static void close() {
-        if (isOpened()) {
-            claw.setPosition(CLOSED_POSITION);
-            LED.changeColor(RevBlinkinLedDriver.BlinkinPattern.GREEN);
-            specimenCollected = true;
-            Differential.moved = false;
-            Differential.reseted = false;
-        }
+        claw.setPosition(CLOSED_POSITION);
+        LED.changeColor(RevBlinkinLedDriver.BlinkinPattern.GREEN);
     }
 
     /**
      * Automated closure of claw when a specimen is close enough.
      */
     public static void collectSpecimen() {
-        if (getProximityValue() <= COLLECTION_DISTANCE && !specimenCollected && isOpened()) {
+        if (getProximityValue() <= COLLECTION_DISTANCE && !specimenCollected && isOpened() && !TempIntake.isSampleCollected()) {
             close();
             Differential.reset();
+            specimenCollected = true;
         }
-    }
-
-    /**
-     * Checks if the claw is in the closed position.
-     *
-     * @return - If the claw is closed.
-     */
-    private static boolean isClosed() {
-        return ServoProps.isServoInPosition(claw, CLOSED_POSITION);
     }
 
     /**

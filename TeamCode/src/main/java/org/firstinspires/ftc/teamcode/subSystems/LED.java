@@ -17,7 +17,7 @@ public class LED {
         LED = LEDConfig;
 
         // Changing LED color to default color.
-        changeColor(RevBlinkinLedDriver.BlinkinPattern.DARK_RED);
+        changeColor(allianceColor);
     }
 
     /**

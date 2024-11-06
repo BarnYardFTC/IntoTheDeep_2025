@@ -61,6 +61,8 @@ public class Drivetrain {
         imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP, RevHubOrientationOnRobot.UsbFacingDirection.FORWARD)));
 
         imu.resetYaw(); // Reset imu heading.
+
+        resetVariables(); // Setting initial values to the variables.
     }
 
     /**
@@ -70,6 +72,20 @@ public class Drivetrain {
      */
     public static double getRobotHeading() {
         return robotHeading;
+    }
+
+    /**
+     * This function is built to reset all the inconstant variables of the class.
+     * This function is essential to enable reuse of the class without restarting the robot.
+     */
+    public static void resetVariables() {
+        maxPower = 1;
+        lx = 0;
+        ly = 0;
+        rx = 0;
+        robotHeading = 0;
+        adjustedLx = 0;
+        adjustedLy = 0;
     }
 
     /**
@@ -101,10 +117,8 @@ public class Drivetrain {
     /**
      * Reset imu heading.
      * Current heading is only for testing.
-     *
-     * @param button - Gamepad1 B button input.
      */
-    public static void resetImu(boolean button) {
+    public static void resetImu() {
         imu.resetYaw();
         imu.resetYaw();
     }
