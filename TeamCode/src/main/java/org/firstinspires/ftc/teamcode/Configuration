@@ -1,8 +1,8 @@
 - Motors:
-leftFront - 0.
-rightFront - 1.
 leftBack - 2.
-rightBack - 3.
+rightFront - 1.
+leftFront - 3.
+rightBack - 0.
 
 - Servos:
 
@@ -14,3 +14,8 @@ IMU - 0.
 - Encoders:
 
 - Cameras:
+
+- DeadWheel:
+par0 - 0
+par1 - 2
+perp - 1
