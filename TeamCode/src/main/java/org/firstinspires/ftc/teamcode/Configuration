@@ -1,8 +1,8 @@
 - Motors:
-leftBack - 2.
-rightFront - 1.
-leftFront - 3.
 rightBack - 0.
+rightFront - 1.
+leftBack - 2.
+leftFront - 3.
 
 - Servos:
 
@@ -17,5 +17,5 @@ IMU - 0.
 
 - DeadWheel:
 par0 - 0
-par1 - 2
-perp - 1
+par1 - 3
+perp - 2
