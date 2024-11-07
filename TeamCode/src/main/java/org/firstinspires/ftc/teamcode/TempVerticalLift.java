@@ -24,8 +24,8 @@ public class TempVerticalLift {
     // Motors Initialization constant values
     private static final int MOTORS_AMOUNT = 2;
     private static final DcMotorEx[] motors = new DcMotorEx[MOTORS_AMOUNT];
-    private static final int RIGHT_INDEX = 0;
-    private static final int LEFT_INDEX = 1;
+    private static final int RIGHT = 0;
+    private static final int LEFT = 1;
 
     // Lift Positions constant values in centimeters
     private static final double BOTTOM_POSITION_CM = 0; // TODO: Find real value
@@ -47,19 +47,18 @@ public class TempVerticalLift {
 
     ==================================================
      */
-    public static void init(DcMotorEx left, DcMotorEx right) {
 
-        /*
+    /**
         Initialize the two motors that the system has so that the lift could be used.
         Left motor is reversed so that: positive encoder=movement up for both motors.
-        TODO: Find out which motor needs to be reversed
 
-        @param left: left motor.
-        @param right: right motor
-         */
+        @param left left motor.
+        @param right right motor
+    */
+    public static void init(DcMotorEx left, DcMotorEx right) {
         left.setDirection(DcMotorSimple.Direction.REVERSE);
-        motors[RIGHT_INDEX] = right;
-        motors[LEFT_INDEX] = left;
+        motors[RIGHT] = right;
+        motors[LEFT] = left;
         for (DcMotorEx motor : motors) {
             motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -67,13 +66,12 @@ public class TempVerticalLift {
         }
     }
 
+    /**
+     Set the position of the lift in cm
+     @param position Desired position in cm
+     @return true if the lift arrived the specified position, false otherwise.
+     */
     public static boolean setPosition(double position) {
-
-        /*
-        Set the position of the lift in cm
-        @param position: Desired position (DEFAULT/LOW_UNLOADING/HIGH_UNLOADING)
-        @return true if the lift arrived the specified position, false otherwise.
-         */
         boolean arrived_position = false;
         for (DcMotorEx motor : motors) {
             arrived_position = MotorProps.runToPosition(motor, cmToEncoder(position), RUNNING_POWER);
@@ -81,17 +79,22 @@ public class TempVerticalLift {
         return arrived_position;
     }
 
+    /**
+     * Brake the lift
+     * @return True if the lift has arrived the braking position
+     */
     public static boolean brake() {
-        int position = cmToEncoder(getCurrentPositionValue());
+        int position = cmToEncoder(getCurrentPosition());
         boolean maintaining_position = false;
         for (DcMotorEx motor : motors) {
             maintaining_position = MotorProps.runToAndMaintainPosition(motor, position, BRAKING_POWER);
         }
         return maintaining_position;
     }
-
+    /**
+     *  @return The position of the lift currently */
     public static String getCurrentPositionCm() {
-        /* @return The position of the lift currently */
+
         double position = Algorithm.closestTo(POSITIONS_ARR, motors[0].getCurrentPosition());
         if (position == HIGH_POSITION_CM) {
             return "HIGH";
@@ -102,11 +105,11 @@ public class TempVerticalLift {
         }
     }
 
-    public static double getPositionCm(String position) {
-        /* Get the cm value of each position (HIGH/LOW/BOTTOM).
+    /** Get the cm value of each position (HIGH/LOW/BOTTOM).
         @param position: The specified position (HIGH/LOW/BOTTOM).
         @return the cm value of the specified position
-        */
+    */
+    public static double getPositionCm(String position) {
         switch (position) {
             case "HIGH":
                 return HIGH_POSITION_CM;
@@ -127,30 +130,29 @@ public class TempVerticalLift {
 
     ====================================================
      */
+
+    /**
+     Convert cm the encoder
+     @param cm Given cm value
+     @return encoder position
+     */
     private static int cmToEncoder(double cm) {
-
-        /*
-          Find out by how much the encoder position of a motor needs to change
-          in order for the lift to move X cm.
-
-          param cm: By how many cm the lift needs to move
-                     A positive cm value = movement up.
-                     A negative value = movement down.
-
-          return by how much the encoder position needs to change in order for the lift to move X cm.
-         */
         return (int) (cm * CM_TO_ENCODER_RATIO);
     }
 
+    /**
+     * Convert encoder to cm
+     * @param encoder A given encoder
+     * @return a cm value corresponding to encoder
+     */
     private static double encoderToCm(int encoder) {
         return (double) encoder / CM_TO_ENCODER_RATIO;
     }
-
-    private static double getCurrentPositionValue() {
-        /*
-        @return the cm value which is the closest to the lift position (bottom cm/low cm/high cm).
-         */
-        return POSITIONS_ARR[Algorithm.closestTo(POSITIONS_ARR, encoderToCm(motors[0].getCurrentPosition()))];
+    /**
+     @return the cm value which is the closest to the lift position (bottom cm/low cm/high cm).
+     */
+    private static double getCurrentPosition() {
+        return motors[LEFT].getCurrentPosition();
     }
 
     /*
