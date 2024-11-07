@@ -35,7 +35,7 @@ public class huskyLensExperimenting extends LinearOpMode {
             rateLimit.reset();
             HuskyLens.Block[] blocks = huskyLens.blocks();
             for (int i = 0; i < blocks.length; i++) {
-                degree = Math.atan((double) Math.abs(69-101) / Math.abs(90-167));
+                degree =Math.atan((double) Math.abs(69-101) / Math.abs(90-167));
                 telemetry.addData("Degree:", degree);
                 telemetry.addData("X", blocks[i].x);
                 telemetry.addData("Y", blocks[i].y);
