@@ -1,11 +1,21 @@
-frontLeft - 0.
-frontRight - 1.
-backLeft - 2.
-backRight - 3.
-leftVerticalLift - 4.
-rightVerticalLift - 5.
+- Motors:
+leftBack - 2.
+rightFront - 1.
+leftFront - 3.
+rightBack - 0.
 
+- Servos:
+
+- I2C:
 IMU - 0.
-distanceSensor - 1.
 
-analogSensor - 0.
+- Analog:
+
+- Encoders:
+
+- Cameras:
+
+- DeadWheel:
+par0 - 0
+par1 - 2
+perp - 1

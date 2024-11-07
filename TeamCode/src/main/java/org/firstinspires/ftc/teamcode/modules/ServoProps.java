@@ -6,9 +6,9 @@ import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class ServoProps {
-    private int maxRotation; // Max rotation of the servo.
-    private double startPosition; // Servo's start position.
-    private double gearRatio; // The ratio between the part we want to move and the servo's rotation. We calculate it by dividing one rotation of the part by the amount of rotations the servo does for one rotation of the part.
+    private final int maxRotation; // Max rotation of the servo.
+    private final double startPosition; // Servo's start position.
+    private final double gearRatio; // The ratio between the part we want to move and the servo's rotation. We calculate it by dividing one rotation of the part by the amount of rotations the servo does for one rotation of the part.
 
     /**
      * Default constructor for standard servo.
@@ -60,64 +60,6 @@ public class ServoProps {
     public static boolean isAnalogInPosition(AnalogInput analogInput, double angle) {
         int analogInputAngle = (int) (analogInput.getVoltage() / 3.3 * 360);
         return Math.abs(analogInputAngle - angle) <= 30;
-    }
-
-    /**
-     * Get the value of the maxRotation parameter.
-     *
-     * @return - The servo's max rotation.
-     */
-    public int getMaxRotation() {
-        return maxRotation;
-    }
-
-    /**
-     * Set the value of the maxRotation parameter while checking if a given max rotation is above zero, if not it throws an exception.
-     *
-     * @param maxRotation - The servo's max rotation.
-     */
-    public void setMaxRotation(int maxRotation) {
-        if (maxRotation <= 0)
-            throw new IllegalArgumentException("Max rotation must be greater than zero.");
-        this.maxRotation = maxRotation;
-    }
-
-    /**
-     * Get the value of the startPosition parameter.
-     *
-     * @return - The servo's start position.
-     */
-    public double getStartPosition() {
-        return startPosition;
-    }
-
-    /**
-     * Set the value of the startPosition parameter.
-     *
-     * @param startPosition - The servo's start position.
-     */
-    public void setStartPosition(double startPosition) {
-        this.startPosition = startPosition;
-    }
-
-    /**
-     * Get the value of the gearRatio parameter.
-     *
-     * @return - The servo's gear ratio.
-     */
-    public double getGearRatio() {
-        return gearRatio;
-    }
-
-    /**
-     * Set the value of the gearRatio parameter while checking if a given gear ratio is above zero, if not it throws an exception.
-     *
-     * @param gearRatio - The servo's gear ratio.
-     */
-    public void setGearRatio(double gearRatio) {
-        if (gearRatio <= 0)
-            throw new IllegalArgumentException("Gear ratio must be greater than zero.");
-        this.gearRatio = gearRatio;
     }
 
     /**

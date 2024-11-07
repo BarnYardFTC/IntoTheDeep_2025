@@ -2,6 +2,11 @@ package org.firstinspires.ftc.teamcode;
 
 // Imports.
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -11,29 +16,97 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.subSystems.Claw;
+import org.firstinspires.ftc.teamcode.subSystems.Differential;
+import org.firstinspires.ftc.teamcode.subSystems.DifferentialArm;
+import org.firstinspires.ftc.teamcode.subSystems.Drivetrain;
+import org.firstinspires.ftc.teamcode.subSystems.IntakeArm;
+import org.firstinspires.ftc.teamcode.subSystems.LED;
+import org.firstinspires.ftc.teamcode.subSystems.TempIntake;
+import org.firstinspires.ftc.teamcode.subSystems.TempVerticalLift;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
 // TeleOp name.
-@TeleOp(name = "IntoTheDeep Temp TeleOp")
+@TeleOp(name = "INTO_THE_DEEP")
 
 public class Teleop extends LinearOpMode {
-    /**
+    private boolean reseted;
+    private boolean wasAPressed;
+    private boolean wasBPressed;
+    private boolean wasYPressed;
+    private boolean wasXPressed;
+    private boolean wasLBumperPressed;
+    private boolean wasRBumperPressed;
+    private boolean wasDPadUpPressed;
+    private boolean wasDPadDownPressed;
+
+    /*
      * Functions for initialization of the hardware.
      * Each function gets the name of the hardware and assigns it to a variable.
      * The variables are given to a each classes inner initialization function.
      */
     // TODO: Change names of all hardware in configuration.
-    private void initIgnitionSystem() {
-        DcMotorEx frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft");
-        DcMotorEx frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
-        DcMotorEx backLeft = hardwareMap.get(DcMotorEx.class, "backLeft");
-        DcMotorEx backRight = hardwareMap.get(DcMotorEx.class, "backRight");
-        IMU imu = hardwareMap.get(IMU.class, "IMU");
 
-        IgnitionSystem.init(frontLeft, frontRight, backLeft, backRight, imu);
+    /**
+     * Initialize all hardware.
+     */
+    private void initializeAll() {
+        reseted = false;
+        wasAPressed = false;
+        wasBPressed = false;
+        wasYPressed = false;
+        wasXPressed = false;
+        wasLBumperPressed = false;
+        wasRBumperPressed = false;
+        wasDPadUpPressed = false;
+        wasDPadDownPressed = false;
+
+        initClaw();
+        initDifferential();
+        initDifferentialArm();
+        initDriveTrain();
+        initVerticalLift();
+        initHorizontalLift();
+        initIntake();
+        initIntakeArm();
+        initHuskyLens();
+        initHang();
+        initLED();
     }
 
+    /**
+     * Move all robot parts to their starting position.
+     * Makes the robot not move between auto and teleop period and instead at start of teleop.
+     */
+    private void resetRobot() {
+        if (reseted) {
+            Claw.open();
+            Differential.reset();
+            DifferentialArm.reset();
+            IntakeArm.reset();
+            LED.changeColor(RevBlinkinLedDriver.BlinkinPattern.DARK_RED);
+            reseted = true;
+        }
+    }
+
+    /**
+     * Initializes ignition system.
+     */
+    private void initDriveTrain() {
+        DcMotorEx leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
+        DcMotorEx rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
+        DcMotorEx leftBack = hardwareMap.get(DcMotorEx.class, "leftBack");
+        DcMotorEx rightBack = hardwareMap.get(DcMotorEx.class, "rightBack");
+        IMU imu = hardwareMap.get(IMU.class, "imu");
+
+        Drivetrain.init(leftFront, rightFront, leftBack, rightBack, imu);
+    }
+
+    /**
+     * Initializes differential system.
+     */
     private void initDifferential() {
         Servo right = hardwareMap.get(Servo.class, "rightDifferential");
         Servo left = hardwareMap.get(Servo.class, "leftDifferential");
@@ -42,6 +115,9 @@ public class Teleop extends LinearOpMode {
         Differential.init(right, left, analogSensor);
     }
 
+    /**
+     * Initializes differential arm system.
+     */
     private void initDifferentialArm() {
         Servo right = hardwareMap.get(Servo.class, "rightDifferentialArm");
         Servo left = hardwareMap.get(Servo.class, "leftDifferentialArm");
@@ -49,6 +125,9 @@ public class Teleop extends LinearOpMode {
         DifferentialArm.init(right, left);
     }
 
+    /**
+     * Initializes claw system.
+     */
     private void initClaw() {
         Servo claw = hardwareMap.get(Servo.class, "claw");
         ColorRangeSensor distanceSensor = hardwareMap.get(ColorRangeSensor.class, "distanceSensor");
@@ -56,6 +135,9 @@ public class Teleop extends LinearOpMode {
         Claw.init(claw, distanceSensor);
     }
 
+    /**
+     * Initializes intake arm system.
+     */
     private void initIntakeArm() {
         Servo right = hardwareMap.get(Servo.class, "rightIntakeArm");
         Servo left = hardwareMap.get(Servo.class, "leftIntakeArm");
@@ -63,12 +145,18 @@ public class Teleop extends LinearOpMode {
         IntakeArm.init(right, left);
     }
 
+    /**
+     * Initializes LED system.
+     */
     private void initLED() {
-        RevBlinkinLedDriver LED = hardwareMap.get(RevBlinkinLedDriver.class, "LED");
+        RevBlinkinLedDriver LEDConfig = hardwareMap.get(RevBlinkinLedDriver.class, "LED");
 
-        org.firstinspires.ftc.teamcode.LED.init(LED);
+        LED.init(LEDConfig);
     }
 
+    /**
+     * Initializes vertical lift system.
+     */
     private void initVerticalLift() {
         DcMotorEx left = hardwareMap.get(DcMotorEx.class, "leftVerticalLift");
         DcMotorEx right = hardwareMap.get(DcMotorEx.class, "rightVerticalLift");
@@ -76,91 +164,200 @@ public class Teleop extends LinearOpMode {
         TempVerticalLift.init(left, right);
     }
 
+    /**
+     * Initializes horizontal lift system.
+     */
+    private void initHorizontalLift() {
+
+    }
+
+    /**
+     * Initializes hang system.
+     */
+    private void initHang() {
+
+    }
+
+    /**
+     * Initializes husky lens system.
+     */
+    private void initHuskyLens() {
+
+    }
+
+    /**
+     * Initializes intake system.
+     */
+    private void initIntake() {
+
+    }
+
     // Functions which work based on a rc input.
     // Each main functions can use multiple functions and systems.
 
     /**
-     * Function for moving all part to be ready for intake.
-     * The function allows automated collection of a specimen via a colorRange sensor inside the claw.
-     *
-     * @param x - Gampad1 x button input.
+     * Operate all robot systems.
      */
-    private void collectSpecimen(boolean x) {
-        Differential.collectSpecimen();
+    private void runAll() {
+        Drivetrain.move(gamepad1);
+        if (gamepad1.dpad_down && !wasDPadDownPressed) {
+            Drivetrain.resetImu();
+            wasDPadDownPressed = true;
+        }
+        if (!gamepad1.dpad_down) {
+            wasDPadDownPressed = false;
+        }
+        collectAllianceColoredSample();
+        collectYellowColoredSample();
+        collectSpecimen();
+        moveToHighUnloadingPosition();
+        moveToLowUnloadingPosition();
+        unload();
+        climb();
+    }
+
+    /**
+     * Moves all parts to be ready for specimen intake.
+     * Allows automated collection of a specimen.
+     */
+    private void collectSpecimen() {
+        if (gamepad1.x && !wasXPressed) {
+            Differential.collectSpecimen();
+            wasXPressed = true;
+        }
+        if (!gamepad1.x) {
+            wasXPressed = false;
+        }
         Claw.collectSpecimen();
     }
 
     /**
-     *
-     * @param a - Gampad1 a button input.
+     * Moves all parts to be ready for sample intake.
+     * Allows automated collection of an alliance colored sample.
      */
-    private void collectAllianceColoredSample(boolean a) {
-        IntakeArm.collect();
-        if (TempHuskyLens.getSampleCollected()) {
-            IntakeArm.reset();
+    private void collectAllianceColoredSample() {
+        if (gamepad1.a && !wasAPressed) {
+            if (TempIntake.isSampleCollected()) {
+                IntakeArm.reset();
+            }
+            wasAPressed = true;
+        }
+        if (!gamepad1.a) {
+            wasAPressed = false;
         }
     }
 
     /**
-     *
-     * @param y - Gampad1 y button input.
+     * Moves all parts to be ready for sample intake.
+     * Allows automated collection of a yellow colored sample.
      */
-    private void collectYellowColoredSample(boolean y) {}
+    private void collectYellowColoredSample() {
+        if (gamepad1.y && !wasYPressed) {
+            if (TempIntake.isSampleCollected()) {
+                IntakeArm.reset();
+            }
+            wasYPressed = true;
+        }
+        if (!gamepad1.y) {
+            wasYPressed = false;
+        }
+    }
 
     /**
-     *
-     * @param b - Gampad1 b button input.
+     * Unloads a sample and resets all parts of the robot.
      */
-    private void unload(boolean b) {}
+    private void unload() {
+        if (gamepad1.b && !wasBPressed) {
+            Claw.open();
+            Differential.reset();
+            DifferentialArm.reset();
+            wasBPressed = true;
+        }
+        if (!gamepad1.b) {
+            wasBPressed = false;
+        }
+    }
 
     /**
-     *
-     * @param rBumper - Gampad1 rBumper button input.
+     * Moves all parts to be ready for sample or specimen unload in their high position.
+     * Checks rather a sample or a specimen needs to be unloaded.
      */
-    private void moveToHighUnloadingPosition(boolean rBumper) {}
+    private void moveToHighUnloadingPosition() {
+        if (gamepad1.right_bumper && !wasRBumperPressed) {
+            if (Claw.isSpecimenCollected()) {
+                Differential.unloadSpecimen();
+                DifferentialArm.unload();
+                LED.changeColor(RevBlinkinLedDriver.BlinkinPattern.VIOLET);
+            }
+            if (TempIntake.isSampleCollected()) {
+                Differential.unloadSample();
+                LED.changeColor(RevBlinkinLedDriver.BlinkinPattern.VIOLET);
+            }
+            wasRBumperPressed = true;
+        }
+        if (!gamepad1.right_bumper) {
+            wasRBumperPressed = false;
+        }
+    }
 
     /**
-     *
-     * @param lBumper - Gampad1 lBumper button input.
+     * Moves all parts to be ready for sample or specimen unload in their low position.
+     * Checks rather a sample or a specimen needs to be unloaded.
      */
-    private void moveToLowUnloadingPosition(boolean lBumper) {}
+    private void moveToLowUnloadingPosition() {
+        if (gamepad1.left_bumper && !wasLBumperPressed) {
+            if (Claw.isSpecimenCollected()) {
+                Differential.unloadSpecimen();
+                DifferentialArm.unload();
+                LED.changeColor(RevBlinkinLedDriver.BlinkinPattern.VIOLET);
+            }
+            if (TempIntake.isSampleCollected()) {
+                Differential.unloadSample();
+                LED.changeColor(RevBlinkinLedDriver.BlinkinPattern.VIOLET);
+            }
+            wasLBumperPressed = true;
+        }
+        if (!gamepad1.left_bumper) {
+            wasLBumperPressed = false;
+        }
+    }
 
     /**
-     *
-     * @param dpadUp - Gampad1 dpadUp button input.
+     * Starts 2nd level ascend.
+     * If pressed again it goes for 3rd level ascend.
      */
-    private void climb(boolean dpadUp) {}
+    private void climb() {
+        if (gamepad1.dpad_up && !wasDPadUpPressed) {
+            LED.changeColor(RevBlinkinLedDriver.BlinkinPattern.VIOLET);
+            wasDPadUpPressed = true;
+        }
+        if (!gamepad1.dpad_up) {
+            wasDPadUpPressed = false;
+        }
+    }
 
     @Override
     public void runOpMode() {
+//        initializeAll();
+        initDriveTrain();
 
         waitForStart();
 
-        // Initializing
-
         // Main Loop
         while (opModeIsActive()) {
-
-            // We use a try & catch block so that any error in the main loop will stop the robot and add the error line to the telemetry.
-            try {
-                IgnitionSystem.move(gamepad1);
-                collectAllianceColoredSample(gamepad1.a);
-                collectYellowColoredSample(gamepad1.y);
-                collectSpecimen(gamepad1.x);
-                moveToHighUnloadingPosition(gamepad1.right_bumper);
-                moveToLowUnloadingPosition(gamepad1.left_bumper);
-                unload(gamepad1.b);
-                climb(gamepad1.dpad_up);
+//            resetRobot();
+//            runAll();
+            Drivetrain.move(gamepad1);
+            if (gamepad1.dpad_down && !wasDPadDownPressed) {
+                Drivetrain.resetImu();
+                wasDPadDownPressed = true;
             }
-            catch (Exception e) {
-                StringWriter sw = new StringWriter();
-                PrintWriter pw = new PrintWriter(sw);
-                e.printStackTrace(pw);
-                String stackTrace = sw.toString();
-                telemetry.addData("stackTrace", stackTrace);
-                telemetry.update();
-                throw e;
+            if (!gamepad1.dpad_down) {
+                wasDPadDownPressed = false;
             }
+            telemetry.log().clear();
+            telemetry.addData("Heading", Drivetrain.getRobotHeading());
+            telemetry.update();
         }
     }
 }
