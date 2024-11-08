@@ -27,7 +27,12 @@ public class huskyLensExperimenting extends LinearOpMode {
         telemetry.update();
         waitForStart();
 
-        double degree = 0;
+        int degree = 0;
+        int ref_height = 0;
+        int ref_width = 0;
+        boolean found = false;
+        int delta_y = 0;
+        int delta_x = 0;
         while(opModeIsActive()){
             if (!rateLimit.hasExpired()) {
                 continue;
@@ -35,12 +40,21 @@ public class huskyLensExperimenting extends LinearOpMode {
             rateLimit.reset();
             HuskyLens.Block[] blocks = huskyLens.blocks();
             for (int i = 0; i < blocks.length; i++) {
-                degree =Math.atan((double) Math.abs(69-101) / Math.abs(90-167));
+                if (!found){
+                    ref_height = blocks[i].height;
+                    ref_width = blocks[i].width;
+                    found = true;
+                }
+                delta_y = Math.abs(blocks[i].height-ref_height);
+                delta_x =  blocks[i].width - Math.abs(blocks[i].width-ref_width);
+                degree = (int) Math.toDegrees(Math.atan((double)
+                        delta_y / delta_x));
                 telemetry.addData("Degree:", degree);
-                telemetry.addData("X", blocks[i].x);
-                telemetry.addData("Y", blocks[i].y);
-                telemetry.addData("top", blocks[i].top);
-                telemetry.addData("left", blocks[i].left);
+                telemetry.addData("width", blocks[i].width);
+                telemetry.addData("ref height", ref_height);
+                telemetry.addData("ref width", ref_width);
+                telemetry.addData("delta y", delta_y);
+                telemetry.addData("delta x", delta_x);
             }
             telemetry.update();
         }
