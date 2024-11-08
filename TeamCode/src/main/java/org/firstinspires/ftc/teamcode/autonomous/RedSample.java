@@ -22,19 +22,21 @@ public class RedSample extends LinearOpMode {
     public void runOpMode() {
         waitForStart();
 
-        TestFunctions.ClawAuto clawAuto = new TestFunctions.ClawAuto();
+        TestFunctions claw = new TestFunctions();
 
         Pose2d initialPose = new Pose2d(-24, -58, Math.toRadians(90));
         MecanumDrive ignitionSystem = new MecanumDrive(hardwareMap, initialPose);
 
         TrajectoryActionBuilder trajectoryBuilder = ignitionSystem.actionBuilder(initialPose)
-                .strafeToLinearHeading(new Vector2d(-10, -35.5), Math.toRadians(90))
-                .strafeTo(new Vector2d(-48, -40))
-                .strafeToLinearHeading(new Vector2d(-55, -55), Math.toRadians(45))
+                .setTangent(0)
+                .splineToConstantHeading(new Vector2d(-10, -35.5), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(-48, -40), Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(-56.5, -56.5), Math.toRadians(45))
                 .strafeToLinearHeading(new Vector2d(-58, -40), Math.toRadians(90))
-                .strafeToLinearHeading(new Vector2d(-55, -55), Math.toRadians(45))
+                .strafeToLinearHeading(new Vector2d(-56.5, -56.5), Math.toRadians(45))
                 .strafeToLinearHeading(new Vector2d(-58, -40), Math.toRadians(90))
-                .strafeToLinearHeading(new Vector2d(-25, -16), Math.toRadians(0));
+                .setTangent(Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(-25, -16, Math.toRadians(0)), 0);
 
         Action trajectory;
         trajectory = trajectoryBuilder.build();
@@ -45,7 +47,7 @@ public class RedSample extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         trajectory,
-                        clawAuto.closeClaw()
+                        claw.closeClaw()
                 )
         );
     }
