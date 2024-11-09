@@ -26,13 +26,13 @@ public class huskyLensExperimenting extends LinearOpMode {
         huskyLens.selectAlgorithm(HuskyLens.Algorithm.COLOR_RECOGNITION);
         telemetry.update();
         waitForStart();
-
         int degree = 0;
         int ref_height = 0;
-        int ref_width = 0;
         boolean found = false;
-        int delta_y = 0;
-        int delta_x = 0;
+        double delta_height = 0;
+        final double HEIGHT_TO_DEGREE = 30;
+        int ref_area = 0;
+        int cur_area = 0;
         while(opModeIsActive()){
             if (!rateLimit.hasExpired()) {
                 continue;
@@ -42,21 +42,25 @@ public class huskyLensExperimenting extends LinearOpMode {
             for (int i = 0; i < blocks.length; i++) {
                 if (!found){
                     ref_height = blocks[i].height;
-                    ref_width = blocks[i].width;
+                    ref_area = blocks[i].height*blocks[i].width;
                     found = true;
                 }
-                delta_y = Math.abs(blocks[i].height-ref_height);
-                delta_x =  blocks[i].width - Math.abs(blocks[i].width-ref_width);
-                degree = (int) Math.toDegrees(Math.atan((double)
-                        delta_y / delta_x));
-                telemetry.addData("Degree:", degree);
-                telemetry.addData("width", blocks[i].width);
-                telemetry.addData("ref height", ref_height);
-                telemetry.addData("ref width", ref_width);
-                telemetry.addData("delta y", delta_y);
-                telemetry.addData("delta x", delta_x);
+                cur_area = blocks[i].width*blocks[i].height;
+                if (equals(cur_area, ref_area)){
+                    delta_height = Math.abs((double) blocks[i].height/ref_height);
+                    degree = (int) (delta_height*HEIGHT_TO_DEGREE);
+                }
             }
+            telemetry.addData("delta height", delta_height);
+            telemetry.addData("degree", degree);
             telemetry.update();
         }
+    }
+    public boolean equals(int n1, int n2){
+        int equals_difference = 10;
+        if (Math.abs(n1-n2)<=equals_difference){
+            return true;
+        }
+        return false;
     }
 }
