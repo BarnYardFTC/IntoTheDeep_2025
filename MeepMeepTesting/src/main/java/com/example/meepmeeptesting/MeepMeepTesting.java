@@ -12,16 +12,18 @@ public class MeepMeepTesting {
 
         RoadRunnerBotEntity botTest = new DefaultBotBuilder(meepMeep).setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15).build();
 
-        Pose2d initialPose = new Pose2d(-24, -58, Math.toRadians(90));
+        Pose2d initialPose = new Pose2d(-24, -65, Math.toRadians(90));
 
         botTest.runAction(botTest.getDrive().actionBuilder(initialPose)
-                .strafeToLinearHeading(new Vector2d(-10, -35.5), Math.toRadians(90))
-                .strafeTo(new Vector2d(-48, -40))
+                .setTangent(0)
+                .splineToConstantHeading(new Vector2d(-10, -35.5), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(-48, -40), Math.toRadians(90))
                 .strafeToLinearHeading(new Vector2d(-56.5, -56.5), Math.toRadians(45))
                 .strafeToLinearHeading(new Vector2d(-58, -40), Math.toRadians(90))
                 .strafeToLinearHeading(new Vector2d(-56.5, -56.5), Math.toRadians(45))
                 .strafeToLinearHeading(new Vector2d(-58, -40), Math.toRadians(90))
-                .strafeToLinearHeading(new Vector2d(-25, -16), Math.toRadians(0))
+                .setTangent(Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(-25, -16, Math.toRadians(0)), 0)
                 .build());
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_INTO_THE_DEEP_JUICE_DARK)

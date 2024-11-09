@@ -10,18 +10,15 @@ import org.firstinspires.ftc.teamcode.subSystems.Claw;
 import org.firstinspires.ftc.teamcode.subSystems.Differential;
 
 public class TestFunctions {
-    public static class ClawAuto{
-
-        public class CloseClaw implements Action {
-            @Override
-            public boolean run(@NonNull TelemetryPacket packet) {
-                Claw.close();
-                return false;
-            }
+    public class CloseClaw implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            Claw.close();
+            return false;
         }
+    }
 
-        public Action closeClaw() {
-            return new CloseClaw();
-        }
+    public Action closeClaw() {
+        return new CloseClaw();
     }
 }
