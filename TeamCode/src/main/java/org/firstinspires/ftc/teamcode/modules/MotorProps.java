@@ -8,7 +8,7 @@ public class MotorProps {
     private final double encoderToDegree; // Convert the gear rotation to degrees.
 
     /**
-     * Default constructor for standard servo.
+     * Default constructor for standard motor.
      */
     public MotorProps() {
         this.encoderResolution = 537.7;
@@ -16,13 +16,18 @@ public class MotorProps {
         this.encoderToDegree = outerGearRatio / 360;
     }
 
+    /**
+     * Non standard constructor.
+     * @param encoderResolution - Encoders needed for one shaft rotation.
+     * @param outerGearRatio - Gear ratio of outer motor shaft rotation to one final gear rotation.
+     */
     public MotorProps(double encoderResolution, double outerGearRatio) {
         this.encoderResolution = encoderResolution;
         this.outerGearRatio = outerGearRatio;
         this.encoderToDegree = encoderResolution / outerGearRatio / 360;
     }
 
-    public double getAngleToEncoder(double angle) {
-        return angle * encoderToDegree;
+    public int getAngleToEncoder(double angle) {
+        return (int) (angle * encoderToDegree);
     }
 }

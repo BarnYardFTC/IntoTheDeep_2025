@@ -10,8 +10,8 @@ import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class Drivetrain {
-    public static final DcMotorEx[] motors = new DcMotorEx[4]; // Motors array.
-    public static final int LF = 0; // Front left's motor index.
+    private static final DcMotorEx[] motors = new DcMotorEx[4]; // Motors array.
+    private static final int LF = 0; // Front left's motor index.
     private static final int RF = 1; // Front right's motor index.
     public static final int LB = 2; // Back left's motor index.
     private static final int RB = 3; // Back right's motor index.

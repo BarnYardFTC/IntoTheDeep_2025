@@ -24,7 +24,7 @@ import org.firstinspires.ftc.teamcode.subSystems.LED;
 
 public class Teleop extends LinearOpMode {
     private boolean reseted;
-    public GamepadEx gamepadEx;
+    private GamepadEx gamepadEx;
 
     /*
      * Functions for initialization of the hardware.
