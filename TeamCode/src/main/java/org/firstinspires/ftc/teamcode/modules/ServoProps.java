@@ -71,7 +71,7 @@ public class ServoProps {
      *
      * @param angle - Wanted end angle of the servo.
      */
-    public double getServoTargetPosition(double angle) {
+    public double getTargetPosition(double angle) {
         if (this.startPosition + angle / this.maxRotation / this.gearRatio <= 1 && this.startPosition + angle / this.maxRotation / this.gearRatio >= 0)
             return this.startPosition + angle / this.maxRotation / this.gearRatio;
         throw new IllegalArgumentException("Servo position must be between 0 and 1.");

@@ -9,8 +9,8 @@ import org.firstinspires.ftc.teamcode.modules.ServoProps;
 
 public class Differential {
     private static final Servo[] servos = new Servo[2]; // Servos array.
-    private static final ServoProps RIGHT_SERVO = new ServoProps(355, (double) 175 / 355, 1); // Right's servo props.
-    private static final ServoProps LEFT_SERVO = new ServoProps(); // Left's servo props.
+    private static final ServoProps RIGHT_SERVO = new ServoProps(355, (double) 265 / 355, 1); // Right's servo props.
+    private static final ServoProps LEFT_SERVO = new ServoProps(355, (double) 90 / 355, 1); // Left's servo props.
     private static final int RIGHT = 0; // Right's servo index.
     private static final int LEFT = 1; // Left's servo index.
 
@@ -47,8 +47,8 @@ public class Differential {
      * @param anglePitch - Wanted end angle of the differential on the pitch axis.
      */
     private static void move(int angleRoll, int anglePitch) {
-        servos[RIGHT].setPosition(RIGHT_SERVO.getServoTargetPosition(angleRoll - anglePitch));
-        servos[LEFT].setPosition(LEFT_SERVO.getServoTargetPosition(angleRoll + anglePitch));
+        servos[RIGHT].setPosition(RIGHT_SERVO.getTargetPosition(angleRoll - anglePitch));
+        servos[LEFT].setPosition(LEFT_SERVO.getTargetPosition(angleRoll + anglePitch));
     }
 
     /**
@@ -58,8 +58,8 @@ public class Differential {
     public static void reset() {
         servos[RIGHT].setDirection(Servo.Direction.FORWARD);
         servos[LEFT].setDirection(Servo.Direction.FORWARD);
-        servos[RIGHT].setPosition(RIGHT_SERVO.getServoTargetPosition(0));
-        servos[LEFT].setPosition(LEFT_SERVO.getServoTargetPosition(0));
+        servos[RIGHT].setPosition(RIGHT_SERVO.getTargetPosition(0));
+        servos[LEFT].setPosition(LEFT_SERVO.getTargetPosition(0));
     }
 
     /**

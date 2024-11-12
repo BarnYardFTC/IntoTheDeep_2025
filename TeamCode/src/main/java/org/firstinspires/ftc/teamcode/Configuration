@@ -16,6 +16,6 @@ IMU - 0.
 - Cameras:
 
 - DeadWheel:
-par0 - 0
-par1 - 3
-perp - 2
+par0 - 0.
+par1 - 3.
+perp - 2.

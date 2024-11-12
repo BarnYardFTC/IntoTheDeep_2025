@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.modules.ServoProps;
 
-public class DifferentialArm {
+public class DifferentialWrist {
     private static final int SERVO_AMOUNT = 2; // Amount of servos used.
     private static final Servo[] servos = new Servo[SERVO_AMOUNT]; // Servos array.
     private static final ServoProps RIGHT_SERVO = new ServoProps(180, 0.5, 1); // Right's servo props.
@@ -34,8 +34,8 @@ public class DifferentialArm {
      * The action set the servos position once in a loop until the moved value is changed.
      */
     public static void unload() {
-        servos[RIGHT].setPosition(RIGHT_SERVO.getServoTargetPosition(ANGLE_SPECIMEN_UNLOAD));
-        servos[LEFT].setPosition(LEFT_SERVO.getServoTargetPosition(ANGLE_SPECIMEN_UNLOAD));
+        servos[RIGHT].setPosition(RIGHT_SERVO.getTargetPosition(ANGLE_SPECIMEN_UNLOAD));
+        servos[LEFT].setPosition(LEFT_SERVO.getTargetPosition(ANGLE_SPECIMEN_UNLOAD));
     }
 
     /**
@@ -43,7 +43,7 @@ public class DifferentialArm {
      * The action set the servos position once in a loop until the reseted value is changed.
      */
     public static void reset() {
-        servos[RIGHT].setPosition(RIGHT_SERVO.getServoTargetPosition(0));
-        servos[LEFT].setPosition(LEFT_SERVO.getServoTargetPosition(0));
+        servos[RIGHT].setPosition(RIGHT_SERVO.getTargetPosition(0));
+        servos[LEFT].setPosition(LEFT_SERVO.getTargetPosition(0));
     }
 }

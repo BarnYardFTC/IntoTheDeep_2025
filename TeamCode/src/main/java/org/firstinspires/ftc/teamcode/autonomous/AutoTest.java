@@ -17,12 +17,12 @@ import org.firstinspires.ftc.teamcode.roadRunner.MecanumDrive;
 @Config
 @Autonomous(name = "Red_Sample", group = "Autonomous")
 
-public class RedSample extends LinearOpMode {
+public class AutoTest extends LinearOpMode {
     @Override
     public void runOpMode() {
         waitForStart();
 
-        TestFunctions claw = new TestFunctions();
+        Functions claw = new Functions();
 
         Pose2d initialPose = new Pose2d(-24, -58, Math.toRadians(90));
         MecanumDrive ignitionSystem = new MecanumDrive(hardwareMap, initialPose);

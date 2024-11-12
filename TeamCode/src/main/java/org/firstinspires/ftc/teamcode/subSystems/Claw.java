@@ -19,6 +19,7 @@ public class Claw {
     private static Servo claw; // Servo (starting position: claw: 0).
     private static ColorRangeSensor distanceSensor; // ColorRangeSensor.
     private static boolean specimenCollected; // State of whether or not a specimen is currently collected and is controlled by the robot.
+    private static boolean sampleCollected; // State of whether or not a sample is currently collected and is controlled by the robot.
 
     /**
      * Initializing.
@@ -33,12 +34,29 @@ public class Claw {
     }
 
     /**
-     * Get the value of the collected parameter.
+     * Get the value of the collected specimen parameter.
      *
      * @return - If a specimen was collected and controlled by the robot or not.
      */
     public static boolean isSpecimenCollected() {
         return specimenCollected;
+    }
+
+    /**
+     * Get the value of the collected sample parameter.
+     *
+     * @return - If a sample was collected and controlled by the robot or not.
+     */
+    public static boolean isSampleCollected() {
+        return sampleCollected;
+    }
+
+    /**
+     * Set the value of the collected sample parameter.
+     *
+     */
+    public static void setSampleCollected(boolean sampleCollected) {
+        Claw.sampleCollected = sampleCollected;
     }
 
     /**
@@ -48,7 +66,7 @@ public class Claw {
         claw.setPosition(OPENED_POSITION);
         LED.changeColor(RevBlinkinLedDriver.BlinkinPattern.DARK_RED);
         specimenCollected = false;
-        TempIntake.setSampleCollected(false);
+        sampleCollected = false;
     }
 
     /**
@@ -63,7 +81,7 @@ public class Claw {
      * Automated closure of claw when a specimen is close enough.
      */
     public static void collectSpecimen() {
-        if (getProximityValue() <= COLLECTION_DISTANCE && !specimenCollected && isOpened() && !TempIntake.isSampleCollected()) {
+        if (getProximityValue() <= COLLECTION_DISTANCE && !sampleCollected && isOpened()) {
             close();
             Differential.reset();
             specimenCollected = true;

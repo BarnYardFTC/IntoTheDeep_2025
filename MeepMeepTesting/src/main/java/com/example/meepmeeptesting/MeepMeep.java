@@ -2,13 +2,12 @@ package com.example.meepmeeptesting;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
-import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
-public class MeepMeepTesting {
+public class MeepMeep {
     public static void main(String[] args) {
-        MeepMeep meepMeep = new MeepMeep(800);
+        com.noahbres.meepmeep.MeepMeep meepMeep = new com.noahbres.meepmeep.MeepMeep(800);
 
         RoadRunnerBotEntity botTest = new DefaultBotBuilder(meepMeep).setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15).build();
 
@@ -26,7 +25,7 @@ public class MeepMeepTesting {
                 .splineToLinearHeading(new Pose2d(-25, -16, Math.toRadians(0)), 0)
                 .build());
 
-        meepMeep.setBackground(MeepMeep.Background.FIELD_INTO_THE_DEEP_JUICE_DARK)
+        meepMeep.setBackground(com.noahbres.meepmeep.MeepMeep.Background.FIELD_INTO_THE_DEEP_JUICE_DARK)
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
                 .addEntity(botTest).start();
