@@ -24,7 +24,7 @@ public class MotorProps {
     public MotorProps(double encoderResolution, double outerGearRatio) {
         this.encoderResolution = encoderResolution;
         this.outerGearRatio = outerGearRatio;
-        this.encoderToDegree = encoderResolution / outerGearRatio / 360;
+        this.encoderToDegree = encoderResolution / 360/ outerGearRatio;
     }
 
     public int getAngleToEncoder(double angle) {

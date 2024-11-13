@@ -206,8 +206,11 @@ public class Teleop extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-//      initializeAll();
+//        initializeAll();
         initDriveTrain();
+
+        waitForStart();
+
         gamepadEx = new GamepadEx(gamepad1);
 
         // Main Loop
