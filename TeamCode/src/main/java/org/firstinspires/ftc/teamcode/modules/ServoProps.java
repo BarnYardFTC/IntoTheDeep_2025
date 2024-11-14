@@ -76,4 +76,8 @@ public class ServoProps {
             return this.startPosition + angle / this.maxRotation / this.gearRatio;
         throw new IllegalArgumentException("Servo position must be between 0 and 1.");
     }
+
+    public double getCurrentAngle(double pos) {
+        return pos / this.maxRotation / this.gearRatio;
+    }
 }
