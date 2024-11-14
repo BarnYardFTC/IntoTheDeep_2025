@@ -25,10 +25,6 @@ public class ServoProps {
      * @param gearRatio     - The ratio between the part we want to move and the servo's rotation. we calculate it by dividing one rotation of the part by the amount of rotations the servo does for one rotation of the part.
      */
     public ServoProps(int maxRotation, double startPosition, double gearRatio) {
-        if (maxRotation <= 0)
-            throw new IllegalArgumentException("Max rotation must be greater than zero.");
-        if (gearRatio <= 0)
-            throw new IllegalArgumentException("Gear ratio must be greater than zero.");
         this.gearRatio = gearRatio;
         this.maxRotation = maxRotation;
         this.startPosition = startPosition;
@@ -77,6 +73,12 @@ public class ServoProps {
         throw new IllegalArgumentException("Servo position must be between 0 and 1.");
     }
 
+    /**
+     * Gives the current angle the servo is in.
+     *
+     * @param pos - Servo's current position.
+     * @return - Servo's position in degrees.
+     */
     public double getCurrentAngle(double pos) {
         return pos / this.maxRotation / this.gearRatio;
     }

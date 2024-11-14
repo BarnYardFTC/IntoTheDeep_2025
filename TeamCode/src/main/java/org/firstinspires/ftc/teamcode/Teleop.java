@@ -142,7 +142,6 @@ public class Teleop extends LinearOpMode {
      */
     private void runAll() {
         Drivetrain.move(gamepad1);
-        TempLiftArm.rest();
         collectSample();
         collectSpecimen();
         moveToHighUnloadingPosition();
@@ -220,10 +219,10 @@ public class Teleop extends LinearOpMode {
             Differential.reset();
         }
         if (gamepad1.dpad_right) {
-            Differential.collectSampleMoveRight();
+            Differential.rollRight();
         }
         if (gamepad1.dpad_left) {
-            Differential.collectSampleMoveLeft();
+            Differential.rollLeft();
         }
     }
 
@@ -240,7 +239,7 @@ public class Teleop extends LinearOpMode {
     @Override
     public void runOpMode() {
 //        initializeAll();
-        initDriveTrain();
+        initLiftArm();
 
         waitForStart();
 
@@ -250,12 +249,17 @@ public class Teleop extends LinearOpMode {
         while (opModeIsActive()) {
 //            resetRobot();
 //            runAll();
-            Drivetrain.move(gamepad1);
-            if (gamepadEx.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
-                Drivetrain.resetImu();
+            if (gamepad1.right_bumper) {
+                TempLiftArm.makeVertical();
+            }
+            if (gamepad1.left_bumper) {
+                TempLiftArm.makeHorizontal();
             }
             telemetry.log().clear();
-            telemetry.addData("Heading", Drivetrain.getRobotHeading());
+            telemetry.addData("rPos", TempLiftArm.motors[0].getCurrentPosition());
+            telemetry.addData("r", TempLiftArm.motors[0].getPower());
+            telemetry.addData("lPos", TempLiftArm.motors[1].getCurrentPosition());
+            telemetry.addData("l", TempLiftArm.motors[1].getPower());
             telemetry.update();
         }
     }

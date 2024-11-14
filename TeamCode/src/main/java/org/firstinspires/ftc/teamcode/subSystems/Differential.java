@@ -51,6 +51,11 @@ public class Differential {
         servos[LEFT].setPosition(LEFT_SERVO.getTargetPosition(angleRoll + anglePitch));
     }
 
+    /**
+     * Increases the differential position on the roll axis by a given amount of degrees.
+     *
+     * @param angle - Amount of degrees wanted for movement.
+     */
     private static void increase(int angle) {
         servos[RIGHT].setPosition(RIGHT_SERVO.getCurrentAngle(servos[RIGHT].getPosition()) + angle);
         servos[LEFT].setPosition(LEFT_SERVO.getCurrentAngle(servos[LEFT].getPosition()) + angle);
@@ -91,16 +96,16 @@ public class Differential {
     }
 
     /**
-     * Moves differential to the sample intake position.
+     * Increases the differential position.
      */
-    public static void collectSampleMoveRight() {
+    public static void rollRight() {
         increase(30);
     }
 
     /**
-     * Moves differential to the sample intake position.
+     * Decreases the differential position.
      */
-    public static void collectSampleMoveLeft() {
+    public static void rollLeft() {
         increase(-30);
     }
 

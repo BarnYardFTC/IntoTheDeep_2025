@@ -9,7 +9,7 @@ public class LED {
     private static RevBlinkinLedDriver.BlinkinPattern allianceColor; // LED strip.
 
     /**
-     * Initializing.
+     * Initializing all hardware.
      *
      * @param LEDConfig - Hardware for LED strip.
      */

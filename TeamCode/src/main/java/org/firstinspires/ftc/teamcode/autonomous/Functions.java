@@ -8,15 +8,15 @@ import com.acmerobotics.roadrunner.Action;
 import org.firstinspires.ftc.teamcode.subSystems.Claw;
 
 public class Functions {
+    public Action closeClaw() {
+        return new CloseClaw();
+    }
+
     public class CloseClaw implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             Claw.close();
             return false;
         }
-    }
-
-    public Action closeClaw() {
-        return new CloseClaw();
     }
 }

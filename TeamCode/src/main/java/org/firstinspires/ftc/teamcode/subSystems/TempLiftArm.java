@@ -9,30 +9,34 @@ public class TempLiftArm {
     private static final int RIGHT = 0; // Right's motor index.
     private static final int LEFT = 1; // Left's motor index.
 
-    private static final MotorProps RIGHT_MOTOR = new MotorProps(1425.1, (double) 1/3); // Right's motor props.
-    private static final MotorProps LEFT_MOTOR = new MotorProps(1425.1, (double) 1/3); // Left's motor props.
+    private static final MotorProps RIGHT_MOTOR = new MotorProps(1425.1, (double) 1 / 3); // Right's motor props.
+    private static final MotorProps LEFT_MOTOR = new MotorProps(1425.1, (double) 1 / 3); // Left's motor props.
 
-    private static boolean rests;
+    private static final int VERTICAL = 90; // Angle for moving the lift arm to a vertical position.
 
-    // Angle for moving the lift arm.
-    private static final int VERTICAL = 90;
-
+    /**
+     * Initializing all hardware.
+     *
+     * @param right - Hardware for right motor.
+     * @param left  - Hardware for left motor.
+     */
     public static void init(DcMotorEx right, DcMotorEx left) {
         // Assigning the given motors to the motors in the class.
         motors[RIGHT] = right;
         motors[LEFT] = left;
 
-        motors[LEFT].setDirection(DcMotorEx.Direction.REVERSE);
+        motors[RIGHT].setDirection(DcMotorEx.Direction.REVERSE);
 
         // Setting motors attributes
         for (DcMotorEx motor : motors) {
             motor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
             motor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         }
-
-        rests = true;
     }
 
+    /**
+     * Moved the arm 90 degrees so it becomes horizontal.
+     */
     public static void makeHorizontal() {
         motors[RIGHT].setPower(1);
         motors[LEFT].setPower(1);
@@ -44,6 +48,9 @@ public class TempLiftArm {
         motors[LEFT].setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
     }
 
+    /**
+     * Moved the arm 90 degrees so it becomes vertical.
+     */
     public static void makeVertical() {
         motors[RIGHT].setPower(1);
         motors[LEFT].setPower(1);
@@ -55,18 +62,11 @@ public class TempLiftArm {
         motors[LEFT].setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
     }
 
-    public static void rest() {
-        if (motors[RIGHT].getCurrentPosition() < RIGHT_MOTOR.getAngleToEncoder(VERTICAL) - 100 && motors[RIGHT].getCurrentPosition() > RIGHT_MOTOR.getAngleToEncoder(0) + 100) {
-            rests = false;
-        }
-
-        if ((motors[RIGHT].getCurrentPosition() > RIGHT_MOTOR.getAngleToEncoder(VERTICAL) - 5 || motors[RIGHT].getCurrentPosition() < RIGHT_MOTOR.getAngleToEncoder(0) + 5) && !rests) {
-            motors[RIGHT].setPower(0);
-            motors[LEFT].setPower(0);
-            rests = true;
-        }
-    }
-
+    /**
+     * Informs if the arm is horizontal.
+     *
+     * @return - If the current arm's position is horizontal.
+     */
     public static boolean isHorizontal() {
         return motors[RIGHT].getCurrentPosition() < RIGHT_MOTOR.getAngleToEncoder(0) + 5;
     }
