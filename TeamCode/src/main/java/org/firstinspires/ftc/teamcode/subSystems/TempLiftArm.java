@@ -12,7 +12,7 @@ public class TempLiftArm {
     private static final MotorProps RIGHT_MOTOR = new MotorProps(1425.1, (double) 1/3); // Right's motor props.
     private static final MotorProps LEFT_MOTOR = new MotorProps(1425.1, (double) 1/3); // Left's motor props.
 
-    public static boolean rests;
+    private static boolean rests;
 
     // Angle for moving the lift arm.
     private static final int VERTICAL = 90;
@@ -65,5 +65,9 @@ public class TempLiftArm {
             motors[LEFT].setPower(0);
             rests = true;
         }
+    }
+
+    public static boolean isHorizontal() {
+        return motors[RIGHT].getCurrentPosition() < RIGHT_MOTOR.getAngleToEncoder(0) + 5;
     }
 }
