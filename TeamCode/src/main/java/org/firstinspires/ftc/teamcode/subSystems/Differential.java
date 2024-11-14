@@ -51,6 +51,11 @@ public class Differential {
         servos[LEFT].setPosition(LEFT_SERVO.getTargetPosition(angleRoll + anglePitch));
     }
 
+    private static void increase(int angle) {
+        servos[RIGHT].setPosition(RIGHT_SERVO.getCurrentAngle(servos[RIGHT].getPosition()) + angle);
+        servos[LEFT].setPosition(LEFT_SERVO.getCurrentAngle(servos[LEFT].getPosition()) + angle);
+    }
+
     /**
      * Resets differential to it's starting position.
      * The action set the servos position once in a loop until the reseted value is changed.
@@ -83,6 +88,20 @@ public class Differential {
             servos[LEFT].setDirection(Servo.Direction.REVERSE);
             move(0, PITCH_ANGLE_SPECIMEN_UNLOAD);
         }
+    }
+
+    /**
+     * Moves differential to the sample intake position.
+     */
+    public static void collectSampleMoveRight() {
+        increase(30);
+    }
+
+    /**
+     * Moves differential to the sample intake position.
+     */
+    public static void collectSampleMoveLeft() {
+        increase(-30);
     }
 
     /**
