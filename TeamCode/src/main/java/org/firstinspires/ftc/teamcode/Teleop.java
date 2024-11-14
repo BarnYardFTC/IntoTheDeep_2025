@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.subSystems.Differential;
 import org.firstinspires.ftc.teamcode.subSystems.DifferentialWrist;
 import org.firstinspires.ftc.teamcode.subSystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subSystems.LED;
+import org.firstinspires.ftc.teamcode.subSystems.TempLiftArm;
 
 // TeleOp name.
 @TeleOp(name = "INTO_THE_DEEP")
@@ -45,6 +46,7 @@ public class Teleop extends LinearOpMode {
         initDriveTrain();
         initLED();
         initHuskyLens();
+        initLiftArm();
     }
 
     /**
@@ -121,6 +123,17 @@ public class Teleop extends LinearOpMode {
 
     }
 
+    /**
+     * Initializes lift arm system.
+     */
+    private void initLiftArm() {
+        DcMotorEx right = hardwareMap.get(DcMotorEx.class, "right");
+        DcMotorEx left = hardwareMap.get(DcMotorEx.class, "left");
+
+        TempLiftArm.init(right, left);
+    }
+
+
     // Functions which work based on a rc input.
     // Each main functions can use multiple functions and systems.
 
@@ -129,6 +142,8 @@ public class Teleop extends LinearOpMode {
      */
     private void runAll() {
         Drivetrain.move(gamepad1);
+        TempLiftArm.rest();
+        collectSample();
         collectSpecimen();
         moveToHighUnloadingPosition();
         moveToLowUnloadingPosition();
@@ -141,7 +156,7 @@ public class Teleop extends LinearOpMode {
      * Allows automated collection of a specimen.
      */
     private void collectSpecimen() {
-        if (gamepadEx.wasJustPressed(GamepadKeys.Button.X)) {
+        if (gamepad1.x) {
             Differential.collectSpecimen();
         }
         Claw.collectSpecimen();
@@ -151,10 +166,11 @@ public class Teleop extends LinearOpMode {
      * Unloads a sample and resets all parts of the robot.
      */
     private void unload() {
-        if (gamepadEx.wasJustPressed(GamepadKeys.Button.B)) {
+        if (gamepad1.b) {
             Claw.open();
             Differential.reset();
             DifferentialWrist.reset();
+            TempLiftArm.makeHorizontal();
         }
     }
 
@@ -163,7 +179,8 @@ public class Teleop extends LinearOpMode {
      * Checks rather a sample or a specimen needs to be unloaded.
      */
     private void moveToHighUnloadingPosition() {
-        if (gamepadEx.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+        if (gamepad1.right_bumper) {
+            TempLiftArm.makeVertical();
             if (Claw.isSpecimenCollected()) {
                 Differential.unloadSpecimen();
                 DifferentialWrist.unload();
@@ -181,16 +198,32 @@ public class Teleop extends LinearOpMode {
      * Checks rather a sample or a specimen needs to be unloaded.
      */
     private void moveToLowUnloadingPosition() {
-        if (gamepadEx.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+        if (gamepad1.left_bumper) {
             if (Claw.isSpecimenCollected()) {
                 Differential.unloadSpecimen();
                 DifferentialWrist.unload();
                 LED.changeColor(RevBlinkinLedDriver.BlinkinPattern.VIOLET);
             }
             if (Claw.isSampleCollected()) {
+                TempLiftArm.makeVertical();
                 Differential.unloadSample();
                 LED.changeColor(RevBlinkinLedDriver.BlinkinPattern.VIOLET);
             }
+        }
+    }
+
+    /**
+     *
+     */
+    private void collectSample() {
+        if (TempLiftArm.isHorizontal() && gamepad1.left_trigger > 0.05) {
+            Differential.reset();
+        }
+        if (gamepad1.dpad_right) {
+            Differential.collectSampleMoveRight();
+        }
+        if (gamepad1.dpad_left) {
+            Differential.collectSampleMoveLeft();
         }
     }
 
