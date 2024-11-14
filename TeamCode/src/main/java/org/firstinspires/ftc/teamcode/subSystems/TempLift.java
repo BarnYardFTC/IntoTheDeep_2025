@@ -6,10 +6,17 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.teamcode.modules.MotorProps;
+
 public class TempLift {
     private static final DcMotorEx[] motors = new DcMotorEx[2];
     private static final int RIGHT = 0;
     private static final int LEFT = 1;
+
+    private static final MotorProps RIGHT_MOTOR = new MotorProps(); // Right's motor props.
+    private static final MotorProps LEFT_MOTOR = new MotorProps(); // Left's motor props.
+
+    private static final double rotationPerInch = 0;
 
     public static void init(DcMotorEx right, DcMotorEx left) {
         motors[LEFT] = left;
