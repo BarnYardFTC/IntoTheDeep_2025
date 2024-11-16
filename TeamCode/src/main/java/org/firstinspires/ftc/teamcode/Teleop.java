@@ -255,6 +255,7 @@ public class Teleop extends LinearOpMode {
             if (gamepad1.left_bumper) {
                 TempLiftArm.makeHorizontal();
             }
+            TempLiftArm.rest();
             telemetry.log().clear();
             telemetry.addData("rPos", TempLiftArm.motors[0].getCurrentPosition());
             telemetry.addData("r", TempLiftArm.motors[0].getPower());
