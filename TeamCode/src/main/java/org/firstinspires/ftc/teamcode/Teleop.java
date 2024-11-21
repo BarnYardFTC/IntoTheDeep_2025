@@ -253,10 +253,7 @@ public class Teleop extends LinearOpMode {
             LiftArm.liftArmPIDF();
 
             telemetry.log().clear();
-            telemetry.addData("rPos", LiftArm.motors[0].getCurrentPosition());
-            telemetry.addData("r", LiftArm.motors[0].getPower());
-            telemetry.addData("lPos", LiftArm.motors[1].getCurrentPosition());
-            telemetry.addData("l", LiftArm.motors[1].getPower());
+            telemetry.addData("hot", LiftArm.isHorizontal());
             telemetry.update();
         }
     }

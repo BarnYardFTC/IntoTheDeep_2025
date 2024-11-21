@@ -43,6 +43,7 @@ public class LiftArm {
             motor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         }
 
+        makeHorizontal();
         controller = new PIDController(p, i, d);
     }
 
@@ -75,6 +76,6 @@ public class LiftArm {
      * @return - If the current arm's position is horizontal.
      */
     public static boolean isHorizontal() {
-        return motors[RIGHT].getCurrentPosition() < RIGHT_MOTOR.getAngleToEncoder(0) + 5;
+        return motors[RIGHT].getCurrentPosition() < RIGHT_MOTOR.getAngleToEncoder(40);
     }
 }
