@@ -10,12 +10,10 @@ public class TempLiftArm {
     private static final int RIGHT = 0; // Right's motor index.
     private static final int LEFT = 1; // Left's motor index.
 
-    private static final MotorProps RIGHT_MOTOR = new MotorProps(1425.1, (double) 1 / 3); // Right's motor props.
-    private static final MotorProps LEFT_MOTOR = new MotorProps(1425.1, (double) 1 / 3); // Left's motor props.
+    public static final MotorProps RIGHT_MOTOR = new MotorProps(1425.1, 3); // Right's motor props.
+    private static final MotorProps LEFT_MOTOR = new MotorProps(1425.1, 3); // Left's motor props.
 
     private static final int VERTICAL = 90; // Angle for moving the lift arm to a vertical position.
-
-    private static boolean goingDown;
 
     /**
      * Initializing all hardware.
@@ -41,8 +39,6 @@ public class TempLiftArm {
      * Moved the arm 90 degrees so it becomes horizontal.
      */
     public static void makeHorizontal() {
-        goingDown = true;
-
         motors[RIGHT].setPower(1);
         motors[LEFT].setPower(1);
 
@@ -74,17 +70,5 @@ public class TempLiftArm {
      */
     public static boolean isHorizontal() {
         return motors[RIGHT].getCurrentPosition() < RIGHT_MOTOR.getAngleToEncoder(0) + 5;
-    }
-
-    public static void rest() {
-        if (isHorizontal() && goingDown) {
-            motors[RIGHT].setPower(0);
-            motors[LEFT].setPower(0);
-
-            motors[RIGHT].setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-            motors[LEFT].setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-
-            goingDown = false;
-        }
     }
 }
