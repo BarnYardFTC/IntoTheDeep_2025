@@ -16,7 +16,7 @@ public class LiftProps extends MotorProps{
         super(ENCODER_RESOLUTION, OUTER_GEAR_RATIO);
         this.PITCH_LENGTH = PITCH_LENGTH;
         this.SLIDE_COUNT = SLIDE_COUNT;
-        ENCODER_TO_CM = this.ENCODER_RESOLUTION * this.OUTER_GEAR_RATIO * PITCH_LENGTH * SLIDE_COUNT / 10;
+        ENCODER_TO_CM = this.ENCODER_RESOLUTION * this.OUTER_GEAR_RATIO * this.PITCH_LENGTH * this.SLIDE_COUNT / 10;
     }
 
     public double getEncodersToCm(double cm) {
