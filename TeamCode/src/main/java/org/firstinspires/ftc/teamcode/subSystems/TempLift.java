@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.teamcode.modules.LiftProps;
 import org.firstinspires.ftc.teamcode.modules.MotorProps;
 
 public class TempLift {
@@ -13,10 +14,12 @@ public class TempLift {
     private static final int RIGHT = 0;
     private static final int LEFT = 1;
 
-    private static final MotorProps RIGHT_MOTOR = new MotorProps(); // Right's motor props.
-    private static final MotorProps LEFT_MOTOR = new MotorProps(); // Left's motor props.
+    private static final LiftProps RIGHT_MOTOR = new LiftProps(); // Right's motor props.
+    private static final LiftProps LEFT_MOTOR = new LiftProps(); // Left's motor props.
 
-    private static final double rotationPerInch = 0; // Amount of rotations of the last gear needed to move one inch of the lift.
+    public static final double HIGH_CHAMBER = RIGHT_MOTOR.getEncodersToCm(66);
+    public static final double HIGH_BASKET = RIGHT_MOTOR.getEncodersToCm(109.2);
+    public static final double LOW_BASKET = RIGHT_MOTOR.getEncodersToCm(65.4);
 
     /**
      * Initializing all hardware.
