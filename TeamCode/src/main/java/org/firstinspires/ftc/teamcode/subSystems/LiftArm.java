@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.teamcode.subSystems;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.modules.MotorProps;
 
-public class TempLiftArm {
+public class LiftArm {
     public static final DcMotorEx[] motors = new DcMotorEx[2]; // Motors array.
     private static final int RIGHT = 0; // Right's motor index.
     private static final int LEFT = 1; // Left's motor index.
@@ -14,6 +14,15 @@ public class TempLiftArm {
     private static final MotorProps LEFT_MOTOR = new MotorProps(1425.1, 3); // Left's motor props.
 
     private static final int VERTICAL = 90; // Angle for moving the lift arm to a vertical position.
+    private static final int HORIZONTAL = 0;
+    private static int targetAngle;
+
+    private static PIDController controller;
+    public static double p = 0.005;
+    public static double i = 0;
+    public static double d = 0.0002;
+    public static double f = 0.03;
+    public static int targetPos;
 
     /**
      * Initializing all hardware.
@@ -30,37 +39,34 @@ public class TempLiftArm {
 
         // Setting motors attributes
         for (DcMotorEx motor : motors) {
-            motor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
             motor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+            motor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         }
+
+        controller = new PIDController(p, i, d);
     }
 
-    /**
-     * Moved the arm 90 degrees so it becomes horizontal.
-     */
+    public static void liftArmPIDF() {
+        controller.setPID(p, i, d);
+
+        int currentPos = LiftArm.motors[0].getCurrentPosition();
+        targetPos = LiftArm.RIGHT_MOTOR.getAngleToEncoder(targetAngle);
+
+        double pid = controller.calculate(currentPos, targetPos);
+        double ff = Math.cos(Math.toRadians(targetPos / LiftArm.RIGHT_MOTOR.getENCODER_TO_DEGREE())) * f;
+
+        double power = pid + ff;
+
+        LiftArm.motors[0].setPower(power);
+        LiftArm.motors[1].setPower(power);
+    }
+
     public static void makeHorizontal() {
-        motors[RIGHT].setPower(1);
-        motors[LEFT].setPower(1);
-
-        motors[RIGHT].setTargetPosition(0);
-        motors[LEFT].setTargetPosition(0);
-
-        motors[RIGHT].setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        motors[LEFT].setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        targetAngle = HORIZONTAL;
     }
 
-    /**
-     * Moved the arm 90 degrees so it becomes vertical.
-     */
     public static void makeVertical() {
-        motors[RIGHT].setPower(1);
-        motors[LEFT].setPower(1);
-
-        motors[RIGHT].setTargetPosition(RIGHT_MOTOR.getAngleToEncoder(VERTICAL));
-        motors[LEFT].setTargetPosition(LEFT_MOTOR.getAngleToEncoder(VERTICAL));
-
-        motors[RIGHT].setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        motors[LEFT].setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        targetAngle = VERTICAL;
     }
 
     /**

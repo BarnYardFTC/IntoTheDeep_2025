@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.subSystems.Differential;
 import org.firstinspires.ftc.teamcode.subSystems.DifferentialWrist;
 import org.firstinspires.ftc.teamcode.subSystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subSystems.LED;
-import org.firstinspires.ftc.teamcode.subSystems.TempLiftArm;
+import org.firstinspires.ftc.teamcode.subSystems.LiftArm;
 
 // TeleOp name.
 @TeleOp(name = "INTO_THE_DEEP")
@@ -130,7 +130,7 @@ public class Teleop extends LinearOpMode {
         DcMotorEx right = hardwareMap.get(DcMotorEx.class, "right");
         DcMotorEx left = hardwareMap.get(DcMotorEx.class, "left");
 
-        TempLiftArm.init(right, left);
+        LiftArm.init(right, left);
     }
 
 
@@ -169,7 +169,7 @@ public class Teleop extends LinearOpMode {
             Claw.open();
             Differential.reset();
             DifferentialWrist.reset();
-            TempLiftArm.makeHorizontal();
+            LiftArm.makeHorizontal();
         }
     }
 
@@ -179,7 +179,7 @@ public class Teleop extends LinearOpMode {
      */
     private void moveToHighUnloadingPosition() {
         if (gamepad1.right_bumper) {
-            TempLiftArm.makeVertical();
+            LiftArm.makeVertical();
             if (Claw.isSpecimenCollected()) {
                 Differential.unloadSpecimen();
                 DifferentialWrist.unload();
@@ -204,7 +204,7 @@ public class Teleop extends LinearOpMode {
                 LED.changeColor(RevBlinkinLedDriver.BlinkinPattern.VIOLET);
             }
             if (Claw.isSampleCollected()) {
-                TempLiftArm.makeVertical();
+                LiftArm.makeVertical();
                 Differential.unloadSample();
                 LED.changeColor(RevBlinkinLedDriver.BlinkinPattern.VIOLET);
             }
@@ -215,7 +215,7 @@ public class Teleop extends LinearOpMode {
      *
      */
     private void collectSample() {
-        if (TempLiftArm.isHorizontal() && gamepad1.left_trigger > 0.05) {
+        if (LiftArm.isHorizontal() && gamepad1.left_trigger > 0.05) {
             Differential.reset();
         }
         if (gamepad1.dpad_right) {
@@ -245,17 +245,18 @@ public class Teleop extends LinearOpMode {
         // Main Loop
         while (opModeIsActive()) {
             if (gamepad1.right_bumper) {
-                TempLiftArm.makeVertical();
+                LiftArm.makeVertical();
             }
             if (gamepad1.left_bumper) {
-                TempLiftArm.makeHorizontal();
+                LiftArm.makeHorizontal();
             }
+            LiftArm.liftArmPIDF();
 
             telemetry.log().clear();
-            telemetry.addData("rPos", TempLiftArm.motors[0].getCurrentPosition());
-            telemetry.addData("r", TempLiftArm.motors[0].getPower());
-            telemetry.addData("lPos", TempLiftArm.motors[1].getCurrentPosition());
-            telemetry.addData("l", TempLiftArm.motors[1].getPower());
+            telemetry.addData("rPos", LiftArm.motors[0].getCurrentPosition());
+            telemetry.addData("r", LiftArm.motors[0].getPower());
+            telemetry.addData("lPos", LiftArm.motors[1].getCurrentPosition());
+            telemetry.addData("l", LiftArm.motors[1].getPower());
             telemetry.update();
         }
     }
