@@ -14,8 +14,10 @@ public class PIDTest extends OpMode {
     public static double p = 0;
     public static double i = 0;
     public static double d = 0;
+    public static double f = 0;
 
     public static int targetPos;
+
     @Override
     public void init() {
         controller = new PIDController(p, i, d);
@@ -32,9 +34,10 @@ public class PIDTest extends OpMode {
         controller.setPID(p, i, d);
         int currentPos = TempLiftArm.motors[0].getCurrentPosition();
         double pid = controller.calculate(currentPos, targetPos);
+        double ff = Math.cos(Math.toRadians(targetPos / TempLiftArm.RIGHT_MOTOR.getENCODER_TO_DEGREE())) * f;
 
-        TempLiftArm.motors[0].setPower(pid);
-        TempLiftArm.motors[1].setPower(pid);
+        TempLiftArm.motors[0].setPower(pid + ff);
+        TempLiftArm.motors[1].setPower(pid + ff);
 
         telemetry.addData("pos ", currentPos);
         telemetry.addData("target ", targetPos);
