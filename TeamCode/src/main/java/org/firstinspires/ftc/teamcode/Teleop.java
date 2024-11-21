@@ -238,24 +238,19 @@ public class Teleop extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-//        initializeAll();
         initLiftArm();
 
         waitForStart();
 
-        gamepadEx = new GamepadEx(gamepad1);
-
         // Main Loop
         while (opModeIsActive()) {
-//            resetRobot();
-//            runAll();
             if (gamepad1.right_bumper) {
                 TempLiftArm.makeVertical();
             }
             if (gamepad1.left_bumper) {
                 TempLiftArm.makeHorizontal();
             }
-            TempLiftArm.rest();
+
             telemetry.log().clear();
             telemetry.addData("rPos", TempLiftArm.motors[0].getCurrentPosition());
             telemetry.addData("r", TempLiftArm.motors[0].getPower());
