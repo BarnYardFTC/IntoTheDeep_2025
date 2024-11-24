@@ -148,6 +148,7 @@ public class Teleop extends LinearOpMode {
         moveToLowUnloadingPosition();
         unload();
         climb();
+        LiftArm.liftArmPIDF();
     }
 
     /**
@@ -253,7 +254,6 @@ public class Teleop extends LinearOpMode {
             LiftArm.liftArmPIDF();
 
             telemetry.log().clear();
-            telemetry.addData("hot", LiftArm.isHorizontal());
             telemetry.update();
         }
     }
