@@ -17,12 +17,12 @@ public class LiftArm {
     private static final int HORIZONTAL = 0;
     private static int targetAngle;
 
-    private static PIDController controller;
+    private static PIDController controller; // PID controller.
     public static double p = 0.005;
     public static double i = 0;
     public static double d = 0.0002;
     public static double f = 0.03;
-    public static int targetPos;
+    public static int targetPos; // Target position of the right motor.
 
     /**
      * Initializing all hardware.
@@ -36,6 +36,7 @@ public class LiftArm {
         motors[LEFT] = left;
 
         motors[RIGHT].setDirection(DcMotorEx.Direction.REVERSE);
+        motors[LEFT].setDirection(DcMotorEx.Direction.REVERSE);
 
         // Setting motors attributes
         for (DcMotorEx motor : motors) {
@@ -43,29 +44,35 @@ public class LiftArm {
             motor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         }
 
-        makeHorizontal();
+        makeHorizontal(); // Moves arm to starting position.
         controller = new PIDController(p, i, d);
     }
 
     public static void liftArmPIDF() {
         controller.setPID(p, i, d);
 
-        int currentPos = LiftArm.motors[0].getCurrentPosition();
-        targetPos = LiftArm.RIGHT_MOTOR.getAngleToEncoder(targetAngle);
+        // Sets the current and target position of the motor.
+        int currentPos = Math.abs(motors[RIGHT].getCurrentPosition());
+        targetPos = RIGHT_MOTOR.getAngleToEncoder(targetAngle);
 
+        // Calculate PIDF values.
         double pid = controller.calculate(currentPos, targetPos);
-        double ff = Math.cos(Math.toRadians(targetPos / LiftArm.RIGHT_MOTOR.getENCODER_TO_DEGREE())) * f;
+        double ff = Math.cos(Math.toRadians(targetPos / RIGHT_MOTOR.getENCODER_TO_DEGREE())) * f;
 
+        // Calculate motor power.
         double power = pid + ff;
 
-        LiftArm.motors[0].setPower(power);
-        LiftArm.motors[1].setPower(power);
+        // Giving power to motors.
+        motors[RIGHT].setPower(power);
+        motors[LEFT].setPower(power);
     }
 
+    // Sets arm target position to a horizontal position.
     public static void makeHorizontal() {
         targetAngle = HORIZONTAL;
     }
 
+    // Sets arm target position to a vertical position.
     public static void makeVertical() {
         targetAngle = VERTICAL;
     }

@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 // Imports.
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
@@ -240,6 +242,7 @@ public class Teleop extends LinearOpMode {
     @Override
     public void runOpMode() {
         initLiftArm();
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         waitForStart();
 
@@ -252,9 +255,6 @@ public class Teleop extends LinearOpMode {
                 LiftArm.makeHorizontal();
             }
             LiftArm.liftArmPIDF();
-
-            telemetry.log().clear();
-            telemetry.update();
         }
     }
 }
