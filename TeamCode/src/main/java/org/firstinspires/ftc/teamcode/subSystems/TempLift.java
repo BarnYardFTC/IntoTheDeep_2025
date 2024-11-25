@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subSystems;
 
 // Imports.
 
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -21,6 +22,15 @@ public class TempLift {
     public static final double HIGH_BASKET = RIGHT_MOTOR.getEncodersToCm(109.2);
     public static final double LOW_BASKET = RIGHT_MOTOR.getEncodersToCm(65.4);
 
+    private static int targetPosCm; // Target position of the lift in cm.
+
+    private static PIDController controller; // PID controller.
+    public static double p = 0.005;
+    public static double i = 0;
+    public static double d = 0.0002;
+    public static double f = 0.03;
+    public static int targetPos; // Target position of the right motor.
+
     /**
      * Initializing all hardware.
      *
@@ -37,5 +47,7 @@ public class TempLift {
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
+
+        controller = new PIDController(p, i, d);
     }
 }
