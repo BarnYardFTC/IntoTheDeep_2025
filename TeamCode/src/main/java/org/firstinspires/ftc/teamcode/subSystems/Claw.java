@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.modules.ServoProps;
 
 public class Claw {
-    static private final int COLLECTION_DISTANCE = 5; // Specimen collection distance.
+    private static final int COLLECTION_DISTANCE = 5; // Specimen collection distance.
 
     // Servo positions.
     private static final double OPENED_POSITION = 1; // Opened claw position.

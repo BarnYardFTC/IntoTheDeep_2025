@@ -1,16 +1,17 @@
 package org.firstinspires.ftc.teamcode.subSystems;
 
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.modules.MotorProps;
 
 public class LiftArm {
-    public static final DcMotorEx[] motors = new DcMotorEx[2]; // Motors array.
+    private static final DcMotorEx[] motors = new DcMotorEx[2]; // Motors array.
     private static final int RIGHT = 0; // Right's motor index.
     private static final int LEFT = 1; // Left's motor index.
 
-    public static final MotorProps RIGHT_MOTOR = new MotorProps(1425.1, 3); // Right's motor props.
+    private static final MotorProps RIGHT_MOTOR = new MotorProps(1425.1, 3); // Right's motor props.
     private static final MotorProps LEFT_MOTOR = new MotorProps(1425.1, 3); // Left's motor props.
 
     private static final int VERTICAL = 90; // Angle for moving the lift arm to a vertical position.
@@ -18,11 +19,11 @@ public class LiftArm {
     private static int targetAngle; // Target angle of the arm.
 
     private static PIDController controller; // PID controller.
-    public static double p = 0.005;
-    public static double i = 0;
-    public static double d = 0.0002;
-    public static double f = 0.03;
-    public static int targetPos; // Target position of the right motor.
+    private static double p = 0.005;
+    private static double i = 0;
+    private static double d = 0.0002;
+    private static double f = 0.03;
+    private static int targetPos; // Target position of the right motor.
 
     /**
      * Initializing all hardware.
@@ -36,7 +37,6 @@ public class LiftArm {
         motors[LEFT] = left;
 
         motors[RIGHT].setDirection(DcMotorEx.Direction.REVERSE);
-        motors[LEFT].setDirection(DcMotorEx.Direction.REVERSE);
 
         // Setting motors attributes
         for (DcMotorEx motor : motors) {
@@ -44,7 +44,7 @@ public class LiftArm {
             motor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         }
 
-        makeHorizontal(); // Moves arm to starting position.
+        move(Angle.HORIZONTAL); // Moves arm to starting position.
         controller = new PIDController(p, i, d);
     }
 
@@ -57,7 +57,7 @@ public class LiftArm {
 
         // Calculate PIDF values.
         double pid = controller.calculate(currentPos, targetPos);
-        double ff = Math.cos(Math.toRadians(targetPos / RIGHT_MOTOR.getENCODER_TO_DEGREE())) * f;
+        double ff = Math.cos(targetAngle) * f;
 
         // Calculate motor power.
         double power = pid + ff;
@@ -67,14 +67,15 @@ public class LiftArm {
         motors[LEFT].setPower(power);
     }
 
-    // Sets arm target position to a horizontal position.
-    public static void makeHorizontal() {
-        targetAngle = HORIZONTAL;
-    }
-
-    // Sets arm target position to a vertical position.
-    public static void makeVertical() {
-        targetAngle = VERTICAL;
+    public static void move(Angle angle) {
+        switch (angle) {
+            case VERTICAL:
+                targetAngle = VERTICAL;
+                break;
+            case HORIZONTAL:
+                targetAngle = HORIZONTAL;
+                break;
+        }
     }
 
     /**
@@ -83,6 +84,15 @@ public class LiftArm {
      * @return - If the current arm's position is horizontal.
      */
     public static boolean isHorizontal() {
-        return motors[RIGHT].getCurrentPosition() < RIGHT_MOTOR.getAngleToEncoder(40);
+        return motors[RIGHT].getCurrentPosition() < RIGHT_MOTOR.getAngleToEncoder(45);
+    }
+
+    public static int getTargetAngle() {
+        return targetAngle;
+    }
+
+    public enum Angle{
+        VERTICAL,
+        HORIZONTAL
     }
 }
