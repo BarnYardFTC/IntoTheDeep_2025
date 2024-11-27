@@ -2,10 +2,9 @@ package org.firstinspires.ftc.teamcode;
 
 // Imports.
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.arcrobotics.ftclib.gamepad.TriggerReader;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -28,6 +27,12 @@ import org.firstinspires.ftc.teamcode.subSystems.LiftArm;
 public class Teleop extends LinearOpMode {
     private boolean reseted;
     private GamepadEx gamepadEx;
+    private TriggerReader RIGHT_TRIGGER;
+    private TriggerReader LEFT_TRIGGER;
+
+//    private GamepadEx gamepadEx1 = new GamepadEx(gamepad1);
+//    private TriggerReader RIGHT_TRIGGER = new TriggerReader(gamepadEx1, GamepadKeys.Trigger.RIGHT_TRIGGER);
+//    private TriggerReader LEFT_TRIGGER = new TriggerReader(gamepadEx1, GamepadKeys.Trigger.LEFT_TRIGGER);
 
     /*
      * Functions for initialization of the hardware.
@@ -172,7 +177,7 @@ public class Teleop extends LinearOpMode {
             Claw.open();
             Differential.reset();
             DifferentialWrist.reset();
-            LiftArm.makeHorizontal();
+            LiftArm.move(LiftArm.Angle.HORIZONTAL);
         }
     }
 
@@ -182,7 +187,7 @@ public class Teleop extends LinearOpMode {
      */
     private void moveToHighUnloadingPosition() {
         if (gamepad1.right_bumper) {
-            LiftArm.makeVertical();
+            LiftArm.move(LiftArm.Angle.VERTICAL);
             if (Claw.isSpecimenCollected()) {
                 Differential.unloadSpecimen();
                 DifferentialWrist.unload();
@@ -207,7 +212,7 @@ public class Teleop extends LinearOpMode {
                 LED.changeColor(RevBlinkinLedDriver.BlinkinPattern.VIOLET);
             }
             if (Claw.isSampleCollected()) {
-                LiftArm.makeVertical();
+                LiftArm.move(LiftArm.Angle.VERTICAL);
                 Differential.unloadSample();
                 LED.changeColor(RevBlinkinLedDriver.BlinkinPattern.VIOLET);
             }
@@ -241,20 +246,27 @@ public class Teleop extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        initLiftArm();
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        gamepadEx = new GamepadEx(gamepad1);
+        RIGHT_TRIGGER = new TriggerReader(gamepadEx, GamepadKeys.Trigger.RIGHT_TRIGGER);
+        LEFT_TRIGGER = new TriggerReader(gamepadEx, GamepadKeys.Trigger.LEFT_TRIGGER);
+
+        initDriveTrain();
 
         waitForStart();
 
         // Main Loop
         while (opModeIsActive()) {
-            if (gamepad1.right_bumper) {
-                LiftArm.makeVertical();
+            if (RIGHT_TRIGGER.wasJustPressed()) {
+                Drivetrain.resetImu();
             }
-            if (gamepad1.left_bumper) {
-                LiftArm.makeHorizontal();
+            if (LEFT_TRIGGER.wasJustPressed()) {
+                Drivetrain.resetImu();
             }
-            LiftArm.liftArmPIDF();
+            if (gamepadEx.wasJustPressed(GamepadKeys.Button.B)) {
+                Drivetrain.resetImu();
+            }
+            Drivetrain.move(gamepad1);
+            gamepadEx.readButtons();
         }
     }
 }
