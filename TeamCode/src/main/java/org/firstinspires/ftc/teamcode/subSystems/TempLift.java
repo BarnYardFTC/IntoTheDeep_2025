@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.modules.LiftProps;
-import org.firstinspires.ftc.teamcode.modules.MotorProps;
 
 public class TempLift {
     private static final DcMotorEx[] motors = new DcMotorEx[2];
@@ -18,18 +17,18 @@ public class TempLift {
     private static final LiftProps RIGHT_MOTOR = new LiftProps(); // Right's motor props.
     private static final LiftProps LEFT_MOTOR = new LiftProps(); // Left's motor props.
 
-    public static final double HIGH_CHAMBER = RIGHT_MOTOR.getEncodersToCm(66);
-    public static final double HIGH_BASKET = RIGHT_MOTOR.getEncodersToCm(109.2);
-    public static final double LOW_BASKET = RIGHT_MOTOR.getEncodersToCm(65.4);
+    private static final double HIGH_CHAMBER = RIGHT_MOTOR.getCmToEncoders(66);
+    private static final double HIGH_BASKET = RIGHT_MOTOR.getCmToEncoders(109.2);
+    private static final double LOW_BASKET = RIGHT_MOTOR.getCmToEncoders(65.4);
 
-    private static int targetPosCm; // Target position of the lift in cm.
+    private static double targetPosCm; // Target position of the lift in cm.
 
     private static PIDController controller; // PID controller.
-    public static double p = 0.005;
-    public static double i = 0;
-    public static double d = 0.0002;
-    public static double f = 0.03;
-    public static int targetPos; // Target position of the right motor.
+    private static double p = 0.005;
+    private static double i = 0;
+    private static double d = 0.0002;
+    private static double f = 0.03;
+    private static int targetPos; // Target position of the right motor.
 
     /**
      * Initializing all hardware.
@@ -49,5 +48,48 @@ public class TempLift {
         }
 
         controller = new PIDController(p, i, d);
+    }
+
+    public static void liftPIDF() {
+        controller.setPID(p, i, d);
+
+        // Sets the current and target position of the motor.
+        int currentPos = Math.abs(motors[RIGHT].getCurrentPosition());
+        targetPos = (int) RIGHT_MOTOR.getCmToEncoders(targetPosCm);
+
+        // Calculate PIDF values.
+        double pid = controller.calculate(currentPos, targetPos);
+        double ff = Math.cos(LiftArm.getTargetAngle() - 90) * f;
+
+        // Calculate motor power.
+        double power = pid + ff;
+
+        // Giving power to motors.
+        motors[RIGHT].setPower(power);
+        motors[LEFT].setPower(power);
+    }
+
+    public static void move(Pos pos) {
+        switch (pos) {
+            case HIGH_CHAMBER:
+                targetPosCm = HIGH_CHAMBER;
+                break;
+            case HIGH_BASKET:
+                targetPosCm = HIGH_BASKET;
+                break;
+            case LOW_BASKET:
+                targetPosCm = LOW_BASKET;
+                break;
+            case RESET:
+                targetPosCm = 0;
+                break;
+        }
+    }
+
+    public enum Pos{
+        HIGH_CHAMBER,
+        HIGH_BASKET,
+        LOW_BASKET,
+        RESET
     }
 }

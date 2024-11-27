@@ -23,7 +23,7 @@ public class LiftProps extends MotorProps{
         return ENCODER_TO_CM;
     }
 
-    public double getEncodersToCm(double cm) {
+    public double getCmToEncoders(double cm) {
         return ENCODER_TO_CM * cm;
     }
 }
