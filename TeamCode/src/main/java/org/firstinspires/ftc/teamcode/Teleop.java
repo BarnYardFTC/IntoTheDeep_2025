@@ -30,10 +30,6 @@ public class Teleop extends LinearOpMode {
     private TriggerReader RIGHT_TRIGGER;
     private TriggerReader LEFT_TRIGGER;
 
-//    private GamepadEx gamepadEx1 = new GamepadEx(gamepad1);
-//    private TriggerReader RIGHT_TRIGGER = new TriggerReader(gamepadEx1, GamepadKeys.Trigger.RIGHT_TRIGGER);
-//    private TriggerReader LEFT_TRIGGER = new TriggerReader(gamepadEx1, GamepadKeys.Trigger.LEFT_TRIGGER);
-
     /*
      * Functions for initialization of the hardware.
      * Each function gets the name of the hardware and assigns it to a variable.
@@ -156,6 +152,10 @@ public class Teleop extends LinearOpMode {
         unload();
         climb();
         LiftArm.liftArmPIDF();
+
+        gamepadEx.readButtons();
+        RIGHT_TRIGGER.readValue();
+        LEFT_TRIGGER.readValue();
     }
 
     /**
@@ -163,7 +163,7 @@ public class Teleop extends LinearOpMode {
      * Allows automated collection of a specimen.
      */
     private void collectSpecimen() {
-        if (gamepad1.x) {
+        if (gamepadEx.wasJustPressed(GamepadKeys.Button.X)) {
             Differential.collectSpecimen();
         }
         Claw.collectSpecimen();
@@ -173,7 +173,7 @@ public class Teleop extends LinearOpMode {
      * Unloads a sample and resets all parts of the robot.
      */
     private void unload() {
-        if (gamepad1.b) {
+        if (gamepadEx.wasJustPressed(GamepadKeys.Button.B)) {
             Claw.open();
             Differential.reset();
             DifferentialWrist.reset();
@@ -186,7 +186,7 @@ public class Teleop extends LinearOpMode {
      * Checks rather a sample or a specimen needs to be unloaded.
      */
     private void moveToHighUnloadingPosition() {
-        if (gamepad1.right_bumper) {
+        if (gamepadEx.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
             LiftArm.move(LiftArm.Angle.VERTICAL);
             if (Claw.isSpecimenCollected()) {
                 Differential.unloadSpecimen();
@@ -205,7 +205,7 @@ public class Teleop extends LinearOpMode {
      * Checks rather a sample or a specimen needs to be unloaded.
      */
     private void moveToLowUnloadingPosition() {
-        if (gamepad1.left_bumper) {
+        if (gamepadEx.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
             if (Claw.isSpecimenCollected()) {
                 Differential.unloadSpecimen();
                 DifferentialWrist.unload();
@@ -223,13 +223,13 @@ public class Teleop extends LinearOpMode {
      *
      */
     private void collectSample() {
-        if (LiftArm.isHorizontal() && gamepad1.left_trigger > 0.05) {
+        if (LiftArm.isHorizontal() && LEFT_TRIGGER.wasJustPressed()) {
             Differential.reset();
         }
-        if (gamepad1.dpad_right) {
+        if (gamepadEx.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
             Differential.rollRight();
         }
-        if (gamepad1.dpad_left) {
+        if (gamepadEx.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
             Differential.rollLeft();
         }
     }
@@ -256,17 +256,13 @@ public class Teleop extends LinearOpMode {
 
         // Main Loop
         while (opModeIsActive()) {
-            if (RIGHT_TRIGGER.wasJustPressed()) {
-                Drivetrain.resetImu();
-            }
-            if (LEFT_TRIGGER.wasJustPressed()) {
-                Drivetrain.resetImu();
-            }
             if (gamepadEx.wasJustPressed(GamepadKeys.Button.B)) {
                 Drivetrain.resetImu();
             }
             Drivetrain.move(gamepad1);
             gamepadEx.readButtons();
+            RIGHT_TRIGGER.readValue();
+            LEFT_TRIGGER.readValue();
         }
     }
 }
