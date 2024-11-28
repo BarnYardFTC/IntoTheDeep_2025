@@ -1,21 +1,39 @@
-- Motors:
-rightBack - 0.
-rightFront - 1.
-leftBack - 2.
-leftFront - 3.
+Control hub:
+    Motors:
+        rightBack - 0.
+        rightFront - 1.
+        leftBack - 2.
+        leftFront - 3.
 
-- Servos:
+    Servos:
 
-- I2C:
-IMU - 0.
+    I2C:
+        IMU - 0.
+        huskyLens - 2.
 
-- Analog:
+    Analog:
 
-- Encoders:
+    USB:
 
-- Cameras:
+    Dead Wheels:
+        par0 - 0.
+        par1 - 3.
+        perp - 2.
 
-- DeadWheel:
-par0 - 0.
-par1 - 3.
-perp - 2.
+Expansion hub:
+    Motors:
+            rightLiftArm - 0.
+            rightLift - 1.
+            leftLiftArm - 2.
+            leftLift - 3.
+
+    Servos:
+
+    I2C:
+
+    Analog:
+
+    USB:
+
+    Encoders:
+        rightLiftArm - 0.
