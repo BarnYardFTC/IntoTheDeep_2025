@@ -26,13 +26,10 @@ public class huskyLensExperimenting extends LinearOpMode {
         huskyLens.selectAlgorithm(HuskyLens.Algorithm.COLOR_RECOGNITION);
         telemetry.update();
         waitForStart();
-        int degree = 0;
-        int ref_height = 0;
         boolean found = false;
-        double delta_height = 0;
-        final double HEIGHT_TO_DEGREE = 30;
-        int ref_area = 0;
-        int cur_area = 0;
+        double w0 = 7, h0 = 3;
+        double w1 = 7, h1 = 3;
+        double degree = 0;
         while(opModeIsActive()){
             if (!rateLimit.hasExpired()) {
                 continue;
@@ -40,27 +37,32 @@ public class huskyLensExperimenting extends LinearOpMode {
             rateLimit.reset();
             HuskyLens.Block[] blocks = huskyLens.blocks();
             for (int i = 0; i < blocks.length; i++) {
-                if (!found){
-                    ref_height = blocks[i].height;
-                    ref_area = blocks[i].height*blocks[i].width;
-                    found = true;
+//                if (!found) {
+//                    w0 = blocks[i].width;
+//                    h0 = blocks[i].height;
+//                    found = true;
+//                    continue;
+//                }
+                w1 = blocks[i].width;
+                h1 = blocks[i].height;
+                if (w0 == h1 && h0 == w1){
+                    degree = 90;
                 }
-                cur_area = blocks[i].width*blocks[i].height;
-                if (equals(cur_area, ref_area)){
-                    delta_height = Math.abs((double) blocks[i].height/ref_height);
-                    degree = (int) (delta_height*HEIGHT_TO_DEGREE);
+                else if (w0 == w1 && h0 == h1){
+                    degree = 0;
+                }
+                else {
+                    degree = Math.toDegrees(Math.atan(
+                            Math.abs( (w0-h0*w1/h1) / (w0*w1/h1-h0) )
+                    ));
                 }
             }
-            telemetry.addData("delta height", delta_height);
+            telemetry.addData("w0", w0);
+            telemetry.addData("h0", h0);
+            telemetry.addData("w1", w1);
+            telemetry.addData("h1", h1);
             telemetry.addData("degree", degree);
             telemetry.update();
         }
-    }
-    public boolean equals(int n1, int n2){
-        int equals_difference = 10;
-        if (Math.abs(n1-n2)<=equals_difference){
-            return true;
-        }
-        return false;
     }
 }
