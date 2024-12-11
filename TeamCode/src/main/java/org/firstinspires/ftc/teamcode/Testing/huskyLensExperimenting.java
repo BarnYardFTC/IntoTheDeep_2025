@@ -51,8 +51,7 @@ public class huskyLensExperimenting extends LinearOpMode {
                 } else if (w0 == w1 && h0 == h1) {
                     degree = 0;
                 } else {
-//                    degree = Math.toDegrees(Math.atan(Math.abs((w0 - h0 * w1 / h1) / (w0 * w1 / h1 - h0))));
-                    degree = Math.toDegrees(Math.atan((w0 - h0 * w1 / h1) / (w0 * w1 / h1 - h0)));
+                    degree = Math.toDegrees(Math.atan(Math.abs((w0 - h0 * w1 / h1) / (w0 * w1 / h1 - h0))));
                 }
             }
             telemetry.addData("w0", w0);
