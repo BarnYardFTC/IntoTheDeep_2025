@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subSystems;
 
 // Imports.
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -22,20 +23,12 @@ public class Differential {
     private static final int PITCH_ANGLE_SAMPLE_UNLOAD = 140;
 
     // Analog, position equation: position = analogInput.getVoltage() / 3.3 * 360.
-    private static AnalogInput analogInput;
+    private static AnalogInput analogSensor;
 
-    /**
-     * Initializing all hardware.
-     *
-     * @param right        - Hardware for right servo.
-     * @param left         - Hardware for left servo.
-     * @param analogSensor - Hardware for analogInput.
-     */
-    public static void init(Servo right, Servo left, AnalogInput analogSensor) {
-        // Assigning objects to variables.
-        servos[RIGHT] = right;
-        servos[LEFT] = left;
-        analogInput = analogSensor;
+    public Differential(OpMode opMode) {
+        servos[RIGHT] = opMode.hardwareMap.get(Servo.class, "rightDifferential");
+        servos[LEFT] = opMode.hardwareMap.get(Servo.class, "leftDifferential");
+        analogSensor = opMode.hardwareMap.get(AnalogInput.class, "analogSensor");
     }
 
     /**
@@ -122,7 +115,7 @@ public class Differential {
      * @return - If the differential is reseted.
      */
     public static boolean isReseted() {
-        return ServoProps.isAnalogInPosition(analogInput, 0);
+        return ServoProps.isAnalogInPosition(analogSensor, 0);
     }
 
     /**
@@ -131,6 +124,6 @@ public class Differential {
      * @return - If the differential is in the position to collect a specimen.
      */
     public static boolean isInSpecimenCollectPos() {
-        return ServoProps.isAnalogInPosition(analogInput, PITCH_ANGLE_SPECIMEN_INTAKE + ROLL_ANGLE_SPECIMEN_INTAKE);
+        return ServoProps.isAnalogInPosition(analogSensor, PITCH_ANGLE_SPECIMEN_INTAKE + ROLL_ANGLE_SPECIMEN_INTAKE);
     }
 }

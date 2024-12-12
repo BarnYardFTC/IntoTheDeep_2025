@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subSystems;
 
 // Imports.
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.modules.ServoProps;
@@ -17,16 +18,9 @@ public class DifferentialWrist {
     // Angle for moving the differential arm to the specimen unloading position.
     private static final int ANGLE_SPECIMEN_UNLOAD = 90;
 
-    /**
-     * Initializing all hardware.
-     *
-     * @param right - Hardware for right servo.
-     * @param left  - Hardware for left servo.
-     */
-    public static void init(Servo right, Servo left) {
-        // Assigning objects to variables.
-        servos[RIGHT] = right;
-        servos[LEFT] = left;
+    public DifferentialWrist(OpMode opMode) {
+        servos[RIGHT] = opMode.hardwareMap.get(Servo.class, "rightDifferential");
+        servos[LEFT] = opMode.hardwareMap.get(Servo.class, "leftDifferential");
     }
 
     /**

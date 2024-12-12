@@ -3,21 +3,14 @@ package org.firstinspires.ftc.teamcode.subSystems;
 // Imports.
 
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 public class LED {
     private static RevBlinkinLedDriver LED; // LED strip.
     private static RevBlinkinLedDriver.BlinkinPattern allianceColor; // LED strip.
 
-    /**
-     * Initializing all hardware.
-     *
-     * @param LEDConfig - Hardware for LED strip.
-     */
-    public static void init(RevBlinkinLedDriver LEDConfig) {
-        LED = LEDConfig;
-
-        // Changing LED color to default color.
-        changeColor(allianceColor);
+    public LED(OpMode opMode) {
+        LED = opMode.hardwareMap.get(RevBlinkinLedDriver.class, "LED");
     }
 
     /**

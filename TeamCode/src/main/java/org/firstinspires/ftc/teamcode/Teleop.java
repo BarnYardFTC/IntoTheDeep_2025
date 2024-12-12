@@ -8,11 +8,6 @@ import com.arcrobotics.ftclib.gamepad.TriggerReader;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.AnalogInput;
-import com.qualcomm.robotcore.hardware.ColorRangeSensor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.subSystems.Claw;
 import org.firstinspires.ftc.teamcode.subSystems.Differential;
@@ -20,6 +15,7 @@ import org.firstinspires.ftc.teamcode.subSystems.DifferentialWrist;
 import org.firstinspires.ftc.teamcode.subSystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subSystems.LED;
 import org.firstinspires.ftc.teamcode.subSystems.LiftArm;
+import org.firstinspires.ftc.teamcode.subSystems.Lift;
 
 // TeleOp name.
 @TeleOp(name = "INTO_THE_DEEP")
@@ -35,6 +31,7 @@ public class Teleop extends LinearOpMode {
      * Each function gets the name of the hardware and assigns it to a variable.
      * The variables are given to a each classes inner initialization function.
      */
+
     // TODO: Change names of all hardware in configuration.
 
     /**
@@ -43,13 +40,13 @@ public class Teleop extends LinearOpMode {
     private void initializeAll() {
         reseted = false;
 
-        initClaw();
-        initDifferential();
-        initDifferentialWrist();
-        initDriveTrain();
-        initLED();
-        initHuskyLens();
-        initLiftArm();
+        Claw claw = new Claw(this);
+        Differential differential = new Differential(this);
+        DifferentialWrist differentialWrist = new DifferentialWrist(this);
+        Drivetrain drivetrain = new Drivetrain(this);
+        LED led = new LED(this);
+        LiftArm liftArm = new LiftArm(this);
+        Lift lift = new Lift(this);
     }
 
     /**
@@ -61,79 +58,11 @@ public class Teleop extends LinearOpMode {
             Claw.open();
             Differential.reset();
             DifferentialWrist.reset();
+            LiftArm.move(LiftArm.Angle.HORIZONTAL);
+            Lift.move(Lift.Pos.RESET);
             LED.changeColor(RevBlinkinLedDriver.BlinkinPattern.DARK_RED);
             reseted = true;
         }
-    }
-
-    /**
-     * Initializes ignition system.
-     */
-    private void initDriveTrain() {
-        DcMotorEx leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
-        DcMotorEx rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
-        DcMotorEx leftBack = hardwareMap.get(DcMotorEx.class, "leftBack");
-        DcMotorEx rightBack = hardwareMap.get(DcMotorEx.class, "rightBack");
-        IMU imu = hardwareMap.get(IMU.class, "imu");
-
-        Drivetrain.init(leftFront, rightFront, leftBack, rightBack, imu);
-    }
-
-    /**
-     * Initializes differential system.
-     */
-    private void initDifferential() {
-        Servo right = hardwareMap.get(Servo.class, "rightDifferential");
-        Servo left = hardwareMap.get(Servo.class, "leftDifferential");
-        AnalogInput analogSensor = hardwareMap.get(AnalogInput.class, "analogSensor");
-
-        Differential.init(right, left, analogSensor);
-    }
-
-    /**
-     * Initializes differential arm system.
-     */
-    private void initDifferentialWrist() {
-        Servo right = hardwareMap.get(Servo.class, "rightDifferentialArm");
-        Servo left = hardwareMap.get(Servo.class, "leftDifferentialArm");
-
-        DifferentialWrist.init(right, left);
-    }
-
-    /**
-     * Initializes claw system.
-     */
-    private void initClaw() {
-        Servo claw = hardwareMap.get(Servo.class, "claw");
-        ColorRangeSensor distanceSensor = hardwareMap.get(ColorRangeSensor.class, "distanceSensor");
-
-        Claw.init(claw, distanceSensor);
-    }
-
-    /**
-     * Initializes LED system.
-     */
-    private void initLED() {
-        RevBlinkinLedDriver LEDConfig = hardwareMap.get(RevBlinkinLedDriver.class, "LED");
-
-        LED.init(LEDConfig);
-    }
-
-    /**
-     * Initializes husky lens system.
-     */
-    private void initHuskyLens() {
-
-    }
-
-    /**
-     * Initializes lift arm system.
-     */
-    private void initLiftArm() {
-        DcMotorEx right = hardwareMap.get(DcMotorEx.class, "right");
-        DcMotorEx left = hardwareMap.get(DcMotorEx.class, "left");
-
-        LiftArm.init(right, left);
     }
 
 
@@ -144,6 +73,7 @@ public class Teleop extends LinearOpMode {
      * Operate all robot systems.
      */
     private void runAll() {
+        // Gamepad actions.
         Drivetrain.move(gamepad1);
         collectSample();
         collectSpecimen();
@@ -153,6 +83,9 @@ public class Teleop extends LinearOpMode {
         climb();
         LiftArm.liftArmPIDF();
 
+        // Passive actions.
+
+        // Updating gamepad.
         gamepadEx.readButtons();
         RIGHT_TRIGGER.readValue();
         LEFT_TRIGGER.readValue();
@@ -223,7 +156,7 @@ public class Teleop extends LinearOpMode {
      *
      */
     private void collectSample() {
-        if (LiftArm.isHorizontal() && LEFT_TRIGGER.wasJustPressed()) {
+        if (LiftArm.getHorizontalPos() && LEFT_TRIGGER.wasJustPressed()) {
             Differential.reset();
         }
         if (gamepadEx.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
@@ -250,19 +183,13 @@ public class Teleop extends LinearOpMode {
         RIGHT_TRIGGER = new TriggerReader(gamepadEx, GamepadKeys.Trigger.RIGHT_TRIGGER);
         LEFT_TRIGGER = new TriggerReader(gamepadEx, GamepadKeys.Trigger.LEFT_TRIGGER);
 
-        initDriveTrain();
+        initializeAll();
 
         waitForStart();
 
         // Main Loop
         while (opModeIsActive()) {
-            if (gamepadEx.wasJustPressed(GamepadKeys.Button.B)) {
-                Drivetrain.resetImu();
-            }
-            Drivetrain.move(gamepad1);
-            gamepadEx.readButtons();
-            RIGHT_TRIGGER.readValue();
-            LEFT_TRIGGER.readValue();
+
         }
     }
 }

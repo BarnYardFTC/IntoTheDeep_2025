@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.subSystems;
 // Imports.
 
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -21,16 +22,9 @@ public class Claw {
     private static boolean specimenCollected; // State of whether or not a specimen is currently collected and is controlled by the robot.
     private static boolean sampleCollected; // State of whether or not a sample is currently collected and is controlled by the robot.
 
-    /**
-     * Initializing.
-     *
-     * @param clawConfig           - Hardware for claw.
-     * @param distanceSensorConfig - Hardware for distance sensor.
-     */
-    public static void init(Servo clawConfig, ColorRangeSensor distanceSensorConfig) {
-        // Assigning objects to variables.
-        claw = clawConfig;
-        distanceSensor = distanceSensorConfig;
+    public Claw(OpMode opMode) {
+        claw = opMode.hardwareMap.get(Servo.class, "claw");
+        distanceSensor = opMode.hardwareMap.get(ColorRangeSensor.class, "distanceSensor");
     }
 
     /**
@@ -53,7 +47,6 @@ public class Claw {
 
     /**
      * Set the value of the collected sample parameter.
-     *
      */
     public static void setSampleCollected(boolean sampleCollected) {
         Claw.sampleCollected = sampleCollected;

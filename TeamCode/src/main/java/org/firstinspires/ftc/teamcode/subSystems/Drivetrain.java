@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.subSystems;
 //Imports.
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -10,10 +11,10 @@ import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class Drivetrain {
+    public static final int LB = 2; // Back left's motor index.
     private static final DcMotorEx[] motors = new DcMotorEx[4]; // Motors array.
     private static final int LF = 0; // Front left's motor index.
     private static final int RF = 1; // Front right's motor index.
-    public static final int LB = 2; // Back left's motor index.
     private static final int RB = 3; // Back right's motor index.
 
     private static IMU imu; // IMU.
@@ -29,22 +30,12 @@ public class Drivetrain {
     private static double adjustedLx; // Adjusted x axis vector of movement.
     private static double adjustedLy; // Adjusted y axis vector of movement.
 
-    /**
-     * Initializing all hardware.
-     *
-     * @param leftFront  - Hardware for front left motor.
-     * @param rightFront - Hardware for front right motor.
-     * @param leftBack   - Hardware for back left motor.
-     * @param rightBack  - Hardware for back right motor.
-     * @param imuConfig  - Hardware for imu.
-     */
-    public static void init(DcMotorEx leftFront, DcMotorEx rightFront, DcMotorEx leftBack, DcMotorEx rightBack, IMU imuConfig) {
-        // Assigning the given motors to the motors in the class.
-        motors[LF] = leftFront;
-        motors[RF] = rightFront;
-        motors[LB] = leftBack;
-        motors[RB] = rightBack;
-        imu = imuConfig;
+    public Drivetrain(OpMode opMode) {
+        motors[LF] = opMode.hardwareMap.get(DcMotorEx.class, "leftFront");
+        motors[RF] = opMode.hardwareMap.get(DcMotorEx.class, "rightFront");
+        motors[LB] = opMode.hardwareMap.get(DcMotorEx.class, "leftBack");
+        motors[RB] = opMode.hardwareMap.get(DcMotorEx.class, "rightBack");
+        imu = opMode.hardwareMap.get(IMU.class, "imu");
 
         // Reversing some motors so that positive power = positive-direction wheel spin.
         motors[LF].setDirection(DcMotorEx.Direction.REVERSE);
