@@ -2,6 +2,9 @@ package org.firstinspires.ftc.teamcode;
 
 // Imports.
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.TriggerReader;
@@ -9,6 +12,7 @@ import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.subSystems.Claw;
 import org.firstinspires.ftc.teamcode.subSystems.Differential;
 import org.firstinspires.ftc.teamcode.subSystems.DifferentialWrist;
@@ -18,6 +22,7 @@ import org.firstinspires.ftc.teamcode.subSystems.LiftArm;
 import org.firstinspires.ftc.teamcode.subSystems.Lift;
 
 // TeleOp name.
+@Config
 @TeleOp(name = "INTO_THE_DEEP")
 
 public class Teleop extends LinearOpMode {
@@ -183,13 +188,27 @@ public class Teleop extends LinearOpMode {
         RIGHT_TRIGGER = new TriggerReader(gamepadEx, GamepadKeys.Trigger.RIGHT_TRIGGER);
         LEFT_TRIGGER = new TriggerReader(gamepadEx, GamepadKeys.Trigger.LEFT_TRIGGER);
 
-        initializeAll();
+//        initializeAll();
 
-        waitForStart();
+        LiftArm liftArm = new LiftArm(this);
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
+                waitForStart();
 
         // Main Loop
         while (opModeIsActive()) {
+//            if (gamepadEx.wasJustPressed(GamepadKeys.Button.A)) {
+//                LiftArm.move(LiftArm.Angle.HORIZONTAL);
+//            }
+//            if (gamepadEx.wasJustPressed(GamepadKeys.Button.B)) {
+//                LiftArm.move(LiftArm.Angle.VERTICAL);
+//            }
 
+            LiftArm.liftArmPIDF();
+            telemetry.addData("pos", LiftArm.getTargetAngle());
+            telemetry.addData("ff", Math.cos(LiftArm.targetAngle) * LiftArm.f);
+            telemetry.addData("current", LiftArm.motors[0].getCurrentPosition());
+            telemetry.update();
         }
     }
 }

@@ -1,28 +1,30 @@
 package org.firstinspires.ftc.teamcode.subSystems;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.modules.MotorProps;
 
+@Config
 public class LiftArm {
-    private static final DcMotorEx[] motors = new DcMotorEx[2]; // Motors array.
+    public static final DcMotorEx[] motors = new DcMotorEx[2]; // Motors array.
     private static final int RIGHT = 0; // Right's motor index.
     private static final int LEFT = 1; // Left's motor index.
 
-    private static final MotorProps RIGHT_MOTOR = new MotorProps(1425.1, 3); // Right's motor props.
-    private static final MotorProps LEFT_MOTOR = new MotorProps(1425.1, 3); // Left's motor props.
+    private static final MotorProps RIGHT_MOTOR = new MotorProps(537.7, 1.2); // Right's motor props.
+    private static final MotorProps LEFT_MOTOR = new MotorProps(537.7, 1.2); // Left's motor props.
 
     private static final int VERTICAL_POS = 90; // Angle for moving the lift arm to a vertical position.
     private static final int HORIZONTAL_POS = 0; // Angle for moving the lift arm to a horizontal position.
 
     //ToDo: set correct values.
-    private static final double p = 0.005;
-    private static final double i = 0;
-    private static final double d = 0.0002;
-    private static final double f = 0.03;
-    private static int targetAngle; // Target angle of the arm.
+    public static double p = 0;
+    public static double i = 0;
+    public static double d = 0;
+    public static double f = 0.39;
+    public static int targetAngle; // Target angle of the arm.
     private static PIDController controller; // PID controller.
     private static int targetPos; // Target position of the right motor.
 
