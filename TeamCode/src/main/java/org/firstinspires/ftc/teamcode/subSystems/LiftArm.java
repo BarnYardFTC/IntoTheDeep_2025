@@ -20,10 +20,10 @@ public class LiftArm {
     private static final int HORIZONTAL_POS = 0; // Angle for moving the lift arm to a horizontal position.
 
     //ToDo: set correct values.
-    public static double p = 0;
-    public static double i = 0;
-    public static double d = 0;
-    public static double f = 0;
+    private static final double p = 0;
+    private static final double i = 0;
+    private static final double d = 0;
+    private static final double f = 0;
     private static int targetAngle; // Target angle of the arm.
     private static PIDController controller; // PID controller.
     private static int targetPos; // Target position of the right motor.
