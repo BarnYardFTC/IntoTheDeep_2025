@@ -9,12 +9,12 @@ import org.firstinspires.ftc.teamcode.modules.MotorProps;
 
 @Config
 public class LiftArm {
-    public static final DcMotorEx[] motors = new DcMotorEx[2]; // Motors array.
+    private static final DcMotorEx[] motors = new DcMotorEx[2]; // Motors array.
     private static final int RIGHT = 0; // Right's motor index.
     private static final int LEFT = 1; // Left's motor index.
 
-    private static final MotorProps RIGHT_MOTOR = new MotorProps(537.7, 1.2); // Right's motor props.
-    private static final MotorProps LEFT_MOTOR = new MotorProps(537.7, 1.2); // Left's motor props.
+    private static final MotorProps RIGHT_MOTOR = new MotorProps(537.7, 0.8); // Right's motor props.
+    private static final MotorProps LEFT_MOTOR = new MotorProps(537.7, 0.8); // Left's motor props.
 
     private static final int VERTICAL_POS = 90; // Angle for moving the lift arm to a vertical position.
     private static final int HORIZONTAL_POS = 0; // Angle for moving the lift arm to a horizontal position.
@@ -23,8 +23,8 @@ public class LiftArm {
     public static double p = 0;
     public static double i = 0;
     public static double d = 0;
-    public static double f = 0.39;
-    public static int targetAngle; // Target angle of the arm.
+    public static double f = 0;
+    private static int targetAngle; // Target angle of the arm.
     private static PIDController controller; // PID controller.
     private static int targetPos; // Target position of the right motor.
 
@@ -43,7 +43,36 @@ public class LiftArm {
         controller = new PIDController(p, i, d);
     }
 
-    public static void liftArmPIDF() {
+    public static int getTargetPos() {
+        return targetPos;
+    }
+
+    public static void setTargetPos(int targetPos) {
+        LiftArm.targetPos = targetPos;
+    }
+
+    /**
+     * Informs if the arm is horizontal.
+     *
+     * @return - If the current arm's position is horizontal.
+     */
+    public static boolean getHorizontalPos() {
+        return motors[RIGHT].getCurrentPosition() < RIGHT_MOTOR.getAngleToEncoder(45);
+    }
+
+    public static int getTargetAngle() {
+        return targetAngle;
+    }
+
+    public static DcMotorEx getRightMotor() {
+        return motors[RIGHT];
+    }
+
+    public static DcMotorEx getLeftMotor() {
+        return motors[LEFT];
+    }
+
+    public static void liftArmPID() {
         controller.setPID(p, i, d);
 
         // Sets the current and target position of the motor.
@@ -71,19 +100,6 @@ public class LiftArm {
                 targetAngle = HORIZONTAL_POS;
                 break;
         }
-    }
-
-    /**
-     * Informs if the arm is horizontal.
-     *
-     * @return - If the current arm's position is horizontal.
-     */
-    public static boolean getHorizontalPos() {
-        return motors[RIGHT].getCurrentPosition() < RIGHT_MOTOR.getAngleToEncoder(45);
-    }
-
-    public static int getTargetAngle() {
-        return targetAngle;
     }
 
     public enum Angle {

@@ -21,10 +21,10 @@ public class Lift {
     private static final double HIGH_CHAMBER_POS = RIGHT_MOTOR.getCmToEncoders(66);
     private static final double HIGH_BASKET_POS = RIGHT_MOTOR.getCmToEncoders(109.2);
     private static final double LOW_BASKET_POS = RIGHT_MOTOR.getCmToEncoders(65.4);
-    private static final double p = 0.005;
+    private static final double p = 0;
     private static final double i = 0;
-    private static final double d = 0.0002;
-    private static final double f = 0.03;
+    private static final double d = 0;
+    private static final double f = 0;
     private static double targetPosCm; // Target position of the lift in cm.
     private static PIDController controller; // PID controller.
     private static int targetPos; // Target position of the right motor.
@@ -43,7 +43,23 @@ public class Lift {
         controller = new PIDController(p, i, d);
     }
 
-    public static void liftPIDF() {
+    public static double getTargetPosCm() {
+        return targetPosCm;
+    }
+
+    public static void setTargetPosCm(double targetPosCm) {
+        Lift.targetPosCm = targetPosCm;
+    }
+
+    public static int getTargetPos() {
+        return targetPos;
+    }
+
+    public static void setTargetPos(int targetPos) {
+        Lift.targetPos = targetPos;
+    }
+
+    public static void liftPID() {
         controller.setPID(p, i, d);
 
         // Sets the current and target position of the motor.

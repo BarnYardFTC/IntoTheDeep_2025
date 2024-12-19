@@ -7,7 +7,8 @@ import com.acmerobotics.roadrunner.Action;
 
 import org.firstinspires.ftc.teamcode.subSystems.Claw;
 
-public class Functions {
+public class AutoFunctions {
+
     public Action closeClaw() {
         return new CloseClaw();
     }

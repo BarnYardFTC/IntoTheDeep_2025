@@ -2,21 +2,20 @@ package org.firstinspires.ftc.teamcode.subSystems;
 
 // Imports.
 
-import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 
 import java.util.concurrent.TimeUnit;
 
-public class TempHuskyLens {
+public class HuskyLens {
     // Rate limit variables
     private static final int READ_PERIOD = 1;
     private static Deadline rate_limit;
 
     // HuskyLens
-    private static HuskyLens huskyLens;
-    private static HuskyLens.Block[] blocks;
+    private static com.qualcomm.hardware.dfrobot.HuskyLens huskyLens;
+    private static com.qualcomm.hardware.dfrobot.HuskyLens.Block[] blocks;
 
     // Algorithms variables
     private static double W0, H0, w1, h1, degree;
@@ -25,8 +24,8 @@ public class TempHuskyLens {
      * Create an HuskyLens.
      * @param opMode: The opMode in which the huskyLens is being created.
      */
-    public TempHuskyLens(OpMode opMode){
-        huskyLens = opMode.hardwareMap.get(HuskyLens.class, "huskyLens");
+    public HuskyLens(OpMode opMode){
+        huskyLens = opMode.hardwareMap.get(com.qualcomm.hardware.dfrobot.HuskyLens.class, "huskyLens");
         rate_limit = new Deadline(READ_PERIOD, TimeUnit.SECONDS);
         W0 = 7;
         H0 = 3;

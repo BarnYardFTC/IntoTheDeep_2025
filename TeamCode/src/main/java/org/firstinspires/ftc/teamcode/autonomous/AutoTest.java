@@ -22,7 +22,7 @@ public class AutoTest extends LinearOpMode {
     public void runOpMode() {
         waitForStart();
 
-        Functions claw = new Functions();
+        AutoFunctions claw = new AutoFunctions();
 
         Pose2d initialPose = new Pose2d(-24, -58, Math.toRadians(90));
         MecanumDrive ignitionSystem = new MecanumDrive(hardwareMap, initialPose);
