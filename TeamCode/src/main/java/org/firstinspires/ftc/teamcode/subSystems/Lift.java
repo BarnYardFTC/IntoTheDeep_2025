@@ -74,7 +74,7 @@ public class Lift {
 
         // Calculate PIDF values.
         double pid = controller.calculate(currentPos, targetPos);
-        double ff = Math.cos(LiftArm.getTargetAngle() - 90) * f;
+        double ff = Math.cos(Math.toRadians(LiftArm.getTargetAngle() - 90)) * f;
 
         // Calculate motor power.
         double power = pid + ff;
