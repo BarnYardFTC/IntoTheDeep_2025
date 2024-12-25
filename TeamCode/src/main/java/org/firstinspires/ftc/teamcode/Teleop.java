@@ -11,6 +11,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.TriggerReader;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.subSystems.Claw;
 import org.firstinspires.ftc.teamcode.subSystems.Differential;
@@ -63,21 +64,7 @@ public class Teleop extends LinearOpMode {
 
         // Main Loop
         while (opModeIsActive()) {
-
             LiftArm.liftArmPID();
-
-
-            // update running actions
-            List<Action> newActions = new ArrayList<>();
-            for (Action action : runningActions) {
-                action.preview(packet.fieldOverlay());
-                if (action.run(packet)) {
-                    newActions.add(action);
-                }
-            }
-            runningActions = newActions;
-
-            dash.sendTelemetryPacket(packet);
 
             telemetry.addData("pos", LiftArm.getTargetAngle());
             telemetry.addData("current", LiftArm.getRightMotor().getCurrentPosition());

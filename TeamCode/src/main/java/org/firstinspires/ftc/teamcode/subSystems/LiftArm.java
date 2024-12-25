@@ -13,8 +13,8 @@ public class LiftArm {
     private static final int RIGHT = 0; // Right's motor index.
     private static final int LEFT = 1; // Left's motor index.
 
-    private static final MotorProps RIGHT_MOTOR = new MotorProps(537.7, 0.8); // Right's motor props.
-    private static final MotorProps LEFT_MOTOR = new MotorProps(537.7, 0.8); // Left's motor props.
+    private static final MotorProps RIGHT_MOTOR = new MotorProps(1425.1, 1); // Right's motor props.
+    private static final MotorProps LEFT_MOTOR = new MotorProps(1425.1, 1); // Left's motor props.
 
     private static final int VERTICAL_POS = 90; // Angle for moving the lift arm to a vertical position.
     private static final int HORIZONTAL_POS = 0; // Angle for moving the lift arm to a horizontal position.
@@ -23,8 +23,8 @@ public class LiftArm {
     private static final double p = 0;
     private static final double i = 0;
     private static final double d = 0;
-    private static final double f = 0;
-    private static int targetAngle; // Target angle of the arm.
+    private static final double f = 0.01;
+    public static int targetAngle; // Target angle of the arm.
     private static PIDController controller; // PID controller.
     private static int targetPos; // Target position of the right motor.
 
@@ -32,7 +32,7 @@ public class LiftArm {
         motors[RIGHT] = opMode.hardwareMap.get(DcMotorEx.class, "right");
         motors[LEFT] = opMode.hardwareMap.get(DcMotorEx.class, "left");
 
-        motors[RIGHT].setDirection(DcMotorEx.Direction.REVERSE);
+        motors[LEFT].setDirection(DcMotorEx.Direction.REVERSE);
 
         // Setting motors attributes
         for (DcMotorEx motor : motors) {
