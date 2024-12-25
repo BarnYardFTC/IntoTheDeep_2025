@@ -2,30 +2,28 @@ Control hub:
     Motors:
         rightBack - 0.
         rightFront - 1.
-        leftBack - 2.
-        leftFront - 3.
+        leftFront - 2.
+        leftBack - 3.
 
     Servos:
 
     I2C:
         IMU - 0.
-        huskyLens - 2.
+
 
     Analog:
 
     USB:
 
     Dead Wheels:
-        par0 - 0.
-        par1 - 3.
-        perp - 2.
+
 
 Expansion hub:
     Motors:
-            rightLiftArm - 0.
-            rightLift - 1.
-            leftLiftArm - 2.
-            leftLift - 3.
+            rightLift - 0.
+            leftLift - 1.
+            rightLiftArm - 2.
+            leftLiftArm - 3.
 
     Servos:
 
@@ -36,4 +34,3 @@ Expansion hub:
     USB:
 
     Encoders:
-        rightLiftArm - 0.
