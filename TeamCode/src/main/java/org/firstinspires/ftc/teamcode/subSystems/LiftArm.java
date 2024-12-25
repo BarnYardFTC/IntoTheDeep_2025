@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.modules.MotorProps;
 
 @Config
 public class LiftArm {
-    private static final DcMotorEx[] motors = new DcMotorEx[2]; // Motors array.
+    public static final DcMotorEx[] motors = new DcMotorEx[2]; // Motors array.
     private static final int RIGHT = 0; // Right's motor index.
     private static final int LEFT = 1; // Left's motor index.
 
@@ -29,10 +29,10 @@ public class LiftArm {
     private static int targetPos; // Target position of the right motor.
 
     public LiftArm(OpMode opMode) {
-        motors[RIGHT] = opMode.hardwareMap.get(DcMotorEx.class, "right");
-        motors[LEFT] = opMode.hardwareMap.get(DcMotorEx.class, "left");
+        motors[RIGHT] = opMode.hardwareMap.get(DcMotorEx.class, "rightArm");
+        motors[LEFT] = opMode.hardwareMap.get(DcMotorEx.class, "leftArm");
 
-        motors[LEFT].setDirection(DcMotorEx.Direction.REVERSE);
+        motors[RIGHT].setDirection(DcMotorEx.Direction.REVERSE);
 
         // Setting motors attributes
         for (DcMotorEx motor : motors) {

@@ -11,35 +11,39 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.teamcode.modules.LiftProps;
 
 public class Lift {
-    private static final DcMotorEx[] motors = new DcMotorEx[2];
+    public static final DcMotorEx[] motors = new DcMotorEx[2];
     private static final int RIGHT = 0;
     private static final int LEFT = 1;
 
     private static final LiftProps RIGHT_MOTOR = new LiftProps(); // Right's motor props.
     private static final LiftProps LEFT_MOTOR = new LiftProps(); // Left's motor props.
 
-    private static final double HIGH_CHAMBER_POS = RIGHT_MOTOR.getCmToEncoders(66);
-    private static final double HIGH_BASKET_POS = RIGHT_MOTOR.getCmToEncoders(109.2);
-    private static final double LOW_BASKET_POS = RIGHT_MOTOR.getCmToEncoders(65.4);
+//    private static final double HIGH_CHAMBER_POS = RIGHT_MOTOR.getCmToEncoders(66);
+//    private static final double HIGH_BASKET_POS = RIGHT_MOTOR.getCmToEncoders(109.2);
+//    private static final double LOW_BASKET_POS = RIGHT_MOTOR.getCmToEncoders(65.4);
+
+    private static final double HIGH_CHAMBER_POS = 0;
+    private static final double HIGH_BASKET_POS = 0;
+    private static final double LOW_BASKET_POS = 0;
 
     //ToDo: set correct values.
     private static final double p = 0;
     private static final double i = 0;
     private static final double d = 0;
     private static final double f = 0;
-    private static double targetPosCm; // Target position of the lift in cm.
+    public static double targetPosCm; // Target position of the lift in cm.
     private static PIDController controller; // PID controller.
     private static int targetPos; // Target position of the right motor.
 
     public Lift(OpMode opMode) {
-        motors[RIGHT] = opMode.hardwareMap.get(DcMotorEx.class, "right");
-        motors[LEFT] = opMode.hardwareMap.get(DcMotorEx.class, "left");
+        motors[RIGHT] = opMode.hardwareMap.get(DcMotorEx.class, "rightLift");
+        motors[LEFT] = opMode.hardwareMap.get(DcMotorEx.class, "leftLift");
 
         motors[LEFT].setDirection(DcMotorSimple.Direction.REVERSE);
 
         for (DcMotorEx motor : motors) {
-            motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+            motor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         }
 
         controller = new PIDController(p, i, d);
@@ -65,8 +69,8 @@ public class Lift {
         controller.setPID(p, i, d);
 
         // Sets the current and target position of the motor.
-        int currentPos = Math.abs(motors[RIGHT].getCurrentPosition());
-        targetPos = (int) RIGHT_MOTOR.getCmToEncoders(targetPosCm);
+        int currentPos = (Math.abs(motors[RIGHT].getCurrentPosition()) + Math.abs(motors[LEFT].getCurrentPosition())) / 2;
+//        targetPos = (int) RIGHT_MOTOR.getCmToEncoders(targetPosCm);
 
         // Calculate PIDF values.
         double pid = controller.calculate(currentPos, targetPos);
@@ -80,19 +84,29 @@ public class Lift {
         motors[LEFT].setPower(power);
     }
 
+    public static DcMotorEx getRightMotor() {
+        return motors[RIGHT];
+    }
+
+    public static DcMotorEx getLeftMotor() {
+        return motors[LEFT];
+    }
+
+
+
     public static void move(Pos pos) {
         switch (pos) {
             case HIGH_CHAMBER:
-                targetPosCm = HIGH_CHAMBER_POS;
+                targetPos = (int) HIGH_CHAMBER_POS;
                 break;
             case HIGH_BASKET:
-                targetPosCm = HIGH_BASKET_POS;
+                targetPos = (int) HIGH_BASKET_POS;
                 break;
             case LOW_BASKET:
-                targetPosCm = LOW_BASKET_POS;
+                targetPos = (int) LOW_BASKET_POS;
                 break;
             case RESET:
-                targetPosCm = 0;
+                targetPos = 0;
                 break;
         }
     }

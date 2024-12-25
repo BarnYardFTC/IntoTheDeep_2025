@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.modules;
 // Imports.
 
 public class MotorProps {
-    protected final double ENCODER_RESOLUTION; // Amount of encoders in one motor shaft rotation..
+    protected final double ENCODER_RESOLUTION; // Amount of encoders in one motor shaft rotation.
     protected final double OUTER_GEAR_RATIO; // Number of motor shaft rotations to one final gear rotation.
     protected final double ENCODER_TO_DEGREE; // Encoders in one degree of movement.
 

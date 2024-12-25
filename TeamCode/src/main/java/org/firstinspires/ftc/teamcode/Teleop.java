@@ -28,9 +28,6 @@ import java.util.List;
 @TeleOp(name = "INTO_THE_DEEP")
 
 public class Teleop extends LinearOpMode {
-    private final FtcDashboard dash = FtcDashboard.getInstance();
-    private List<Action> runningActions = new ArrayList<>();
-
     // TODO: Change names of all hardware in configuration.
 
     /**
@@ -50,25 +47,21 @@ public class Teleop extends LinearOpMode {
         TeleOpFunctions.setGamepadEx(new GamepadEx(gamepad1));
         TeleOpFunctions.setLeftTrigger(new TriggerReader(TeleOpFunctions.getGamepadEx(), GamepadKeys.Trigger.LEFT_TRIGGER));
         TeleOpFunctions.setRightTrigger(new TriggerReader(TeleOpFunctions.getGamepadEx(), GamepadKeys.Trigger.RIGHT_TRIGGER));
-
-        TelemetryPacket packet = new TelemetryPacket();
     }
 
     @Override
     public void runOpMode() {
+        Drivetrain drivetrain = new Drivetrain(this);
         LiftArm liftArm = new LiftArm(this);
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        TelemetryPacket packet = new TelemetryPacket();
+        Lift lift = new Lift(this);
+//        LiftArm.move(LiftArm.Angle.HORIZONTAL);
+//        Lift.move(Lift.Pos.RESET);
 
         waitForStart();
 
         // Main Loop
         while (opModeIsActive()) {
-            LiftArm.liftArmPID();
 
-            telemetry.addData("pos", LiftArm.getTargetAngle());
-            telemetry.addData("current", LiftArm.getRightMotor().getCurrentPosition());
-            telemetry.update();
         }
     }
 }
