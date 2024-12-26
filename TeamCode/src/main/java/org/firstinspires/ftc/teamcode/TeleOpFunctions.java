@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.subSystems.Claw;
 import org.firstinspires.ftc.teamcode.subSystems.Differential;
-import org.firstinspires.ftc.teamcode.subSystems.DifferentialWrist;
 import org.firstinspires.ftc.teamcode.subSystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subSystems.LED;
 import org.firstinspires.ftc.teamcode.subSystems.Lift;
@@ -55,7 +54,6 @@ public class TeleOpFunctions {
         if (reseted) {
             Claw.open();
             Differential.reset();
-            DifferentialWrist.reset();
             LiftArm.move(LiftArm.Angle.HORIZONTAL);
             Lift.move(Lift.Pos.RESET);
             LED.changeColor(RevBlinkinLedDriver.BlinkinPattern.DARK_RED);

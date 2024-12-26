@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.modules.ServoProps;
 public class Differential {
     private static final Servo[] servos = new Servo[2]; // Servos array.
     private static final ServoProps RIGHT_SERVO = new ServoProps(355, (double) 175 / 355, 1); // Right's servo props.
-    private static final ServoProps LEFT_SERVO = new ServoProps(355, (double) 0, 1); // Left's servo props.
+    private static final ServoProps LEFT_SERVO = new ServoProps(355, 0, 1); // Left's servo props.
     private static final int RIGHT = 0; // Right's servo index.
     private static final int LEFT = 1; // Left's servo index.
 
@@ -28,7 +28,7 @@ public class Differential {
     public Differential(OpMode opMode) {
         servos[RIGHT] = opMode.hardwareMap.get(Servo.class, "rightDifferential");
         servos[LEFT] = opMode.hardwareMap.get(Servo.class, "leftDifferential");
-//        analogSensor = opMode.hardwareMap.get(AnalogInput.class, "analogSensor");
+        analogSensor = opMode.hardwareMap.get(AnalogInput.class, "analogSensor");
     }
 
     /**

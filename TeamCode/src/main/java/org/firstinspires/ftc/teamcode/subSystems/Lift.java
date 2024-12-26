@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subSystems;
 
 // Imports.
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,30 +11,27 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.modules.LiftProps;
 
+@Config
 public class Lift {
     public static final DcMotorEx[] motors = new DcMotorEx[2];
     private static final int RIGHT = 0;
     private static final int LEFT = 1;
 
-    private static final LiftProps RIGHT_MOTOR = new LiftProps(); // Right's motor props.
-    private static final LiftProps LEFT_MOTOR = new LiftProps(); // Left's motor props.
+    private static final LiftProps RIGHT_MOTOR = new LiftProps(8, 3, 537.7, 1.4, 14); // Right's motor props.
+    private static final LiftProps LEFT_MOTOR = new LiftProps(8, 3, 537.7, 1.4, 14); // Left's motor props.
 
-//    private static final double HIGH_CHAMBER_POS = RIGHT_MOTOR.getCmToEncoders(66);
-//    private static final double HIGH_BASKET_POS = RIGHT_MOTOR.getCmToEncoders(109.2);
-//    private static final double LOW_BASKET_POS = RIGHT_MOTOR.getCmToEncoders(65.4);
-
-    private static final double HIGH_CHAMBER_POS = 0;
-    private static final double HIGH_BASKET_POS = 0;
-    private static final double LOW_BASKET_POS = 0;
+    private static final double HIGH_CHAMBER_POS = RIGHT_MOTOR.getCmToEncoders(66);
+    private static final double HIGH_BASKET_POS = RIGHT_MOTOR.getCmToEncoders(109.2);
+    private static final double LOW_BASKET_POS = RIGHT_MOTOR.getCmToEncoders(65.4);
 
     //ToDo: set correct values.
-    private static final double p = 0;
-    private static final double i = 0;
-    private static final double d = 0;
-    private static final double f = 0;
+    public static double p = 0.03;
+    public static double i = 0;
+    public static double d = 0;
+    public static double f = 0;
     public static double targetPosCm; // Target position of the lift in cm.
     private static PIDController controller; // PID controller.
-    private static int targetPos; // Target position of the right motor.
+    public static int targetPos; // Target position of the right motor.
 
     public Lift(OpMode opMode) {
         motors[RIGHT] = opMode.hardwareMap.get(DcMotorEx.class, "rightLift");
@@ -69,7 +67,7 @@ public class Lift {
         controller.setPID(p, i, d);
 
         // Sets the current and target position of the motor.
-        int currentPos = (Math.abs(motors[RIGHT].getCurrentPosition()) + Math.abs(motors[LEFT].getCurrentPosition())) / 2;
+        int currentPos = Math.abs(motors[RIGHT].getCurrentPosition());
 //        targetPos = (int) RIGHT_MOTOR.getCmToEncoders(targetPosCm);
 
         // Calculate PIDF values.
