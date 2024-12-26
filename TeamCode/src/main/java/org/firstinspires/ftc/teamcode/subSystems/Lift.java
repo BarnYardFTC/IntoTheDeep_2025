@@ -21,6 +21,7 @@ public class Lift {
     private static final LiftProps LEFT_MOTOR = new LiftProps(8, 3, 537.7, 1.4, 14); // Left's motor props.
 
     private static final double HIGH_CHAMBER_POS = RIGHT_MOTOR.getCmToEncoders(66);
+    private static final double LOW_CHAMBER_POS = RIGHT_MOTOR.getCmToEncoders(0);
     private static final double HIGH_BASKET_POS = RIGHT_MOTOR.getCmToEncoders(109.2);
     private static final double LOW_BASKET_POS = RIGHT_MOTOR.getCmToEncoders(65.4);
 
@@ -32,6 +33,8 @@ public class Lift {
     public static double targetPosCm; // Target position of the lift in cm.
     private static PIDController controller; // PID controller.
     public static int targetPos; // Target position of the right motor.
+
+    private static final double ENCODERS_TO_CM = 0;
 
     public Lift(OpMode opMode) {
         motors[RIGHT] = opMode.hardwareMap.get(DcMotorEx.class, "rightLift");
@@ -69,6 +72,7 @@ public class Lift {
         // Sets the current and target position of the motor.
         int currentPos = Math.abs(motors[RIGHT].getCurrentPosition());
 //        targetPos = (int) RIGHT_MOTOR.getCmToEncoders(targetPosCm);
+//        targetPos = (int) (targetPosCm * ENCODERS_TO_CM);
 
         // Calculate PIDF values.
         double pid = controller.calculate(currentPos, targetPos);
@@ -97,6 +101,9 @@ public class Lift {
             case HIGH_CHAMBER:
                 targetPos = (int) HIGH_CHAMBER_POS;
                 break;
+            case LOW_CHAMBER:
+                targetPos = (int) LOW_CHAMBER_POS;
+                break;
             case HIGH_BASKET:
                 targetPos = (int) HIGH_BASKET_POS;
                 break;
@@ -104,12 +111,21 @@ public class Lift {
                 targetPos = (int) LOW_BASKET_POS;
                 break;
             case RESET:
-                targetPos = 0;
+                targetPos = 30;
                 break;
         }
     }
 
+    public static void move(double direction) {
+        if (direction > 0) {
+            targetPosCm += 5;
+        }
+        else {
+            targetPosCm -= 5;
+        }
+    }
+
     public enum Pos {
-        HIGH_CHAMBER, HIGH_BASKET, LOW_BASKET, RESET
+        HIGH_CHAMBER, LOW_CHAMBER, HIGH_BASKET, LOW_BASKET, RESET
     }
 }

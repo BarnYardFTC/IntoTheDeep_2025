@@ -89,20 +89,6 @@ public class Differential {
     }
 
     /**
-     * Increases the differential position.
-     */
-    public static void rollRight() {
-        increase(30);
-    }
-
-    /**
-     * Decreases the differential position.
-     */
-    public static void rollLeft() {
-        increase(-30);
-    }
-
-    /**
      * Moves differential to the sample unload position.
      */
     public static void unloadSample() {

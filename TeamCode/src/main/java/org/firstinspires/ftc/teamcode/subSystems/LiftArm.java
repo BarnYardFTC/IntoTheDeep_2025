@@ -56,7 +56,7 @@ public class LiftArm {
      *
      * @return - If the current arm's position is horizontal.
      */
-    public static boolean getHorizontalPos() {
+    public static boolean isHorizontal() {
         return motors[RIGHT].getCurrentPosition() < RIGHT_MOTOR.getAngleToEncoder(45);
     }
 

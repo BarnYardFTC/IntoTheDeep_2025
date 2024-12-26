@@ -1,16 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.TriggerReader;
-import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-import org.firstinspires.ftc.teamcode.subSystems.Claw;
 import org.firstinspires.ftc.teamcode.subSystems.Differential;
 import org.firstinspires.ftc.teamcode.subSystems.Drivetrain;
-import org.firstinspires.ftc.teamcode.subSystems.LED;
 import org.firstinspires.ftc.teamcode.subSystems.Lift;
 import org.firstinspires.ftc.teamcode.subSystems.LiftArm;
+import org.firstinspires.ftc.teamcode.subSystems.Suction;
 
 public class TeleOpFunctions {
     private static boolean reseted;
@@ -50,26 +49,28 @@ public class TeleOpFunctions {
         LEFT_TRIGGER = leftTrigger;
     }
 
-    private void resetRobot() {
+    private static void resetRobot() {
         if (reseted) {
-            Claw.open();
             Differential.reset();
             LiftArm.move(LiftArm.Angle.HORIZONTAL);
             Lift.move(Lift.Pos.RESET);
-            LED.changeColor(RevBlinkinLedDriver.BlinkinPattern.DARK_RED);
             reseted = true;
         }
     }
 
-    private void runAll(Gamepad gamepad) {
+    public static void runAll(Gamepad gamepad) {
+        resetRobot();
+
         // Gamepad actions.
         Drivetrain.move(gamepad);
+        Drivetrain.resetImu(gamepad);
         collectSample();
         collectSpecimen();
         moveToHighUnloadingPosition();
         moveToLowUnloadingPosition();
         unload();
-
+        reset();
+        unload();
 
         // Passive actions.
         LiftArm.liftArmPID();
@@ -81,23 +82,40 @@ public class TeleOpFunctions {
         LEFT_TRIGGER.readValue();
     }
 
-    private void collectSpecimen() {
-
+    private static void reset() {
+        if (gamepadEx.wasJustPressed(GamepadKeys.Button.Y)) {
+            Differential.reset();
+            LiftArm.move(LiftArm.Angle.HORIZONTAL);
+            Lift.move(Lift.Pos.RESET);
+        }
     }
 
-    private void unload() {
-
+    private static void unload() {
+        if (gamepadEx.wasJustPressed(GamepadKeys.Button.X)) {
+            Suction.getSuction().setPower(-1);
+        }
     }
 
-    private void moveToHighUnloadingPosition() {
-
+    private static void moveToHighUnloadingPosition() {
     }
 
-    private void moveToLowUnloadingPosition() {
-
+    private static void moveToLowUnloadingPosition() {
     }
 
-    private void collectSample() {
+    private static void collectSample() {
+    }
 
+    private static void collectSpecimen() {
+    }
+
+    private static void moveLift() {
+        if (LiftArm.isHorizontal()) {
+            if (getLeftTrigger().isDown()) {
+                Lift.move(-1);
+            }
+            if (getRightTrigger().isDown()) {
+                Lift.move(1);
+            }
+        }
     }
 }

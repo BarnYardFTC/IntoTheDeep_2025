@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.subSystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subSystems.LED;
 import org.firstinspires.ftc.teamcode.subSystems.Lift;
 import org.firstinspires.ftc.teamcode.subSystems.LiftArm;
+import org.firstinspires.ftc.teamcode.subSystems.Suction;
 
 // TeleOp name.
 @TeleOp(name = "INTO_THE_DEEP")
@@ -27,7 +28,7 @@ public class Teleop extends LinearOpMode {
     private void initializeAll() {
         TeleOpFunctions.setReseted(false);
 
-        Claw claw = new Claw(this);
+        Suction suction = new Suction(this);
         Differential differential = new Differential(this);
         Drivetrain drivetrain = new Drivetrain(this);
         LiftArm liftArm = new LiftArm(this);
@@ -40,15 +41,13 @@ public class Teleop extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        Drivetrain drivetrain = new Drivetrain(this);
-        LiftArm liftArm = new LiftArm(this);
-        Lift lift = new Lift(this);
+        initializeAll();
 
         waitForStart();
 
         // Main Loop
         while (opModeIsActive()) {
-
+            TeleOpFunctions.runAll(gamepad1);
         }
     }
 }
