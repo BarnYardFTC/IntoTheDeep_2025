@@ -41,13 +41,15 @@ public class Teleop extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        initializeAll();
+        Drivetrain drivetrain = new Drivetrain(this);
 
         waitForStart();
 
         // Main Loop
         while (opModeIsActive()) {
-            TeleOpFunctions.runAll(gamepad1);
+            Drivetrain.move(gamepad1);
+            telemetry.addData("heading", Drivetrain.getRobotHeading());
+            telemetry.update();
         }
     }
 }
