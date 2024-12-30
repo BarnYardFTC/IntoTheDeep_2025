@@ -9,13 +9,17 @@ public class MeepMeep {
     public static void main(String[] args) {
         com.noahbres.meepmeep.MeepMeep meepMeep = new com.noahbres.meepmeep.MeepMeep(800);
 
-        RoadRunnerBotEntity botRed = new DefaultBotBuilder(meepMeep).setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 12).build();
-        RoadRunnerBotEntity botBlue = new DefaultBotBuilder(meepMeep).setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 12).build();
+        RoadRunnerBotEntity botRedSpecimen = new DefaultBotBuilder(meepMeep).setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 14).build();
+        RoadRunnerBotEntity botBlueSpecimen = new DefaultBotBuilder(meepMeep).setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 14).build();
+        RoadRunnerBotEntity botRedSample = new DefaultBotBuilder(meepMeep).setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 14).build();
+        RoadRunnerBotEntity botBlueSample = new DefaultBotBuilder(meepMeep).setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 14).build();
 
-        Pose2d initialPoseRed = new Pose2d(8, -63, Math.toRadians(90));
-        Pose2d initialPoseBlue = new Pose2d(-8, 63, Math.toRadians(270));
+        Pose2d initialPoseRedSpecimen = new Pose2d(8, -63, Math.toRadians(90));
+        Pose2d initialPoseBlueSpecimen = new Pose2d(-8, 63, Math.toRadians(270));
+        Pose2d initialPoseRedSample = new Pose2d(-30, -63, Math.toRadians(90));
+        Pose2d initialPoseBlueSample = new Pose2d(30, 63, Math.toRadians(270));
 
-        botRed.runAction(botRed.getDrive().actionBuilder(initialPoseRed)
+        botRedSpecimen.runAction(botRedSpecimen.getDrive().actionBuilder(initialPoseRedSpecimen)
                 .strafeToConstantHeading(new Vector2d(-4, -33))
 
                 .setTangent(Math.toRadians(270))
@@ -59,7 +63,7 @@ public class MeepMeep {
 
                 .build());
 
-        botBlue.runAction(botBlue.getDrive().actionBuilder(initialPoseBlue)
+        botBlueSpecimen.runAction(botBlueSpecimen.getDrive().actionBuilder(initialPoseBlueSpecimen)
                 .strafeToConstantHeading(new Vector2d(4, 33))
 
                 .setTangent(Math.toRadians(90))
@@ -103,10 +107,24 @@ public class MeepMeep {
 
                 .build());
 
+        botRedSample.runAction(botRedSample.getDrive().actionBuilder(initialPoseRedSample)
+                .waitSeconds(26)
+                .strafeToConstantHeading(new Vector2d(33, -63))
+
+                .build());
+
+        botBlueSample.runAction(botBlueSample.getDrive().actionBuilder(initialPoseBlueSample)
+                .waitSeconds(26)
+                .strafeToConstantHeading(new Vector2d(-33, 63))
+
+                .build());
+
         meepMeep.setBackground(com.noahbres.meepmeep.MeepMeep.Background.FIELD_INTO_THE_DEEP_JUICE_DARK)
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
-                .addEntity(botRed).start()
-                .addEntity(botBlue).start();
+                .addEntity(botRedSpecimen).start()
+                .addEntity(botBlueSpecimen).start()
+                .addEntity(botRedSample).start()
+                .addEntity(botBlueSample).start();
     }
 }

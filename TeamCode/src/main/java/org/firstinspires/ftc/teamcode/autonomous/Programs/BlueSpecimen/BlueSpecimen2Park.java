@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.autonomous;
+package org.firstinspires.ftc.teamcode.autonomous.Programs.BlueSpecimen;
 
 // Import
 
@@ -15,9 +15,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.roadRunner.MecanumDrive;
 
 @Config
-@Autonomous(name = "Blue_Specimen_1_Park", group = "Autonomous")
+@Autonomous(name = "Blue_Specimen_2_Park", group = "Autonomous")
 
-public class BlueSpecimen1Park extends LinearOpMode {
+public class BlueSpecimen2Park extends LinearOpMode {
     @Override
     public void runOpMode() {
         waitForStart();
@@ -26,7 +26,7 @@ public class BlueSpecimen1Park extends LinearOpMode {
         MecanumDrive ignitionSystem = new MecanumDrive(hardwareMap, initialPose);
 
         TrajectoryActionBuilder trajectoryBuilder = ignitionSystem.actionBuilder(initialPose)
-                .strafeToConstantHeading(new Vector2d(-8, 33))
+                .strafeToConstantHeading(new Vector2d(4, 33))
 
                 .setTangent(Math.toRadians(90))
                 .splineToConstantHeading(new Vector2d(-33, 36), Math.toRadians(270))
@@ -45,10 +45,16 @@ public class BlueSpecimen1Park extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(-54, 13), Math.toRadians(270))
 
                 .splineToConstantHeading(new Vector2d(-62, 13), Math.toRadians(270))
-                .splineToConstantHeading(new Vector2d(-62, 54), Math.toRadians(270));
+                .splineToConstantHeading(new Vector2d(-62, 54), Math.toRadians(270))
+
+                .setTangent(Math.toRadians(270))
+                .splineToConstantHeading(new Vector2d(1, 33), Math.toRadians(270))
+
+                .strafeToConstantHeading(new Vector2d(-46, 59));
 
         Action trajectory;
         trajectory = trajectoryBuilder.build();
+
         waitForStart();
 
         if (isStopRequested()) return;

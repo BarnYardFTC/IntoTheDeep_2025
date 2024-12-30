@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.autonomous;
+package org.firstinspires.ftc.teamcode.autonomous.Programs.BlueSpecimen;
 
 // Import
 
@@ -15,9 +15,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.roadRunner.MecanumDrive;
 
 @Config
-@Autonomous(name = "Blue_Specimen_3_Park", group = "Autonomous")
+@Autonomous(name = "Blue_Specimen_5_Park", group = "Autonomous")
 
-public class BlueSpecimen3Park extends LinearOpMode {
+public class BlueSpecimen5Park extends LinearOpMode {
     @Override
     public void runOpMode() {
         waitForStart();
@@ -54,6 +54,16 @@ public class BlueSpecimen3Park extends LinearOpMode {
 
                 .setTangent(Math.toRadians(270))
                 .splineToConstantHeading(new Vector2d(-2, 33), Math.toRadians(270))
+
+                .strafeToConstantHeading(new Vector2d(-46, 59))
+
+                .setTangent(Math.toRadians(270))
+                .splineToConstantHeading(new Vector2d(-5, 33), Math.toRadians(270))
+
+                .strafeToConstantHeading(new Vector2d(-46, 59))
+
+                .setTangent(Math.toRadians(270))
+                .splineToConstantHeading(new Vector2d(-8, 33), Math.toRadians(270))
 
                 .strafeToConstantHeading(new Vector2d(-46, 59));
 
