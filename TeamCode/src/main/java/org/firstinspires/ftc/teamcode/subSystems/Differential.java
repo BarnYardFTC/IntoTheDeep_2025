@@ -28,7 +28,7 @@ public class Differential {
     public Differential(OpMode opMode) {
         servos[RIGHT] = opMode.hardwareMap.get(Servo.class, "rightDifferential");
         servos[LEFT] = opMode.hardwareMap.get(Servo.class, "leftDifferential");
-        analogSensor = opMode.hardwareMap.get(AnalogInput.class, "analogSensor");
+//        analogSensor = opMode.hardwareMap.get(AnalogInput.class, "analogSensor");
     }
 
     /**

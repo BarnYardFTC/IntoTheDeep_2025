@@ -70,7 +70,7 @@ public class Lift {
         controller.setPID(p, i, d);
 
         // Sets the current and target position of the motor.
-        int currentPos = Math.abs(motors[RIGHT].getCurrentPosition());
+        int currentPos = motors[RIGHT].getCurrentPosition();
 //        targetPos = (int) RIGHT_MOTOR.getCmToEncoders(targetPosCm);
 //        targetPos = (int) (targetPosCm * ENCODERS_TO_CM);
 

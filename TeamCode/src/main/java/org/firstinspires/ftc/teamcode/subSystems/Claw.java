@@ -60,6 +60,7 @@ public class Claw {
         LED.changeColor(RevBlinkinLedDriver.BlinkinPattern.DARK_RED);
         specimenCollected = false;
         sampleCollected = false;
+
     }
 
     /**
@@ -68,6 +69,7 @@ public class Claw {
     public static void close() {
         claw.setPosition(CLOSED_POSITION);
         LED.changeColor(RevBlinkinLedDriver.BlinkinPattern.GREEN);
+
     }
 
     /**

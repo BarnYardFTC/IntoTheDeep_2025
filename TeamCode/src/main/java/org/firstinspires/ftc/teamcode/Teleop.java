@@ -33,21 +33,30 @@ public class Teleop extends LinearOpMode {
         Drivetrain drivetrain = new Drivetrain(this);
         LiftArm liftArm = new LiftArm(this);
         Lift lift = new Lift(this);
-
-        TeleOpFunctions.setGamepadEx(new GamepadEx(gamepad1));
-        TeleOpFunctions.setLeftTrigger(new TriggerReader(TeleOpFunctions.getGamepadEx(), GamepadKeys.Trigger.LEFT_TRIGGER));
-        TeleOpFunctions.setRightTrigger(new TriggerReader(TeleOpFunctions.getGamepadEx(), GamepadKeys.Trigger.RIGHT_TRIGGER));
     }
 
     @Override
     public void runOpMode() {
-        Drivetrain drivetrain = new Drivetrain(this);
+        initializeAll();
+        Differential.move(0, 180);
 
         waitForStart();
 
         // Main Loop
         while (opModeIsActive()) {
-            Drivetrain.move(gamepad1);
+            TeleOpFunctions.runAll(gamepad1);
+            if (gamepad1.a) {
+                Differential.move(0, 10);
+            }
+            if (gamepad1.b) {
+                Suction.getSuction().setPower(1);
+            }
+            if (gamepad1.x) {
+                Suction.getSuction().setPower(-1);
+            }
+            if (!gamepad1.b && !gamepad1.x) {
+                Suction.getSuction().setPower(0);
+            }
             telemetry.addData("heading", Drivetrain.getRobotHeading());
             telemetry.update();
         }

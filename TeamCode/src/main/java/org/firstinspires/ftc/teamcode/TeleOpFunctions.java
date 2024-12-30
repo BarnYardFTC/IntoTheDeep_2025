@@ -51,35 +51,19 @@ public class TeleOpFunctions {
 
     private static void resetRobot() {
         if (reseted) {
-            Differential.reset();
-            LiftArm.move(LiftArm.Angle.HORIZONTAL);
-            Lift.move(Lift.Pos.RESET);
+            reset();
             reseted = true;
         }
     }
 
     public static void runAll(Gamepad gamepad) {
-        resetRobot();
+//        resetRobot();
 
-        // Gamepad actions.
         Drivetrain.move(gamepad);
         Drivetrain.resetImu(gamepad);
-        collectSample();
-        collectSpecimen();
-        moveToHighUnloadingPosition();
-        moveToLowUnloadingPosition();
-        unload();
-        reset();
-        unload();
 
-        // Passive actions.
-        LiftArm.liftArmPID();
-        Lift.liftPID();
-
-        // Updating gamepad.
-        gamepadEx.readButtons();
-        RIGHT_TRIGGER.readValue();
-        LEFT_TRIGGER.readValue();
+//        LiftArm.liftArmPID();
+//        Lift.liftPID();
     }
 
     private static void reset() {

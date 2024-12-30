@@ -16,11 +16,11 @@ public class LiftArm {
     private static final MotorProps RIGHT_MOTOR = new MotorProps(1425.1, 1); // Right's motor props.
     private static final MotorProps LEFT_MOTOR = new MotorProps(1425.1, 1); // Left's motor props.
 
-    private static final int VERTICAL_POS = 90; // Angle for moving the lift arm to a vertical position.
-    private static final int HORIZONTAL_POS = 0; // Angle for moving the lift arm to a horizontal position.
+    private static final int VERTICAL_POS = 80; // Angle for moving the lift arm to a vertical position.
+    private static final int HORIZONTAL_POS = 20; // Angle for moving the lift arm to a horizontal position.
 
     //ToDo: set correct values.
-    public static double p = 0.05;
+    public static double p = 0.028;
     public static double i = 0;
     public static double d = 0;
     public static double f = 0.22;
@@ -76,7 +76,7 @@ public class LiftArm {
         controller.setPID(p, i, d);
 
         // Sets the current and target position of the motor.
-        int currentPos = Math.abs(motors[RIGHT].getCurrentPosition());
+        int currentPos = motors[RIGHT].getCurrentPosition();
         targetPos = RIGHT_MOTOR.getAngleToEncoder(targetAngle);
 
         // Calculate PIDF values.
