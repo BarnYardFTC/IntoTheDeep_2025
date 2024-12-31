@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.modules.ServoProps;
 
 public class Differential {
-    private static final Servo[] servos = new Servo[2]; // Servos array.
+    public static final Servo[] servos = new Servo[2]; // Servos array.
     private static final ServoProps RIGHT_SERVO = new ServoProps(355, (double) 175 / 355, 1); // Right's servo props.
     private static final ServoProps LEFT_SERVO = new ServoProps(355, 0, 1); // Left's servo props.
     private static final int RIGHT = 0; // Right's servo index.
@@ -28,6 +28,7 @@ public class Differential {
     public Differential(OpMode opMode) {
         servos[RIGHT] = opMode.hardwareMap.get(Servo.class, "rightDifferential");
         servos[LEFT] = opMode.hardwareMap.get(Servo.class, "leftDifferential");
+        servos[LEFT].setDirection(Servo.Direction.REVERSE);
 //        analogSensor = opMode.hardwareMap.get(AnalogInput.class, "analogSensor");
     }
 
@@ -40,8 +41,8 @@ public class Differential {
      * @param anglePitch - Wanted end angle of the differential on the pitch axis.
      */
     public static void move(int angleRoll, int anglePitch) {
-        servos[RIGHT].setPosition(RIGHT_SERVO.getTargetPosition(angleRoll - anglePitch));
-        servos[LEFT].setPosition(LEFT_SERVO.getTargetPosition(angleRoll + anglePitch));
+        servos[RIGHT].setPosition(RIGHT_SERVO.getTargetPosition(angleRoll + anglePitch));
+        servos[LEFT].setPosition(LEFT_SERVO.getTargetPosition(-angleRoll + anglePitch));
     }
 
     /**

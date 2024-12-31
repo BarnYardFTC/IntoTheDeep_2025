@@ -16,8 +16,9 @@ public class LiftArm {
     private static final MotorProps RIGHT_MOTOR = new MotorProps(1425.1, 1); // Right's motor props.
     private static final MotorProps LEFT_MOTOR = new MotorProps(1425.1, 1); // Left's motor props.
 
-    private static final int VERTICAL_POS = 80; // Angle for moving the lift arm to a vertical position.
+    private static final int VERTICAL_POS = 85; // Angle for moving the lift arm to a vertical position.
     private static final int HORIZONTAL_POS = 20; // Angle for moving the lift arm to a horizontal position.
+    private static final int INTAKE_POS = 42;
 
     //ToDo: set correct values.
     public static double p = 0.028;
@@ -99,10 +100,13 @@ public class LiftArm {
             case HORIZONTAL:
                 targetAngle = HORIZONTAL_POS;
                 break;
+            case INTAKE:
+                targetAngle = INTAKE_POS;
+                break;
         }
     }
 
     public enum Angle {
-        VERTICAL, HORIZONTAL
+        VERTICAL, HORIZONTAL, INTAKE
     }
 }
