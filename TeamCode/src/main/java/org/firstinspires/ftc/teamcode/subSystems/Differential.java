@@ -15,6 +15,8 @@ public class Differential {
     private static final int RIGHT = 0; // Right's servo index.
     private static final int LEFT = 1; // Left's servo index.
 
+    public static int goalAngle;
+
     // Angles for moving the differential.
     private static final int PITCH_ANGLE_SPECIMEN_INTAKE = 175;
     private static final int ROLL_ANGLE_SPECIMEN_INTAKE = 180;
@@ -50,9 +52,9 @@ public class Differential {
      *
      * @param angle - Amount of degrees wanted for movement.
      */
-    private static void increase(int angle) {
-        servos[RIGHT].setPosition(RIGHT_SERVO.getCurrentAngle(servos[RIGHT].getPosition()) + angle);
-        servos[LEFT].setPosition(LEFT_SERVO.getCurrentAngle(servos[LEFT].getPosition()) + angle);
+    public static void increase(int angle) {
+        servos[RIGHT].setPosition(servos[RIGHT].getPosition() + 0.05 * angle);
+        servos[LEFT].setPosition(servos[LEFT].getPosition() + 0.05 * angle);
     }
 
     /**
