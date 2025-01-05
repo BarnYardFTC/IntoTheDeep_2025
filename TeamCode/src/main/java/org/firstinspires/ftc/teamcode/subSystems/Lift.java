@@ -5,7 +5,6 @@ package org.firstinspires.ftc.teamcode.subSystems;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
@@ -24,17 +23,15 @@ public class Lift {
     private static final double LOW_CHAMBER_POS = RIGHT_MOTOR.getCmToEncoders(0);
     private static final double HIGH_BASKET_POS = RIGHT_MOTOR.getCmToEncoders(109.2);
     private static final double LOW_BASKET_POS = RIGHT_MOTOR.getCmToEncoders(65.4);
-
+    private static final double ENCODERS_TO_CM = 0;
     //ToDo: set correct values.
     public static double p = 0.03;
     public static double i = 0;
     public static double d = 0;
     public static double f = 0;
     public static double targetPosCm; // Target position of the lift in cm.
-    private static PIDController controller; // PID controller.
     public static int targetPos; // Target position of the right motor.
-
-    private static final double ENCODERS_TO_CM = 0;
+    private static PIDController controller; // PID controller.
 
     public Lift(OpMode opMode) {
         motors[RIGHT] = opMode.hardwareMap.get(DcMotorEx.class, "rightLift");
@@ -95,7 +92,6 @@ public class Lift {
     }
 
 
-
     public static void move(Pos pos) {
         switch (pos) {
             case HIGH_CHAMBER:
@@ -119,8 +115,7 @@ public class Lift {
     public static void move(double direction) {
         if (direction > 0) {
             targetPosCm += 5;
-        }
-        else {
+        } else {
             targetPosCm -= 5;
         }
     }
