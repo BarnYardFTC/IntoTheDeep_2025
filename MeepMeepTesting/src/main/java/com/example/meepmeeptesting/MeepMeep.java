@@ -14,6 +14,8 @@ public class MeepMeep {
         RoadRunnerBotEntity botRedSample = new DefaultBotBuilder(meepMeep).setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 14).build();
         RoadRunnerBotEntity botBlueSample = new DefaultBotBuilder(meepMeep).setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 14).build();
 
+        Pose2d test = new Pose2d(4, 33, Math.toRadians(270));
+
         Pose2d initialPoseRedSpecimen = new Pose2d(8, -63, Math.toRadians(90));
         Pose2d initialPoseBlueSpecimen = new Pose2d(-8, 63, Math.toRadians(270));
         Pose2d initialPoseRedSample = new Pose2d(-30, -63, Math.toRadians(90));
@@ -64,7 +66,8 @@ public class MeepMeep {
                 .build());
 
         botBlueSpecimen.runAction(botBlueSpecimen.getDrive().actionBuilder(initialPoseBlueSpecimen)
-                .strafeToConstantHeading(new Vector2d(4, 33))
+//                .strafeToConstantHeading(new Vector2d(4, 33))
+                .strafeToConstantHeading(test.component1())
 
                 .setTangent(Math.toRadians(90))
                 .splineToConstantHeading(new Vector2d(-33, 36), Math.toRadians(270))
@@ -118,6 +121,7 @@ public class MeepMeep {
                 .strafeToConstantHeading(new Vector2d(-33, 63))
 
                 .build());
+
 
         meepMeep.setBackground(com.noahbres.meepmeep.MeepMeep.Background.FIELD_INTO_THE_DEEP_JUICE_DARK)
                 .setDarkMode(true)
