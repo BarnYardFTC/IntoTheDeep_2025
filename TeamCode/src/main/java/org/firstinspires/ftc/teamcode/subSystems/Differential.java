@@ -48,16 +48,6 @@ public class Differential {
     }
 
     /**
-     * Increases the differential position on the roll axis by a given amount of degrees.
-     *
-     * @param angle - Amount of degrees wanted for movement.
-     */
-    public static void increase(int angle) {
-        servos[RIGHT].setPosition(servos[RIGHT].getPosition() + 0.05 * angle);
-        servos[LEFT].setPosition(servos[LEFT].getPosition() + 0.05 * angle);
-    }
-
-    /**
      * Resets differential to it's starting position.
      * The action set the servos position once in a loop until the reseted value is changed.
      */

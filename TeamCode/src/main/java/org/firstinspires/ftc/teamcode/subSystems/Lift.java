@@ -23,7 +23,7 @@ public class Lift {
     private static final double LOW_CHAMBER_POS = RIGHT_MOTOR.getCmToEncoders(0);
     private static final double HIGH_BASKET_POS = RIGHT_MOTOR.getCmToEncoders(109.2);
     private static final double LOW_BASKET_POS = RIGHT_MOTOR.getCmToEncoders(65.4);
-    private static final double ENCODERS_TO_CM = 0;
+
     //ToDo: set correct values.
     public static double p = 0.03;
     public static double i = 0;
@@ -68,8 +68,7 @@ public class Lift {
 
         // Sets the current and target position of the motor.
         int currentPos = motors[RIGHT].getCurrentPosition();
-//        targetPos = (int) RIGHT_MOTOR.getCmToEncoders(targetPosCm);
-//        targetPos = (int) (targetPosCm * ENCODERS_TO_CM);
+        targetPos = (int) RIGHT_MOTOR.getCmToEncoders(targetPosCm);
 
         // Calculate PIDF values.
         double pid = controller.calculate(currentPos, targetPos);

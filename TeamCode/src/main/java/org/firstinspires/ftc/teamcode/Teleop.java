@@ -3,19 +3,12 @@ package org.firstinspires.ftc.teamcode;
 // Imports.
 
 import static org.firstinspires.ftc.teamcode.subSystems.Differential.goalAngle;
-import static org.firstinspires.ftc.teamcode.subSystems.Differential.servos;
 
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.arcrobotics.ftclib.gamepad.TriggerReader;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.subSystems.Claw;
 import org.firstinspires.ftc.teamcode.subSystems.Differential;
 import org.firstinspires.ftc.teamcode.subSystems.Drivetrain;
-import org.firstinspires.ftc.teamcode.subSystems.LED;
 import org.firstinspires.ftc.teamcode.subSystems.Lift;
 import org.firstinspires.ftc.teamcode.subSystems.LiftArm;
 import org.firstinspires.ftc.teamcode.subSystems.Suction;
@@ -60,15 +53,15 @@ public class Teleop extends LinearOpMode {
                 Differential.goalAngle = 0;
             }
             if (gamepad1.b) {
-                Suction.getSuction().setPower(-1);
+                Suction.getSuction().setPower(1);
             }
             if (gamepad1.x) {
-                Suction.getSuction().setPower(1);
+                Suction.getSuction().setPower(-1);
             }
             if (!gamepad1.b && !gamepad1.x) {
                 Suction.getSuction().setPower(0);
             }
-            if (Lift.targetPos + 10 > 800 && LiftArm.isHorizontal()){
+            if (Lift.targetPos + 10 > 800 && LiftArm.isHorizontal()) {
                 Lift.targetPos = 800;
             }
             if (gamepad1.right_trigger > 0.1 && Lift.targetPos + 10 < 800 && LiftArm.isHorizontal()) {

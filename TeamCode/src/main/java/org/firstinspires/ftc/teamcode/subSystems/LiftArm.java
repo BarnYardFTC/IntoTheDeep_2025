@@ -16,9 +16,9 @@ public class LiftArm {
     public static final MotorProps RIGHT_MOTOR = new MotorProps(1425.1, 1); // Right's motor props.
     private static final MotorProps LEFT_MOTOR = new MotorProps(1425.1, 1); // Left's motor props.
 
-    private static final int VERTICAL_POS = 175; // Angle for moving the lift arm to a vertical position.
-    private static final int HORIZONTAL_POS = 0; // Angle for moving the lift arm to a horizontal position.
-    private static final int INTAKE_POS = 42;
+    private static final int VERTICAL_POS = 130; // Angle for moving the lift arm to a vertical position.
+    private static final int HORIZONTAL_POS = 5; // Angle for moving the lift arm to a horizontal position.
+    private static final double MIN_LIFT_LENGTH = 30;
 
     //ToDo: set correct values.
     public static double p = 0.028;
@@ -82,8 +82,8 @@ public class LiftArm {
 
         // Calculate PIDF values.
         double pid = controller.calculate(currentPos, targetPos);
-        double ff = Math.cos(Math.toRadians(targetAngle)) * f;
-//        double maxPower = 0.55;
+        double ff = Math.cos(Math.toRadians(targetAngle)) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
+
         // Calculate motor power.
         double power = pid + ff;
 
@@ -100,13 +100,10 @@ public class LiftArm {
             case HORIZONTAL:
                 targetAngle = HORIZONTAL_POS;
                 break;
-            case INTAKE:
-                targetAngle = INTAKE_POS;
-                break;
         }
     }
 
     public enum Angle {
-        VERTICAL, HORIZONTAL, INTAKE
+        VERTICAL, HORIZONTAL
     }
 }
