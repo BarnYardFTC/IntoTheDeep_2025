@@ -5,18 +5,14 @@ package org.firstinspires.ftc.teamcode.autonomous.Programs.BlueSpecimen;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.Pose2dDual;
-import com.acmerobotics.roadrunner.ProfileParams;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
-import com.acmerobotics.roadrunner.TrajectoryBuilder;
-import com.acmerobotics.roadrunner.TrajectoryBuilderParams;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.autonomous.Trajactories.BlueSpecimen;
+import org.firstinspires.ftc.teamcode.autonomous.Trajactories.BlueSpecimenTrajectories;
 import org.firstinspires.ftc.teamcode.roadRunner.MecanumDrive;
 
 @Config
@@ -56,7 +52,6 @@ public class BlueSpecimen1Park extends LinearOpMode {
 
         Action trajectory;
         trajectory = trajectoryBuilder.build();
-        Action trajectory1 = BlueSpecimen.trajectoryBuilder.build();
 
         waitForStart();
 

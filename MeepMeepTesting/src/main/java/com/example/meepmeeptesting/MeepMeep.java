@@ -7,14 +7,12 @@ import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
 public class MeepMeep {
     public static void main(String[] args) {
-        com.noahbres.meepmeep.MeepMeep meepMeep = new com.noahbres.meepmeep.MeepMeep(800);
+        com.noahbres.meepmeep.MeepMeep meepMeep = new com.noahbres.meepmeep.MeepMeep(500);
 
         RoadRunnerBotEntity botRedSpecimen = new DefaultBotBuilder(meepMeep).setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 14).build();
         RoadRunnerBotEntity botBlueSpecimen = new DefaultBotBuilder(meepMeep).setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 14).build();
         RoadRunnerBotEntity botRedSample = new DefaultBotBuilder(meepMeep).setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 14).build();
         RoadRunnerBotEntity botBlueSample = new DefaultBotBuilder(meepMeep).setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 14).build();
-
-        Pose2d test = new Pose2d(4, 33, Math.toRadians(270));
 
         Pose2d initialPoseRedSpecimen = new Pose2d(8, -63, Math.toRadians(90));
         Pose2d initialPoseBlueSpecimen = new Pose2d(-8, 63, Math.toRadians(270));
@@ -66,8 +64,7 @@ public class MeepMeep {
                 .build());
 
         botBlueSpecimen.runAction(botBlueSpecimen.getDrive().actionBuilder(initialPoseBlueSpecimen)
-//                .strafeToConstantHeading(new Vector2d(4, 33))
-                .strafeToConstantHeading(test.component1())
+                .strafeToConstantHeading(new Vector2d(4, 33))
 
                 .setTangent(Math.toRadians(90))
                 .splineToConstantHeading(new Vector2d(-33, 36), Math.toRadians(270))

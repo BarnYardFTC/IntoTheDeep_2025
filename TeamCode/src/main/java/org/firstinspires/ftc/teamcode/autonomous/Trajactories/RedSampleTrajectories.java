@@ -1,4 +1,4 @@
 package org.firstinspires.ftc.teamcode.autonomous.Trajactories;
 
-public class RedSample {
+public class RedSampleTrajectories {
 }
