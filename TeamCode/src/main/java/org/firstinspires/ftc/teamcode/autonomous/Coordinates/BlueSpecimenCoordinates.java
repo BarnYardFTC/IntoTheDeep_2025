@@ -5,35 +5,51 @@ import com.acmerobotics.roadrunner.Pose2d;
 public class BlueSpecimenCoordinates {
     private static final double startX = -8;
     private static final double startY = 63;
+    private static final double score1X = 4;
+    private static final double score2X = 1;
+    private static final double score3X = -2;
+    private static final double score4X = -5;
+    private static final double score5X = -8;
+    private static final double scoreY = 33;
+    private static final double midWayMoveSpecimensY = 36;
+    private static final double moveSpecimensStart0X = -33;
+    private static final double moveSpecimensStartY = 13;
+    private static final double moveSpecimensEndY = 54;
+    private static final double specimen1X = -46;
+    private static final double specimen2X = -54;
+    private static final double specimen3X = -62;
+    private static final double wallY = 59;
+    private static final double intakeX = -46;
+    private static final double parkX = -62;
 
     private static final double midWayMoveSpecimensTangent = Math.toRadians(90);
     private static final double startPoseHeading = Math.toRadians(270);
 
-    private static final Pose2d startPose = new Pose2d(-8, 63, startPoseHeading);
+    private static final Pose2d start = new Pose2d(startX, startY, startPoseHeading);
 
-    private static final Pose2d score1 = new Pose2d(4, 33, startPoseHeading);
-    private static final Pose2d score2 = new Pose2d(1, 33, startPoseHeading);
-    private static final Pose2d score3 = new Pose2d(-2, 33, Math.toRadians(270));
-    private static final Pose2d score4 = new Pose2d(-5, 33, Math.toRadians(270));
-    private static final Pose2d score5 = new Pose2d(-8, 33, Math.toRadians(270));
+    private static final Pose2d score1 = new Pose2d(score1X, scoreY, startPoseHeading);
+    private static final Pose2d score2 = new Pose2d(score2X, scoreY, startPoseHeading);
+    private static final Pose2d score3 = new Pose2d(score3X, scoreY, startPoseHeading);
+    private static final Pose2d score4 = new Pose2d(score4X, scoreY, startPoseHeading);
+    private static final Pose2d score5 = new Pose2d(score5X, scoreY, startPoseHeading);
 
-    private static final Pose2d midWayMoveSpecimens = new Pose2d(-33, 36, startPoseHeading);
-    private static final Pose2d moveSpecimensStart0 = new Pose2d(-33, 13, startPoseHeading);
+    private static final Pose2d midWayMoveSpecimens = new Pose2d(moveSpecimensStart0X, midWayMoveSpecimensY, startPoseHeading);
+    private static final Pose2d moveSpecimensStart0 = new Pose2d(moveSpecimensStart0X, moveSpecimensStartY, startPoseHeading);
 
-    private static final Pose2d moveSpecimenStart1 = new Pose2d(-46, 13, Math.toRadians(270));
-    private static final Pose2d moveSpecimenStart2 = new Pose2d(-54, 13, Math.toRadians(270));
-    private static final Pose2d moveSpecimenStart3 = new Pose2d(-62, 33, Math.toRadians(270));
+    private static final Pose2d moveSpecimenStart1 = new Pose2d(specimen1X, moveSpecimensStartY, startPoseHeading);
+    private static final Pose2d moveSpecimenStart2 = new Pose2d(specimen2X, moveSpecimensStartY, startPoseHeading);
+    private static final Pose2d moveSpecimenStart3 = new Pose2d(specimen3X, moveSpecimensStartY, startPoseHeading);
 
-    private static final Pose2d moveSpecimenEnd1 = new Pose2d(-46, 54, Math.toRadians(270));
-    private static final Pose2d moveSpecimenEnd2 = new Pose2d(-54, 54, Math.toRadians(270));
-    private static final Pose2d moveSpecimenEnd3 = new Pose2d(-62, 54, Math.toRadians(270));
+    private static final Pose2d moveSpecimenEnd1 = new Pose2d(specimen1X, moveSpecimensEndY, startPoseHeading);
+    private static final Pose2d moveSpecimenEnd2 = new Pose2d(specimen2X, moveSpecimensEndY, startPoseHeading);
+    private static final Pose2d moveSpecimenEnd3 = new Pose2d(specimen3X, moveSpecimensEndY, startPoseHeading);
 
-    private static final Pose2d intake = new Pose2d(-46, 59, Math.toRadians(270));
+    private static final Pose2d intake = new Pose2d(intakeX, wallY, startPoseHeading);
 
-    private static final Pose2d park = new Pose2d(-62, 59, Math.toRadians(270));
+    private static final Pose2d park = new Pose2d(parkX, wallY, startPoseHeading);
 
-    public static Pose2d getStartPose() {
-        return startPose;
+    public static Pose2d getStart() {
+        return start;
     }
 
     public static Pose2d getScore1() {
@@ -94,5 +110,8 @@ public class BlueSpecimenCoordinates {
 
     public static Pose2d getPark() {
         return park;
+    }
+    public static double getMidWayMoveSpecimensTangent() {
+        return midWayMoveSpecimensTangent;
     }
 }

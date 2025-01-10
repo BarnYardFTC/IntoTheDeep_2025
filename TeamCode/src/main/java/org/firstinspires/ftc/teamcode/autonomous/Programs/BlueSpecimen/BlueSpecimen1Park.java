@@ -23,35 +23,8 @@ public class BlueSpecimen1Park extends LinearOpMode {
     public void runOpMode() {
         waitForStart();
 
-        Pose2d initialPose = new Pose2d(-8, 63, Math.toRadians(270));
-        MecanumDrive ignitionSystem = new MecanumDrive(hardwareMap, initialPose);
-
-        initialPose.inverse();
-
-        TrajectoryActionBuilder trajectoryBuilder = ignitionSystem.actionBuilder(initialPose)
-                .strafeToConstantHeading(new Vector2d(-8, 33))
-
-                .setTangent(Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(-33, 36), Math.toRadians(270))
-
-
-                .splineToConstantHeading(new Vector2d(-33, 13), Math.toRadians(270))
-
-                .splineToConstantHeading(new Vector2d(-46, 13), Math.toRadians(270))
-                .splineToConstantHeading(new Vector2d(-46, 54), Math.toRadians(270))
-
-                .splineToConstantHeading(new Vector2d(-46, 13), Math.toRadians(270))
-
-                .splineToConstantHeading(new Vector2d(-54, 13), Math.toRadians(270))
-                .splineToConstantHeading(new Vector2d(-54, 54), Math.toRadians(270))
-
-                .splineToConstantHeading(new Vector2d(-54, 13), Math.toRadians(270))
-
-                .splineToConstantHeading(new Vector2d(-62, 13), Math.toRadians(270))
-                .splineToConstantHeading(new Vector2d(-62, 54), Math.toRadians(270));
-
-        Action trajectory;
-        trajectory = trajectoryBuilder.build();
+        Action scorePreLoad = BlueSpecimenTrajectories.scorePreload.build();
+        Action moveSpecimens = BlueSpecimenTrajectories.moveSpecimens.build();
 
         waitForStart();
 
@@ -59,7 +32,8 @@ public class BlueSpecimen1Park extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        trajectory
+                        scorePreLoad,
+                        moveSpecimens
                 )
         );
     }
