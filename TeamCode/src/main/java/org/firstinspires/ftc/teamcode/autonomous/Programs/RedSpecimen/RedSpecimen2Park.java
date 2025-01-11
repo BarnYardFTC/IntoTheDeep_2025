@@ -12,6 +12,8 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.autonomous.Trajactories.BlueSpecimenTrajectories;
+import org.firstinspires.ftc.teamcode.autonomous.Trajactories.RedSpecimenTrajectories;
 import org.firstinspires.ftc.teamcode.roadRunner.MecanumDrive;
 
 @Config
@@ -22,38 +24,10 @@ public class RedSpecimen2Park extends LinearOpMode {
     public void runOpMode() {
         waitForStart();
 
-        Pose2d initialPose = new Pose2d(8, -63, Math.toRadians(90));
-        MecanumDrive ignitionSystem = new MecanumDrive(hardwareMap, initialPose);
-
-        TrajectoryActionBuilder trajectoryBuilder = ignitionSystem.actionBuilder(initialPose)
-                .strafeToConstantHeading(new Vector2d(-4, -33))
-
-                .setTangent(Math.toRadians(270))
-                .splineToConstantHeading(new Vector2d(33, -36), Math.toRadians(90))
-
-
-                .splineToConstantHeading(new Vector2d(33, -13), Math.toRadians(90))
-
-                .splineToConstantHeading(new Vector2d(46, -13), Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(46, -54), Math.toRadians(90))
-
-                .splineToConstantHeading(new Vector2d(46, -13), Math.toRadians(90))
-
-                .splineToConstantHeading(new Vector2d(54, -13), Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(54, -54), Math.toRadians(90))
-
-                .splineToConstantHeading(new Vector2d(54, -13), Math.toRadians(90))
-
-                .splineToConstantHeading(new Vector2d(62, -13), Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(62, -54), Math.toRadians(90))
-
-                .setTangent(Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(-1, -33), Math.toRadians(90))
-
-                .strafeToConstantHeading(new Vector2d(46, -59));
-
-        Action trajectory;
-        trajectory = trajectoryBuilder.build();
+        Action scorePreLoad = RedSpecimenTrajectories.scorePreload.build();
+        Action moveSpecimens = RedSpecimenTrajectories.moveSpecimens.build();
+        Action scoreSecond = RedSpecimenTrajectories.scoreSecond.build();
+        Action park = RedSpecimenTrajectories.parkAfterSecond.build();
 
         waitForStart();
 
@@ -61,7 +35,10 @@ public class RedSpecimen2Park extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        trajectory
+                        scorePreLoad,
+                        moveSpecimens,
+                        scoreSecond,
+                        park
                 )
         );
     }

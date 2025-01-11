@@ -37,24 +37,21 @@ public class BlueSpecimenTrajectories {
             .splineToConstantHeading(BlueSpecimenCoordinates.getScore2().position, BlueSpecimenCoordinates.getStart().heading);
 
     public static TrajectoryActionBuilder intakeThird = ignitionSystem.actionBuilder(BlueSpecimenCoordinates.getScore2())
-            .setTangent(BlueSpecimenCoordinates.getStart().heading)
-            .splineToConstantHeading(BlueSpecimenCoordinates.getIntake().position, BlueSpecimenCoordinates.getIntake().heading);
+            .strafeToConstantHeading(BlueSpecimenCoordinates.getIntake().position);
 
     public static TrajectoryActionBuilder scoreThird = ignitionSystem.actionBuilder(BlueSpecimenCoordinates.getIntake())
             .setTangent(BlueSpecimenCoordinates.getStart().heading)
             .splineToConstantHeading(BlueSpecimenCoordinates.getScore3().position, BlueSpecimenCoordinates.getStart().heading);
 
     public static TrajectoryActionBuilder intakeFourth = ignitionSystem.actionBuilder(BlueSpecimenCoordinates.getScore3())
-            .setTangent(BlueSpecimenCoordinates.getStart().heading)
-            .splineToConstantHeading(BlueSpecimenCoordinates.getIntake().position, BlueSpecimenCoordinates.getIntake().heading);
+            .strafeToConstantHeading(BlueSpecimenCoordinates.getIntake().position);
 
     public static TrajectoryActionBuilder scoreFourth = ignitionSystem.actionBuilder(BlueSpecimenCoordinates.getIntake())
             .setTangent(BlueSpecimenCoordinates.getStart().heading)
             .splineToConstantHeading(BlueSpecimenCoordinates.getScore4().position, BlueSpecimenCoordinates.getStart().heading);
 
     public static TrajectoryActionBuilder intakeFifth = ignitionSystem.actionBuilder(BlueSpecimenCoordinates.getScore4())
-            .setTangent(BlueSpecimenCoordinates.getStart().heading)
-            .splineToConstantHeading(BlueSpecimenCoordinates.getIntake().position, BlueSpecimenCoordinates.getIntake().heading);
+            .strafeToConstantHeading(BlueSpecimenCoordinates.getIntake().position);
 
     public static TrajectoryActionBuilder scoreFifth = ignitionSystem.actionBuilder(BlueSpecimenCoordinates.getIntake())
             .setTangent(BlueSpecimenCoordinates.getStart().heading)
