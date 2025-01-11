@@ -10,10 +10,9 @@ import org.firstinspires.ftc.teamcode.modules.MotorProps;
 @Config
 public class LiftArm {
     public static final DcMotorEx[] motors = new DcMotorEx[2]; // Motors array.
+    public static final MotorProps RIGHT_MOTOR = new MotorProps(1425.1, 1); // Right's motor props.
     private static final int RIGHT = 0; // Right's motor index.
     private static final int LEFT = 1; // Left's motor index.
-
-    public static final MotorProps RIGHT_MOTOR = new MotorProps(1425.1, 1); // Right's motor props.
     private static final MotorProps LEFT_MOTOR = new MotorProps(1425.1, 1); // Left's motor props.
 
     private static final int VERTICAL_POS = 130; // Angle for moving the lift arm to a vertical position.

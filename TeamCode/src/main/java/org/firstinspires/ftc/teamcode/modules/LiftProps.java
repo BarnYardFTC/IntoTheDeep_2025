@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.modules;
 
-public class LiftProps extends MotorProps{
+public class LiftProps extends MotorProps {
     private final double CHAIN_SIZE;
     private final int SLIDE_COUNT;
     private final int TOOTH_OF_FINAL_PART;

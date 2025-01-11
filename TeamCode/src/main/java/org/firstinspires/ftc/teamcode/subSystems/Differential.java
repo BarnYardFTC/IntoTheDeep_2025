@@ -14,16 +14,13 @@ public class Differential {
     private static final ServoProps LEFT_SERVO = new ServoProps(355, 0, 1); // Left's servo props.
     private static final int RIGHT = 0; // Right's servo index.
     private static final int LEFT = 1; // Left's servo index.
-
-    public static int goalAngle;
-
     // Angles for moving the differential.
     private static final int PITCH_ANGLE_SPECIMEN_INTAKE = 175;
     private static final int ROLL_ANGLE_SPECIMEN_INTAKE = 180;
     private static final int PITCH_ANGLE_SPECIMEN_UNLOAD = 90;
     private static final int ROLL_ANGLE_SAMPLE_UNLOAD = 90;
     private static final int PITCH_ANGLE_SAMPLE_UNLOAD = 140;
-
+    public static int goalAngle;
     // Analog, position equation: position = analogInput.getVoltage() / 3.3 * 360.
     private static AnalogInput analogSensor;
 

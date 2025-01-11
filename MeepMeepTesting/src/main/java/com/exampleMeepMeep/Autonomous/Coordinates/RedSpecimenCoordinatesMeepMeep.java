@@ -111,6 +111,7 @@ public class RedSpecimenCoordinatesMeepMeep {
     public static Pose2d getPark() {
         return park;
     }
+
     public static double getMidWayMoveSpecimensTangent() {
         return midWayMoveSpecimensTangent;
     }

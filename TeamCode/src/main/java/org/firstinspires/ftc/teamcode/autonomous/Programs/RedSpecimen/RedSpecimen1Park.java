@@ -4,17 +4,12 @@ package org.firstinspires.ftc.teamcode.autonomous.Programs.RedSpecimen;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
-import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.autonomous.Trajactories.BlueSpecimenTrajectories;
 import org.firstinspires.ftc.teamcode.autonomous.Trajactories.RedSpecimenTrajectories;
-import org.firstinspires.ftc.teamcode.roadRunner.MecanumDrive;
 
 @Config
 @Autonomous(name = "Red_Specimen_1_Park", group = "Autonomous")

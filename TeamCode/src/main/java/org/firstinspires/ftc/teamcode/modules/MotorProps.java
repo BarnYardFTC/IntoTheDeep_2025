@@ -21,7 +21,7 @@ public class MotorProps {
      * Non standard constructor.
      *
      * @param ENCODER_RESOLUTION - Encoders needed for one shaft rotation.
-     * @param OUTER_GEAR_RATIO    - Gear ratio of outer motor shaft rotation to one final gear rotation.
+     * @param OUTER_GEAR_RATIO   - Gear ratio of outer motor shaft rotation to one final gear rotation.
      */
     public MotorProps(double ENCODER_RESOLUTION, double OUTER_GEAR_RATIO) {
         this.ENCODER_RESOLUTION = ENCODER_RESOLUTION;
