@@ -4,7 +4,6 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.har
 
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 
-import org.firstinspires.ftc.teamcode.autonomous.Coordinates.BlueSpecimenCoordinates;
 import org.firstinspires.ftc.teamcode.autonomous.Coordinates.RedSpecimenCoordinates;
 import org.firstinspires.ftc.teamcode.roadRunner.MecanumDrive;
 

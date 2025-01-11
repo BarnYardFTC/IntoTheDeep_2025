@@ -2,7 +2,9 @@ package com.exampleMeepMeep.meepmeeptesting;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.exampleMeepMeep.Autonomous.Coordinates.BlueSampleCoordinatesMeepMeep;
 import com.exampleMeepMeep.Autonomous.Coordinates.BlueSpecimenCoordinatesMeepMeep;
+import com.exampleMeepMeep.Autonomous.Coordinates.RedSampleCoordinatesMeepMeep;
 import com.exampleMeepMeep.Autonomous.Coordinates.RedSpecimenCoordinatesMeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
@@ -15,9 +17,6 @@ public class MeepMeep {
         RoadRunnerBotEntity botBlueSpecimen = new DefaultBotBuilder(meepMeep).setConstraints(75, 75, Math.toRadians(180), Math.toRadians(180), 14).build();
         RoadRunnerBotEntity botRedSample = new DefaultBotBuilder(meepMeep).setConstraints(75, 75, Math.toRadians(180), Math.toRadians(180), 14).build();
         RoadRunnerBotEntity botBlueSample = new DefaultBotBuilder(meepMeep).setConstraints(75, 75, Math.toRadians(180), Math.toRadians(180), 14).build();
-
-        Pose2d initialPoseRedSample = new Pose2d(-30, -63, Math.toRadians(90));
-        Pose2d initialPoseBlueSample = new Pose2d(30, 63, Math.toRadians(270));
 
         botRedSpecimen.runAction(botRedSpecimen.getDrive().actionBuilder(RedSpecimenCoordinatesMeepMeep.getStart())
                 .strafeToConstantHeading(RedSpecimenCoordinatesMeepMeep.getScore1().position)
@@ -105,15 +104,15 @@ public class MeepMeep {
 
                 .build());
 
-        botRedSample.runAction(botRedSample.getDrive().actionBuilder(initialPoseRedSample)
+        botRedSample.runAction(botRedSample.getDrive().actionBuilder(RedSampleCoordinatesMeepMeep.getStart())
                 .waitSeconds(26)
-                .strafeToConstantHeading(new Vector2d(33, -63))
+                .strafeToConstantHeading(RedSampleCoordinatesMeepMeep.getPark().position)
 
                 .build());
 
-        botBlueSample.runAction(botBlueSample.getDrive().actionBuilder(initialPoseBlueSample)
+        botBlueSample.runAction(botBlueSample.getDrive().actionBuilder(BlueSampleCoordinatesMeepMeep.getStart())
                 .waitSeconds(26)
-                .strafeToConstantHeading(new Vector2d(-33, 63))
+                .strafeToConstantHeading(BlueSampleCoordinatesMeepMeep.getPark().position)
 
                 .build());
 
