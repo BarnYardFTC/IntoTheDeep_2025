@@ -6,9 +6,9 @@ import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class ServoProps {
-    private final int maxRotation; // Max rotation of the servo.
-    private final double startPosition; // Servo's start position.
-    private final double gearRatio; // The ratio between the part we want to move and the servo's rotation. We calculate it by dividing one rotation of the part by the amount of rotations the servo does for one rotation of the part.
+    private final int MAX_ROTATION; // Max rotation of the servo.
+    private final double START_POSITION; // Servo's start position.
+    private final double GEAR_RATIO; // The ratio between the part we want to move and the servo's rotation. We calculate it by dividing one rotation of the part by the amount of rotations the servo does for one rotation of the part.
 
     /**
      * Default constructor for standard servo.
@@ -20,14 +20,14 @@ public class ServoProps {
     /**
      * For non standard servo.
      *
-     * @param maxRotation   - Max rotation of the servo.
-     * @param startPosition - Servo's start position.
+     * @param MAX_ROTATION   - Max rotation of the servo.
+     * @param START_POSITION - Servo's start position.
      * @param gearRatio     - The ratio between the part we want to move and the servo's rotation. we calculate it by dividing one rotation of the part by the amount of rotations the servo does for one rotation of the part.
      */
-    public ServoProps(int maxRotation, double startPosition, double gearRatio) {
-        this.gearRatio = gearRatio;
-        this.maxRotation = maxRotation;
-        this.startPosition = startPosition;
+    public ServoProps(int MAX_ROTATION, double START_POSITION, double gearRatio) {
+        this.GEAR_RATIO = gearRatio;
+        this.MAX_ROTATION = MAX_ROTATION;
+        this.START_POSITION = START_POSITION;
     }
 
     /**
@@ -68,8 +68,8 @@ public class ServoProps {
      * @param angle - Wanted end angle of the servo.
      */
     public double getTargetPosition(double angle) {
-        if (this.startPosition + angle / this.maxRotation / this.gearRatio <= 1 && this.startPosition + angle / this.maxRotation / this.gearRatio >= 0)
-            return this.startPosition + angle / this.maxRotation / this.gearRatio;
+        if (this.START_POSITION + angle / this.MAX_ROTATION / this.GEAR_RATIO <= 1 && this.START_POSITION + angle / this.MAX_ROTATION / this.GEAR_RATIO >= 0)
+            return this.START_POSITION + angle / this.MAX_ROTATION / this.GEAR_RATIO;
         throw new IllegalArgumentException("Servo position must be between 0 and 1.");
     }
 
@@ -80,6 +80,6 @@ public class ServoProps {
      * @return - Servo's position in degrees.
      */
     public double getCurrentAngle(double pos) {
-        return pos / this.maxRotation / this.gearRatio;
+        return pos / this.MAX_ROTATION / this.GEAR_RATIO;
     }
 }

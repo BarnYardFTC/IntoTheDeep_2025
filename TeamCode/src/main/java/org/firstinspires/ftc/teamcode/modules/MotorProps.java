@@ -5,7 +5,7 @@ package org.firstinspires.ftc.teamcode.modules;
 public class MotorProps {
     protected final double ENCODER_RESOLUTION; // Amount of encoders in one motor shaft rotation.
     protected final double OUTER_GEAR_RATIO; // Number of motor shaft rotations to one final gear rotation.
-    protected final double ENCODER_TO_DEGREE; // Encoders in one degree of movement.
+    protected final double ENCODERS_PER_DEGREE; // Encoders in one degree of movement.
 
     /**
      * Default constructor for standard motor.
@@ -14,7 +14,7 @@ public class MotorProps {
     public MotorProps() {
         this.ENCODER_RESOLUTION = 537.7;
         this.OUTER_GEAR_RATIO = 1;
-        this.ENCODER_TO_DEGREE = ENCODER_RESOLUTION / 360;
+        this.ENCODERS_PER_DEGREE = ENCODER_RESOLUTION / 360;
     }
 
     /**
@@ -26,7 +26,7 @@ public class MotorProps {
     public MotorProps(double ENCODER_RESOLUTION, double OUTER_GEAR_RATIO) {
         this.ENCODER_RESOLUTION = ENCODER_RESOLUTION;
         this.OUTER_GEAR_RATIO = OUTER_GEAR_RATIO;
-        this.ENCODER_TO_DEGREE = ENCODER_RESOLUTION / 360 * OUTER_GEAR_RATIO;
+        this.ENCODERS_PER_DEGREE = ENCODER_RESOLUTION / 360 * OUTER_GEAR_RATIO;
     }
 
     public double getENCODER_RESOLUTION() {
@@ -37,8 +37,8 @@ public class MotorProps {
         return OUTER_GEAR_RATIO;
     }
 
-    public double getENCODER_TO_DEGREE() {
-        return ENCODER_TO_DEGREE;
+    public double getENCODERS_PER_DEGREE() {
+        return ENCODERS_PER_DEGREE;
     }
 
     /**
@@ -48,6 +48,6 @@ public class MotorProps {
      * @return - Number encoders needed for moving the amount of degrees given.
      */
     public int getAngleToEncoder(double angle) {
-        return (int) (angle * ENCODER_TO_DEGREE);
+        return (int) (angle * ENCODERS_PER_DEGREE);
     }
 }

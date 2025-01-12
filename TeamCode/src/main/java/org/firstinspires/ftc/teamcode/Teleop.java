@@ -93,7 +93,7 @@ public class Teleop extends LinearOpMode {
             }
             LiftArm.liftArmPID();
             Lift.liftPID();
-            telemetry.addData("angle", LiftArm.getRightMotor().getCurrentPosition() / LiftArm.RIGHT_MOTOR.getENCODER_TO_DEGREE());
+            telemetry.addData("angle", LiftArm.getRightMotor().getCurrentPosition() / LiftArm.RIGHT_MOTOR.getENCODERS_PER_DEGREE());
             telemetry.update();
         }
     }
