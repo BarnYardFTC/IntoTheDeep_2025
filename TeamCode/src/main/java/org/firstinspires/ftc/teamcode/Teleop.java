@@ -35,9 +35,9 @@ public class Teleop extends LinearOpMode {
     @Override
     public void runOpMode() {
         initializeAll();
-        Differential.move(0, 0);
-        LiftArm.move(LiftArm.Angle.HORIZONTAL);
-        Lift.targetPos = 15;
+        Differential.move(0, 175);
+//        LiftArm.move(LiftArm.Angle.HORIZONTAL);
+//        Lift.targetPos = 15;
 
         waitForStart();
 
@@ -45,12 +45,12 @@ public class Teleop extends LinearOpMode {
         while (opModeIsActive()) {
             TeleOpFunctions.runAll(gamepad1);
             if (gamepad1.a) {
-                Differential.move(0, 104);
-                Differential.goalAngle = 104;
+                Differential.move(0, 76);
+                Differential.goalAngle = 76;
             }
             if (gamepad1.y) {
-                Differential.move(0, 0);
-                Differential.goalAngle = 0;
+                Differential.move(0, 175);
+                Differential.goalAngle = 175;
             }
             if (gamepad1.b) {
                 Suction.getSuction().setPower(1);
@@ -75,13 +75,13 @@ public class Teleop extends LinearOpMode {
             }
             if (gamepad1.right_bumper) {
                 LiftArm.move(LiftArm.Angle.VERTICAL);
-                Differential.move(0, 0);
-                Differential.goalAngle = 0;
+                Differential.move(0, 175);
+                Differential.goalAngle = 175;
             }
             if (gamepad1.left_bumper) {
                 LiftArm.move(LiftArm.Angle.HORIZONTAL);
-                Differential.move(0, 0);
-                Differential.goalAngle = 0;
+                Differential.move(0, 175);
+                Differential.goalAngle = 175;
             }
             if (gamepad1.dpad_up) {
                 Differential.move(0, goalAngle + 2);

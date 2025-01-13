@@ -27,7 +27,6 @@ public class Differential {
     public Differential(OpMode opMode) {
         servos[RIGHT] = opMode.hardwareMap.get(Servo.class, "rightDifferential");
         servos[LEFT] = opMode.hardwareMap.get(Servo.class, "leftDifferential");
-        servos[LEFT].setDirection(Servo.Direction.REVERSE);
 //        analogSensor = opMode.hardwareMap.get(AnalogInput.class, "analogSensor");
     }
 
@@ -40,8 +39,8 @@ public class Differential {
      * @param anglePitch - Wanted end angle of the differential on the pitch axis.
      */
     public static void move(int angleRoll, int anglePitch) {
-        servos[RIGHT].setPosition(RIGHT_SERVO.getTargetPosition(angleRoll + anglePitch));
-        servos[LEFT].setPosition(LEFT_SERVO.getTargetPosition(-angleRoll + anglePitch));
+        servos[RIGHT].setPosition(RIGHT_SERVO.getTargetPosition(angleRoll - anglePitch));
+        servos[LEFT].setPosition(LEFT_SERVO.getTargetPosition(angleRoll + anglePitch));
     }
 
     /**

@@ -106,17 +106,13 @@ public class Lift {
                 targetPos = (int) LOW_BASKET_POS;
                 break;
             case RESET:
-                targetPos = 30;
+                targetPos = 15;
                 break;
         }
     }
 
     public static void move(double direction) {
-        if (direction > 0) {
-            targetPosCm += 5;
-        } else {
-            targetPosCm -= 5;
-        }
+        targetPosCm += 5 * (direction / Math.abs(direction));
     }
 
     public enum Pos {
