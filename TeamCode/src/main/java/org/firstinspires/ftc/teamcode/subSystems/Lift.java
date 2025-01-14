@@ -25,7 +25,7 @@ public class Lift {
     private static final double LOW_BASKET_POS = RIGHT_MOTOR.getCmToEncoders(65.4);
 
     //ToDo: set correct values.
-    public static double p = 0.03;
+    public static double p = 0.01; // 0.03.
     public static double i = 0;
     public static double d = 0;
     public static double f = 0;

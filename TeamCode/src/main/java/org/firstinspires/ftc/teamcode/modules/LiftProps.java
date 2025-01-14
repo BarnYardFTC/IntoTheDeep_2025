@@ -19,7 +19,7 @@ public class LiftProps extends MotorProps {
         this.CHAIN_SIZE = CHAIN_SIZE;
         this.SLIDE_COUNT = SLIDE_COUNT;
         this.TOOTH_OF_FINAL_PART = TOOTH_OF_FINAL_PART;
-        this.ENCODERS_PER_CM = this.ENCODERS_PER_DEGREE * 10 / (this.TOOTH_OF_FINAL_PART * this.CHAIN_SIZE * this.SLIDE_COUNT);
+        this.ENCODERS_PER_CM = this.ENCODERS_PER_DEGREE * 360 * 10 / (this.TOOTH_OF_FINAL_PART * this.CHAIN_SIZE * this.SLIDE_COUNT);
     }
 
     public double getENCODERS_PER_CM() {
