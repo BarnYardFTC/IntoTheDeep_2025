@@ -28,6 +28,8 @@ public class ArmPIDTuning extends LinearOpMode {
 
             telemetry.addData("pos", LiftArm.getTargetPos());
             telemetry.addData("current", LiftArm.getRightMotor().getCurrentPosition());
+            telemetry.addData("powerR", LiftArm.getRightMotor().getPower());
+            telemetry.addData("powerL", LiftArm.getLeftMotor().getPower());
             telemetry.update();
         }
     }
