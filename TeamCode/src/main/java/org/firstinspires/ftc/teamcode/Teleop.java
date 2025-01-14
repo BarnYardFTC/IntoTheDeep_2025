@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.subSystems.Suction;
 @TeleOp(name = "INTO_THE_DEEP")
 
 public class Teleop extends LinearOpMode {
-    // TODO: Change names of all hardware in configuration.
+    // TODO: Change names of all hardware in configuration
 
     /**
      * Initialize all hardware.
