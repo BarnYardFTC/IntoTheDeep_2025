@@ -15,15 +15,15 @@ public class LiftArm {
     private static final int LEFT = 1; // Left's motor index.
     private static final MotorProps LEFT_MOTOR = new MotorProps(1425.1, 1); // Left's motor props.
 
-    private static final int VERTICAL_POS = 125; // Angle for moving the lift arm to a vertical position.
+    private static final int VERTICAL_POS = 130; // Angle for moving the lift arm to a vertical position.
     private static final int HORIZONTAL_POS = 5; // Angle for moving the lift arm to a horizontal position.
     private static final double MIN_LIFT_LENGTH = 30;
 
     //ToDo: set correct values.
-    public static double p = 0.02; // 0.028.
+    public static double p = 0.02;
     public static double i = 0;
     public static double d = 0;
-    public static double f = 0.18; // 0.22.
+    public static double f = 0.22;
     public static int targetAngle; // Target angle of the arm.
     private static PIDController controller; // PID controller.
     private static int targetPos; // Target position of the right motor.
@@ -57,7 +57,7 @@ public class LiftArm {
      * @return - If the current arm's position is horizontal.
      */
     public static boolean isHorizontal() {
-        return motors[RIGHT].getCurrentPosition() < RIGHT_MOTOR.getAngleToEncoder(45);
+        return targetAngle < 45;
     }
 
     public static int getTargetAngle() {
@@ -81,7 +81,13 @@ public class LiftArm {
 
         // Calculate PIDF values.
         double pid = controller.calculate(currentPos, targetPos);
-        double ff = Math.cos(Math.toRadians(targetAngle)) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
+        double ff;
+        if (targetAngle > 90) {
+            ff = Math.cos(Math.toRadians(80)) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
+        }
+        else {
+            ff = Math.cos(Math.toRadians(targetAngle)) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
+        }
 
         // Calculate motor power.
         double power = pid + ff;
