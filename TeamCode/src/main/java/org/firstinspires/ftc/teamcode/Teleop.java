@@ -9,20 +9,15 @@ import org.firstinspires.ftc.teamcode.subSystems.Differential;
 import org.firstinspires.ftc.teamcode.subSystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subSystems.Lift;
 import org.firstinspires.ftc.teamcode.subSystems.LiftArm;
-import org.firstinspires.ftc.teamcode.subSystems.Suction;
 
 // TeleOp name.
 @TeleOp(name = "INTO_THE_DEEP")
 
 public class Teleop extends LinearOpMode {
-    // TODO: Change names of all hardware in configuration
-
     /**
      * Initialize all hardware.
      */
     private void initializeAll() {
-        TeleOpFunctions.setReseted(false);
-        
         Differential differential = new Differential(this);
         Drivetrain drivetrain = new Drivetrain(this);
         LiftArm liftArm = new LiftArm(this);
@@ -33,11 +28,12 @@ public class Teleop extends LinearOpMode {
     @Override
     public void runOpMode() {
         initializeAll();
-        Differential.move(0, 175);
-        LiftArm.move(LiftArm.Angle.HORIZONTAL);
-        Lift.targetPosCm = 0;
 
         waitForStart();
+
+        Differential.reset();
+        LiftArm.move(LiftArm.Angle.HORIZONTAL);
+        Lift.move(Lift.Pos.RESET);
 
         // Main Loop
         while (opModeIsActive()) {
@@ -75,14 +71,14 @@ public class Teleop extends LinearOpMode {
             }
 
             if (gamepad1.right_trigger > 0.1 && LiftArm.isHorizontal() && Lift.targetPosCm + 2 <= 44) {
-                Lift.targetPosCm += 2;
+                Lift.move(1);
             }
             if (gamepad1.right_trigger > 0.1 && !LiftArm.isHorizontal() && Lift.targetPosCm + 2 <= 52) {
-                Lift.targetPosCm += 2;
+                Lift.move(1);
             }
 
             if (gamepad1.left_trigger > 0.1 && Lift.targetPosCm - 2 >= 0) {
-                Lift.targetPosCm -= 2;
+                Lift.move(-1);
             }
 
             if (gamepad1.right_bumper) {

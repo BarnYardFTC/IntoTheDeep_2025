@@ -9,7 +9,6 @@ import org.firstinspires.ftc.teamcode.subSystems.Differential;
 import org.firstinspires.ftc.teamcode.subSystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subSystems.Lift;
 import org.firstinspires.ftc.teamcode.subSystems.LiftArm;
-import org.firstinspires.ftc.teamcode.subSystems.Suction;
 
 public class TeleOpFunctions {
     private static boolean reseted;
@@ -57,8 +56,6 @@ public class TeleOpFunctions {
     }
 
     public static void runAll(Gamepad gamepad) {
-//        resetRobot();
-
         Drivetrain.move(gamepad);
         Drivetrain.resetImu(gamepad);
 
@@ -71,35 +68,6 @@ public class TeleOpFunctions {
             Differential.reset();
             LiftArm.move(LiftArm.Angle.HORIZONTAL);
             Lift.move(Lift.Pos.RESET);
-        }
-    }
-
-    private static void unload() {
-        if (gamepadEx.wasJustPressed(GamepadKeys.Button.X)) {
-            Suction.getSuction().setPower(-1);
-        }
-    }
-
-    private static void moveToHighUnloadingPosition() {
-    }
-
-    private static void moveToLowUnloadingPosition() {
-    }
-
-    private static void collectSample() {
-    }
-
-    private static void collectSpecimen() {
-    }
-
-    private static void moveLift() {
-        if (LiftArm.isHorizontal()) {
-            if (getLeftTrigger().isDown()) {
-                Lift.move(-1);
-            }
-            if (getRightTrigger().isDown()) {
-                Lift.move(1);
-            }
         }
     }
 }

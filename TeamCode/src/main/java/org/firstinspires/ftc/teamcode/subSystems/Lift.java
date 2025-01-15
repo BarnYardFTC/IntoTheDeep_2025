@@ -19,12 +19,12 @@ public class Lift {
     private static final LiftProps RIGHT_MOTOR = new LiftProps(8, 3, 537.7, 1.4, 14); // Right's motor props.
     private static final LiftProps LEFT_MOTOR = new LiftProps(8, 3, 537.7, 1.4, 14); // Left's motor props.
 
-    private static final double ROBOT_LIFT_SIZE = 50;
+    private static final double ROBOT_LIFT_HEIGHT = 50;
 
-    public static final double HIGH_CHAMBER_POS = RIGHT_MOTOR.getCmToEncoders(66 - ROBOT_LIFT_SIZE);
+    public static final double HIGH_CHAMBER_POS = RIGHT_MOTOR.getCmToEncoders(66 - ROBOT_LIFT_HEIGHT);
     public static final double LOW_CHAMBER_POS = RIGHT_MOTOR.getCmToEncoders(0);
     public static final double HIGH_BASKET_POS = RIGHT_MOTOR.getCmToEncoders(52); // 109.2 - ROBOT_LIFT_SIZE.
-    public static final double LOW_BASKET_POS = RIGHT_MOTOR.getCmToEncoders(65.4 - ROBOT_LIFT_SIZE);
+    public static final double LOW_BASKET_POS = RIGHT_MOTOR.getCmToEncoders(65.4 - ROBOT_LIFT_HEIGHT);
 
     //ToDo: set correct values.
     public static double p = 0.01;
@@ -103,13 +103,13 @@ public class Lift {
                 targetPos = (int) LOW_BASKET_POS;
                 break;
             case RESET:
-                targetPos = 15;
+                targetPosCm = 0;
                 break;
         }
     }
 
     public static void move(double direction) {
-        targetPosCm += 5 * (direction / Math.abs(direction));
+        targetPosCm += 2 * direction;
     }
 
     public enum Pos {

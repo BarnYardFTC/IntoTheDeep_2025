@@ -17,6 +17,12 @@ public class ServoProps {
         this(355, 0, 1);
     }
 
+    public ServoProps(double START_POSITION) {
+        this.GEAR_RATIO = 1;
+        this.MAX_ROTATION = 355;
+        this.START_POSITION = START_POSITION;
+    }
+
     /**
      * For non standard servo.
      *

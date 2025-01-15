@@ -10,45 +10,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.modules.ServoProps;
 
 public class Claw {
-    private static final int COLLECTION_DISTANCE = 5; // Specimen collection distance.
-
     // Servo positions.
     private static final double OPENED_POSITION = 0.2; // Opened claw position.
     private static final double CLOSED_POSITION = 0.0; // Closed claw position.
 
     private static Servo claw; // Servo (starting position: claw: 0).
-    private static ColorRangeSensor distanceSensor; // ColorRangeSensor.
-    private static boolean specimenCollected; // State of whether or not a specimen is currently collected and is controlled by the robot.
-    private static boolean sampleCollected; // State of whether or not a sample is currently collected and is controlled by the robot.
 
     public Claw(OpMode opMode) {
         claw = opMode.hardwareMap.get(Servo.class, "claw");
-//        distanceSensor = opMode.hardwareMap.get(ColorRangeSensor.class, "distanceSensor");
-    }
-
-    /**
-     * Get the value of the collected specimen parameter.
-     *
-     * @return - If a specimen was collected and controlled by the robot or not.
-     */
-    public static boolean isSpecimenCollected() {
-        return specimenCollected;
-    }
-
-    /**
-     * Get the value of the collected sample parameter.
-     *
-     * @return - If a sample was collected and controlled by the robot or not.
-     */
-    public static boolean isSampleCollected() {
-        return sampleCollected;
-    }
-
-    /**
-     * Set the value of the collected sample parameter.
-     */
-    public static void setSampleCollected(boolean sampleCollected) {
-        Claw.sampleCollected = sampleCollected;
     }
 
     /**
@@ -66,33 +35,11 @@ public class Claw {
     }
 
     /**
-     * Automated closure of claw when a specimen is close enough.
-     */
-    public static void collectSpecimen() {
-        if (getProximityValue() <= COLLECTION_DISTANCE && !sampleCollected && isOpen()) {
-            close();
-            Differential.reset();
-            specimenCollected = true;
-        }
-    }
-
-    /**
      * Checks if the claw is in the opened position.
      *
      * @return - If the claw is opened.
      */
     public static boolean isOpen() {
         return ServoProps.isServoInPosition(claw, OPENED_POSITION);
-    }
-
-    /**
-     * Get the value of the proximity parameter.
-     *
-     * @return - The value of proximity from distance sensor.
-     */
-    public static int getProximityValue() {
-        int proximityValue;
-        proximityValue = (int) distanceSensor.getDistance(DistanceUnit.MM);
-        return proximityValue;
     }
 }

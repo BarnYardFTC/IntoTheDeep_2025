@@ -10,20 +10,17 @@ import org.firstinspires.ftc.teamcode.modules.ServoProps;
 
 public class Differential {
     public static final Servo[] servos = new Servo[2]; // Servos array.
-    private static final ServoProps RIGHT_SERVO = new ServoProps(355, (double) 175 / 355, 1); // Right's servo props.
-    private static final ServoProps LEFT_SERVO = new ServoProps(355, 0, 1); // Left's servo props.
+    private static final ServoProps RIGHT_SERVO = new ServoProps ((double) 175 / 35); // Right's servo props.
+    private static final ServoProps LEFT_SERVO = new ServoProps(0); // Left's servo props.
     private static final int RIGHT = 0; // Right's servo index.
     private static final int LEFT = 1; // Left's servo index.
     // Angles for moving the differential.
     private static final int PITCH_ANGLE_INTAKE = 0;
     private static final int PITCH_ANGLE_RESET = 175;
-    // Analog, position equation: position = analogInput.getVoltage() / 3.3 * 360.
-    private static AnalogInput analogSensor;
 
     public Differential(OpMode opMode) {
         servos[RIGHT] = opMode.hardwareMap.get(Servo.class, "rightDifferential");
         servos[LEFT] = opMode.hardwareMap.get(Servo.class, "leftDifferential");
-//      analogSensor = opMode.hardwareMap.get(AnalogInput.class, "analogSensor");
     }
 
     /**
@@ -61,14 +58,5 @@ public class Differential {
      */
     public static boolean isReseted() {
         return servos[0].getPosition() == 0;
-    }
-
-    /**
-     * Checks if the differential is in the position to collect a specimen.
-     *
-     * @return - If the differential is in the position to collect a specimen.
-     */
-    public static boolean isInSpecimenCollectPos() {
-        return ServoProps.isAnalogInPosition(analogSensor, PITCH_ANGLE_INTAKE + PITCH_ANGLE_RESET);
     }
 }
