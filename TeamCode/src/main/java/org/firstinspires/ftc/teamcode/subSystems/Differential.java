@@ -23,7 +23,7 @@ public class Differential {
     public Differential(OpMode opMode) {
         servos[RIGHT] = opMode.hardwareMap.get(Servo.class, "rightDifferential");
         servos[LEFT] = opMode.hardwareMap.get(Servo.class, "leftDifferential");
-//        analogSensor = opMode.hardwareMap.get(AnalogInput.class, "analogSensor");
+//      analogSensor = opMode.hardwareMap.get(AnalogInput.class, "analogSensor");
     }
 
     /**
@@ -60,7 +60,7 @@ public class Differential {
      * @return - If the differential is reseted.
      */
     public static boolean isReseted() {
-        return ServoProps.isAnalogInPosition(analogSensor, 0);
+        return servos[0].getPosition() == 0;
     }
 
     /**

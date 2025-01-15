@@ -22,8 +22,7 @@ public class Teleop extends LinearOpMode {
      */
     private void initializeAll() {
         TeleOpFunctions.setReseted(false);
-
-        Suction suction = new Suction(this);
+        
         Differential differential = new Differential(this);
         Drivetrain drivetrain = new Drivetrain(this);
         LiftArm liftArm = new LiftArm(this);
