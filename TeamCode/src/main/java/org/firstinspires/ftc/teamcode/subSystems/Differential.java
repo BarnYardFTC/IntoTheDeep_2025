@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.modules.ServoProps;
 
 public class Differential {
     public static final Servo[] servos = new Servo[2]; // Servos array.
-    private static final ServoProps RIGHT_SERVO = new ServoProps ((double) 175 / 35); // Right's servo props.
+    private static final ServoProps RIGHT_SERVO = new ServoProps ((double) 175 / 355); // Right's servo props.
     private static final ServoProps LEFT_SERVO = new ServoProps(0); // Left's servo props.
     private static final int RIGHT = 0; // Right's servo index.
     private static final int LEFT = 1; // Left's servo index.

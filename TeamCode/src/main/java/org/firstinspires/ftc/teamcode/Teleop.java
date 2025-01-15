@@ -28,6 +28,7 @@ public class Teleop extends LinearOpMode {
     @Override
     public void runOpMode() {
         initializeAll();
+        Claw.close();
 
         waitForStart();
 
