@@ -1,12 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
 // Imports.
-
-import static org.firstinspires.ftc.teamcode.subSystems.Differential.goalAngle;
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.subSystems.Claw;
 import org.firstinspires.ftc.teamcode.subSystems.Differential;
 import org.firstinspires.ftc.teamcode.subSystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subSystems.Lift;
@@ -30,6 +28,7 @@ public class Teleop extends LinearOpMode {
         Drivetrain drivetrain = new Drivetrain(this);
         LiftArm liftArm = new LiftArm(this);
         Lift lift = new Lift(this);
+        Claw claw = new Claw(this);
     }
 
     @Override
@@ -44,13 +43,36 @@ public class Teleop extends LinearOpMode {
         // Main Loop
         while (opModeIsActive()) {
             TeleOpFunctions.runAll(gamepad1);
+
             if (gamepad1.a) {
-                Differential.move(0, 0);
-                Differential.goalAngle = 0;
+                if (Differential.isReseted()) {
+                    Differential.collect();
+                }
+                else {
+                    Differential.reset();
+                }
             }
+
+            if (gamepad1.x) {
+                Differential.move(0, 20);
+            }
+
             if (gamepad1.y) {
-                Differential.move(0, 175);
-                Differential.goalAngle = 175;
+                if (Claw.isOpen()) {
+                    Claw.close();
+                }
+                else {
+                    Claw.open();
+                }
+            }
+
+            if (gamepad1.b) {
+                if (Lift.HIGH_BASKET_POS == Lift.getTargetPosCm()) {
+                    Lift.move(Lift.Pos.LOW_BASKET);
+                }
+                else {
+                    Lift.move(Lift.Pos.HIGH_BASKET);
+                }
             }
 
             if (gamepad1.right_trigger > 0.1 && LiftArm.isHorizontal() && Lift.targetPosCm + 2 <= 44) {
@@ -60,26 +82,20 @@ public class Teleop extends LinearOpMode {
                 Lift.targetPosCm += 2;
             }
 
-            if (gamepad1.left_trigger < 0.1 && LiftArm.isHorizontal() && Lift.targetPosCm + 4 >= 44) {
-                Lift.targetPosCm = 44;
-            }
-
             if (gamepad1.left_trigger > 0.1 && Lift.targetPosCm - 2 >= 0) {
                 Lift.targetPosCm -= 2;
             }
 
             if (gamepad1.right_bumper) {
                 LiftArm.move(LiftArm.Angle.VERTICAL);
-                Differential.move(0, 175);
-                Differential.goalAngle = 175;
+                Lift.move(Lift.Pos.RESET);
+                Differential.reset();
             }
             if (gamepad1.left_bumper) {
                 LiftArm.move(LiftArm.Angle.HORIZONTAL);
-                Differential.move(0, 175);
-                Differential.goalAngle = 175;
+                Differential.reset();
             }
-            LiftArm.liftArmPID();
-            Lift.liftPID();
+
             telemetry.addData("angle", LiftArm.getRightMotor().getCurrentPosition() / LiftArm.RIGHT_MOTOR.getENCODERS_PER_DEGREE());
             telemetry.addData("rD", Differential.servos[0].getPosition());
             telemetry.addData("lD", Differential.servos[1].getPosition());

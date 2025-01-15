@@ -19,16 +19,17 @@ public class Lift {
     private static final LiftProps RIGHT_MOTOR = new LiftProps(8, 3, 537.7, 1.4, 14); // Right's motor props.
     private static final LiftProps LEFT_MOTOR = new LiftProps(8, 3, 537.7, 1.4, 14); // Left's motor props.
 
-    private static final double HIGH_CHAMBER_POS = RIGHT_MOTOR.getCmToEncoders(66);
-    private static final double LOW_CHAMBER_POS = RIGHT_MOTOR.getCmToEncoders(0);
-    private static final double HIGH_BASKET_POS = RIGHT_MOTOR.getCmToEncoders(109.2);
-    private static final double LOW_BASKET_POS = RIGHT_MOTOR.getCmToEncoders(65.4);
+    private static final double ROBOT_LIFT_SIZE = 50;
+
+    public static final double HIGH_CHAMBER_POS = RIGHT_MOTOR.getCmToEncoders(66 - ROBOT_LIFT_SIZE);
+    public static final double LOW_CHAMBER_POS = RIGHT_MOTOR.getCmToEncoders(0);
+    public static final double HIGH_BASKET_POS = RIGHT_MOTOR.getCmToEncoders(52); // 109.2 - ROBOT_LIFT_SIZE.
+    public static final double LOW_BASKET_POS = RIGHT_MOTOR.getCmToEncoders(65.4 - ROBOT_LIFT_SIZE);
 
     //ToDo: set correct values.
     public static double p = 0.01;
     public static double i = 0;
     public static double d = 0;
-    public static double f = 0;
     public static double targetPosCm; // Target position of the lift in cm.
     public static int targetPos; // Target position of the right motor.
     private static PIDController controller; // PID controller.
@@ -70,12 +71,8 @@ public class Lift {
         int currentPos = motors[RIGHT].getCurrentPosition();
         targetPos = (int) RIGHT_MOTOR.getCmToEncoders(targetPosCm);
 
-        // Calculate PIDF values.
-        double pid = controller.calculate(currentPos, targetPos);
-        double ff = Math.cos(Math.toRadians(LiftArm.getTargetAngle() - 90)) * f;
-
         // Calculate motor power.
-        double power = pid + ff;
+        double power = controller.calculate(currentPos, targetPos);
 
         // Giving power to motors.
         motors[RIGHT].setPower(power);

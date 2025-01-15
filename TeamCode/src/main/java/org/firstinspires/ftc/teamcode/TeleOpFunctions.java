@@ -60,10 +60,10 @@ public class TeleOpFunctions {
 //        resetRobot();
 
         Drivetrain.move(gamepad);
-//        Drivetrain.resetImu(gamepad);
+        Drivetrain.resetImu(gamepad);
 
-//        LiftArm.liftArmPID();
-//        Lift.liftPID();
+        LiftArm.liftArmPID();
+        Lift.liftPID();
     }
 
     private static void reset() {
