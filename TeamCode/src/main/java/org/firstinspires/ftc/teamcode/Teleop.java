@@ -55,7 +55,12 @@ public class Teleop extends LinearOpMode {
             }
 
             if (gamepad1.x && !x_pressed) {
-                Differential.move(0, 20);
+                if (Differential.isReseted()){
+                    Differential.move(0, 20);
+                }
+                else{
+                    Differential.reset();
+                }
             }
 
             if (gamepad1.y && !y_pressed) {
@@ -96,6 +101,11 @@ public class Teleop extends LinearOpMode {
                 LiftArm.move(LiftArm.Angle.HORIZONTAL);
                 Differential.reset();
             }
+
+            a_pressed = gamepad1.a;
+            x_pressed = gamepad1.x;
+            y_pressed = gamepad1.y;
+            b_pressed = gamepad1.b;
 
             telemetry.addData("angle", LiftArm.getRightMotor().getCurrentPosition() / LiftArm.RIGHT_MOTOR.getENCODERS_PER_DEGREE());
             telemetry.addData("rD", Differential.servos[0].getPosition());
