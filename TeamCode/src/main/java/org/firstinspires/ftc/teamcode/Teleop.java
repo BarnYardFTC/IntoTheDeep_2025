@@ -36,11 +36,16 @@ public class Teleop extends LinearOpMode {
         LiftArm.move(LiftArm.Angle.HORIZONTAL);
         Lift.move(Lift.Pos.RESET);
 
+        boolean a_pressed = false,
+                x_pressed = false,
+                y_pressed = false,
+                b_pressed = false;
+
         // Main Loop
         while (opModeIsActive()) {
             TeleOpFunctions.runAll(gamepad1);
 
-            if (gamepad1.a) {
+            if (gamepad1.a && !a_pressed) {
                 if (Differential.isReseted()) {
                     Differential.collect();
                 }
@@ -49,11 +54,11 @@ public class Teleop extends LinearOpMode {
                 }
             }
 
-            if (gamepad1.x) {
+            if (gamepad1.x && !x_pressed) {
                 Differential.move(0, 20);
             }
 
-            if (gamepad1.y) {
+            if (gamepad1.y && !y_pressed) {
                 if (Claw.isOpen()) {
                     Claw.close();
                 }
@@ -62,7 +67,7 @@ public class Teleop extends LinearOpMode {
                 }
             }
 
-            if (gamepad1.b) {
+            if (gamepad1.b && !b_pressed) {
                 if (Lift.HIGH_BASKET_POS == Lift.getTargetPosCm()) {
                     Lift.move(Lift.Pos.LOW_BASKET);
                 }
