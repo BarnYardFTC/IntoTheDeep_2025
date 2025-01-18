@@ -36,6 +36,14 @@ public class Teleop extends LinearOpMode {
         LiftArm.move(LiftArm.Angle.HORIZONTAL);
         Lift.move(Lift.Pos.RESET);
 
+        // ToDo: In General, why don't the buttons used in here align with the buttons we said we'll use in the TeleOp Flaw Chart?
+
+        /**
+        Buttons documentation:
+         A: move differential to collect/reset position
+         Y: Open/Close claw
+         B/RB?/LB?: Movement of Lift
+         */
         boolean a_pressed = false,
                 x_pressed = false,
                 y_pressed = false,
@@ -52,17 +60,17 @@ public class Teleop extends LinearOpMode {
                 else {
                     Differential.reset();
                 }
-
             }
 
-            if (gamepad1.x && !x_pressed) {
-                if (Differential.isReseted()){
-                    Differential.move(0, 20);
-                }
-                else{
-                    Differential.reset();
-                }
-            }
+// ToDo: Why do we need two buttons to move the differential?
+//            if (gamepad1.x && !x_pressed) {
+//                if (Differential.isReseted()){
+//                    Differential.move(0, 20);
+//                }
+//                else{
+//                    Differential.reset();
+//                }
+//            }
 
             if (gamepad1.y && !y_pressed) {
                 if (Claw.isOpen()) {
@@ -81,7 +89,7 @@ public class Teleop extends LinearOpMode {
                     Lift.move(Lift.Pos.HIGH_BASKET);
                 }
             }
-
+// ToDo: Don't we already move the lift using b???
             if (gamepad1.right_trigger > 0.1 && LiftArm.isHorizontal() && Lift.targetPosCm + 2 <= 44) {
                 Lift.move(1);
             }
