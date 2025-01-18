@@ -52,6 +52,7 @@ public class Teleop extends LinearOpMode {
                 else {
                     Differential.reset();
                 }
+
             }
 
             if (gamepad1.x && !x_pressed) {
