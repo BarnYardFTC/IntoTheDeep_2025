@@ -109,10 +109,9 @@ public class Drivetrain {
      * Reset imu heading.
      * Current heading is only for testing.
      */
-    public static void resetImu(Gamepad gamepad) {
-        if (gamepad.dpad_up) {
-            imu.resetYaw();
-            imu.resetYaw();
-        }
+    public static void resetImu() {
+        imu.resetYaw();
+        imu.resetYaw();
+
     }
 }

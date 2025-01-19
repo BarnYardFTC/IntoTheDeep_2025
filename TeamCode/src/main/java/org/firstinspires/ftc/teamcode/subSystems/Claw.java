@@ -2,17 +2,20 @@ package org.firstinspires.ftc.teamcode.subSystems;
 
 // Imports.
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 import org.firstinspires.ftc.teamcode.modules.ServoProps;
 
+@Config
 public class Claw {
     // Servo positions.
-    private static final double OPENED_POSITION = 0.2; // Opened claw position.
-    private static final double CLOSED_POSITION = 0.0; // Closed claw position.
+    public static double OPENED_POSITION = 0.27; // Opened claw position.
+    public static double CLOSED_POSITION = 0.54; // Closed claw position.
 
     private static Servo claw; // Servo (starting position: claw: 0).
 
@@ -41,5 +44,9 @@ public class Claw {
      */
     public static boolean isOpen() {
         return ServoProps.isServoInPosition(claw, OPENED_POSITION);
+    }
+
+    public static double getPosition(){
+        return claw.getPosition();
     }
 }
