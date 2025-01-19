@@ -41,6 +41,8 @@ public class LiftArm {
         }
 
         controller = new PIDController(p, i, d);
+
+        move(Angle.HORIZONTAL);
     }
 
     public static int getTargetPos() {

@@ -52,6 +52,7 @@ public class Lift {
         }
 
         controller = new PIDController(p, i, d);
+        move(Pos.RESET);
     }
 
     public static double getTargetPosCm() {

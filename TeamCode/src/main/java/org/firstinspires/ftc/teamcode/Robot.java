@@ -88,12 +88,11 @@ public class Robot {
         if (gamepadEx.wasJustPressed(GamepadKeys.Button.Y)){
             if (Claw.isOpen()) {
                 Claw.close();
+                // ToDo: Automate in future
             }
             else {
                 Claw.open();
-                if (!LiftArm.isHorizontal()){
-                    reset();
-                }
+                // ToDo: Automate in future
             }
         }
     }
