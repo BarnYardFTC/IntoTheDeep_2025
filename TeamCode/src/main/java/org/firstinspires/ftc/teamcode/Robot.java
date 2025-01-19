@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.subSystems.Claw;
 import org.firstinspires.ftc.teamcode.subSystems.Differential;
 import org.firstinspires.ftc.teamcode.subSystems.Drivetrain;
-import org.firstinspires.ftc.teamcode.subSystems.LED;
 import org.firstinspires.ftc.teamcode.subSystems.Lift;
 import org.firstinspires.ftc.teamcode.subSystems.LiftArm;
 import org.firstinspires.ftc.teamcode.subSystems.VisionProcessor;
@@ -21,6 +20,8 @@ import org.firstinspires.ftc.teamcode.subSystems.VisionProcessor;
  *  Y: Open/Close Claw. Claw opened – Reset every system of the robot | Claw closed – Reset only the differential
  *  Dpad-Down: Move Lift to the Low Basket (When claw is opened the lift will automatically reset)
  *  Dpad-Up: Move Lift to the High Basket (When claw is opened the lift will automatically reset)
+ *  Right-Trigger: Open the lift
+ *  Left-Trigger: Close the lift
  *  Right-Bumper: Rotate the lift to it's vertical position
  *  Left-Bumper: Rotate the lift to it's horizontal position
  */
@@ -44,7 +45,6 @@ public class Robot {
         VisionProcessor.initialize(opMode);
         LiftArm.initialize(opMode);
         Lift.initialize(opMode);
-        LED.initialize(opMode);
         Drivetrain.initialize(opMode);
         Differential.initialize(opMode);
         Claw.initialize(opMode);
@@ -117,7 +117,20 @@ public class Robot {
         }
     }
     public static void activateLiftBOG() {
+        if (gamepadEx.wasJustPressed(GamepadKeys.Button.DPAD_DOWN) && !LiftArm.isHorizontal()){
+            Lift.move(Lift.Pos.LOW_BASKET);
+        }
+        else if (gamepadEx.wasJustPressed(GamepadKeys.Button.DPAD_UP) && LiftArm.isHorizontal()){
+            Lift.move(Lift.Pos.HIGH_BASKET);
+        }
+        else if (RIGHT_TRIGGER.isDown() && LiftArm.isHorizontal() && Lift.isMoveable(1)) {
+            Lift.move(1);
+        }
+        else if (RIGHT_TRIGGER.isDown() && !LiftArm.isHorizontal() && Lift.isMoveable(1)) {
+            Lift.move(1);
+        }
 
+        // Todo: KEEP GOING HERE
     }
     public static void activateLiftArmBOG() {
 

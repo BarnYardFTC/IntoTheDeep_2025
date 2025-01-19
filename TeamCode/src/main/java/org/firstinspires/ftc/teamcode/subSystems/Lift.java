@@ -21,10 +21,16 @@ public class Lift {
 
     private static final double ROBOT_LIFT_HEIGHT = 50;
 
+    // Lift limits
+    private static final double HORIZONTAL_LIMIT = 44;
+    private static final double VERTICAL_LIMIT = 52;
+
     public static final double HIGH_CHAMBER_POS = RIGHT_MOTOR.getCmToEncoders(66 - ROBOT_LIFT_HEIGHT);
     public static final double LOW_CHAMBER_POS = RIGHT_MOTOR.getCmToEncoders(0);
     public static final double HIGH_BASKET_POS = RIGHT_MOTOR.getCmToEncoders(52); // 109.2 - ROBOT_LIFT_SIZE.
     public static final double LOW_BASKET_POS = RIGHT_MOTOR.getCmToEncoders(65.4 - ROBOT_LIFT_HEIGHT);
+
+    public static final int LIFT_SPEED = 1;
 
     //ToDo: set correct values.
     public static double p = 0.01;
@@ -109,7 +115,16 @@ public class Lift {
     }
 
     public static void move(double direction) {
-        targetPosCm += 2 * direction;
+        targetPosCm += LIFT_SPEED * direction;
+    }
+
+    public static boolean isMoveable(double direction){
+        return (LiftArm.isHorizontal() &&
+                targetPosCm + direction <= HORIZONTAL_LIMIT &&
+                targetPosCm + direction >= 0) ||
+                (!LiftArm.isHorizontal() &&
+                targetPosCm + direction <= VERTICAL_LIMIT &&
+                targetPosCm + direction >= 0);
     }
 
     public enum Pos {
