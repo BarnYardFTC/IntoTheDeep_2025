@@ -46,8 +46,13 @@ public class Robot {
     // Final Variables
     private static final double TRIGGERS_THRESHOLD = 0.1; // When the trigger value exceeds this value, the trigger is considered active
 
-    private static boolean started_waiting = false;
-    private static Deadline rate_limit;
+    private static boolean automating_intake = false;
+    private static Deadline rate_limit_intake;
+    private static boolean started_waiting_intake = false;
+
+    private static boolean automating_discharge = false;
+    private static Deadline rate_limit_discharge;
+    private static boolean started_waiting_discharge = false;
 
     public static void initialize(OpMode opMode) {
         //VisionProcessor.initialize(opMode);
@@ -88,11 +93,13 @@ public class Robot {
         if (gamepadEx.wasJustPressed(GamepadKeys.Button.Y)){
             if (Claw.isOpen()) {
                 Claw.close();
-                // ToDo: Automate in future
+                automating_intake = true;
             }
             else {
                 Claw.open();
-                // ToDo: Automate in future
+                if (!LiftArm.isHorizontal()){
+                    automating_discharge = true;
+                }
             }
         }
     }
@@ -123,7 +130,6 @@ public class Robot {
         else if (LEFT_TRIGGER.isDown() && Lift.isMoveable(-1)) {
             Lift.move(-1);
         }
-        Lift.liftPID();
     }
     public static void activateLiftArm() {
         if (gamepadEx.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
@@ -132,7 +138,6 @@ public class Robot {
         else if (gamepadEx.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
             LiftArm.move(LiftArm.Angle.HORIZONTAL);
         }
-        LiftArm.liftArmPID();
     }
     public static void activateDrivetrain() {
         Drivetrain.move(gamepad);
@@ -143,11 +148,44 @@ public class Robot {
         // ToDo: Write a code for sample collection. Than add this method to activateAll() and remove the comment that prevents the HuskyLens' initialization
     }
     public static void activateAll(){
-        activateClaw();
         activateDrivetrain();
-        activateDifferential();
-        activateLift();
-        activateLiftArm();
+
+        if (automating_intake){
+            if (finishedWaitingIntake()){
+                Differential.reset();
+                automating_intake = false;
+            }
+        }
+        else {
+            activateClaw();
+        }
+
+        if (automating_discharge) {
+            if (finishedWaitingDischarge()) {
+                if (Differential.isReseted()) {
+                    Differential.collectSample();
+                }
+                if (Lift.isReseted()) {
+                    Differential.reset();
+                    LiftArm.move(LiftArm.Angle.HORIZONTAL);
+                }
+                else {
+                    Lift.move(Lift.Pos.RESET);
+                }
+                if (LiftArm.isHorizontal()){
+                    automating_discharge = false;
+                }
+            }
+        }
+        else {
+            activateLift();
+            activateLiftArm();
+            activateDifferential();
+        }
+
+        // Shit that always keeps on working in the background
+        Lift.liftPID();
+        LiftArm.liftArmPID();
         gamepadEx.readButtons();
         RIGHT_TRIGGER.readValue();
         LEFT_TRIGGER.readValue();
@@ -166,15 +204,28 @@ public class Robot {
         opMode.telemetry.update();
     }
 
-    public static boolean finishedWaiting(int milliseconds){
-        if (!started_waiting){
-            rate_limit = new Deadline(milliseconds, TimeUnit.MILLISECONDS);
-            started_waiting = true;
+    public static boolean finishedWaitingIntake(){
+        if (!started_waiting_intake){
+            rate_limit_intake = new Deadline(200, TimeUnit.MILLISECONDS);
+            started_waiting_intake = true;
             return false;
         }
-        if (rate_limit.hasExpired()){
-            rate_limit = null;
-            started_waiting = false;
+        if (rate_limit_intake.hasExpired()){
+            rate_limit_intake = null;
+            started_waiting_intake = false;
+            return true;
+        }
+        return false;
+    }
+    public static boolean finishedWaitingDischarge(){
+        if (!started_waiting_discharge){
+            rate_limit_discharge = new Deadline(300, TimeUnit.MILLISECONDS);
+            started_waiting_discharge = true;
+            return false;
+        }
+        if (rate_limit_discharge.hasExpired()){
+            rate_limit_discharge = null;
+            started_waiting_discharge = false;
             return true;
         }
         return false;

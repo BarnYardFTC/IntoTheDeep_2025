@@ -23,7 +23,7 @@ public class LiftArm {
     public static double p = 0.02;
     public static double i = 0;
     public static double d = 0;
-    public static double f = 0.22;
+    public static double f = 0.24;
     public static int targetAngle; // Target angle of the arm.
     private static PIDController controller; // PID controller.
     private static int targetPos; // Target position of the right motor.

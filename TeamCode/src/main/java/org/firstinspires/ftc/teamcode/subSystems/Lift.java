@@ -25,10 +25,10 @@ public class Lift {
     private static final double HORIZONTAL_LIMIT = 44;
     private static final double VERTICAL_LIMIT = 52;
 
-    public static final double HIGH_CHAMBER_POS = RIGHT_MOTOR.getCmToEncoders(66 - ROBOT_LIFT_HEIGHT);
-    public static final double LOW_CHAMBER_POS = RIGHT_MOTOR.getCmToEncoders(0);
-    public static final double HIGH_BASKET_POS = RIGHT_MOTOR.getCmToEncoders(52); // 109.2 - ROBOT_LIFT_SIZE.
-    public static final double LOW_BASKET_POS = RIGHT_MOTOR.getCmToEncoders(65.4 - ROBOT_LIFT_HEIGHT);
+    public static final double HIGH_CHAMBER_POS = 66 - ROBOT_LIFT_HEIGHT;
+    public static final double LOW_CHAMBER_POS = 0;
+    public static final double HIGH_BASKET_POS = 52; // 109.2 - ROBOT_LIFT_SIZE.
+    public static final double LOW_BASKET_POS = 65.4 - ROBOT_LIFT_HEIGHT;
 
     public static final int LIFT_SPEED = 1;
 
@@ -67,6 +67,10 @@ public class Lift {
         return targetPos;
     }
 
+    public static boolean isReseted() {
+        return motors[RIGHT].getCurrentPosition() / RIGHT_MOTOR.getENCODERS_PER_CM() < 7;
+    }
+
     public static void setTargetPos(int targetPos) {
         Lift.targetPos = targetPos;
     }
@@ -98,16 +102,16 @@ public class Lift {
     public static void move(Pos pos) {
         switch (pos) {
             case HIGH_CHAMBER:
-                targetPos = (int) HIGH_CHAMBER_POS;
+                targetPosCm = HIGH_CHAMBER_POS;
                 break;
             case LOW_CHAMBER:
-                targetPos = (int) LOW_CHAMBER_POS;
+                targetPosCm = LOW_CHAMBER_POS;
                 break;
             case HIGH_BASKET:
-                targetPos = (int) HIGH_BASKET_POS;
+                targetPosCm = HIGH_BASKET_POS;
                 break;
             case LOW_BASKET:
-                targetPos = (int) LOW_BASKET_POS;
+                targetPosCm = LOW_BASKET_POS;
                 break;
             case RESET:
                 targetPosCm = 0;
