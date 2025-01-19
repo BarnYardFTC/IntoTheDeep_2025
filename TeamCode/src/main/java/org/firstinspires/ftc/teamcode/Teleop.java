@@ -14,20 +14,13 @@ import org.firstinspires.ftc.teamcode.subSystems.LiftArm;
 @TeleOp(name = "INTO_THE_DEEP")
 
 public class Teleop extends LinearOpMode {
-    /**
-     * Initialize all hardware.
-     */
-    private void initializeAll() {
-        Differential differential = new Differential(this);
-        Drivetrain drivetrain = new Drivetrain(this);
-        LiftArm liftArm = new LiftArm(this);
-        Lift lift = new Lift(this);
-        Claw claw = new Claw(this);
-    }
 
     @Override
     public void runOpMode() {
-        initializeAll();
+
+        Robot.initializeTeleop(this);
+
+//        initializeAll();
         Claw.close();
 
         waitForStart();
@@ -36,7 +29,8 @@ public class Teleop extends LinearOpMode {
         LiftArm.move(LiftArm.Angle.HORIZONTAL);
         Lift.move(Lift.Pos.RESET);
 
-        // ToDo: In General, why don't the buttons used in here align with the buttons we said we'll use in the TeleOp Flaw Chart?
+        LiftArm.initialize(this);
+
 
         /**
         Buttons documentation:
@@ -51,27 +45,16 @@ public class Teleop extends LinearOpMode {
 
         // Main Loop
         while (opModeIsActive()) {
-            TeleOpFunctions.runAll(gamepad1);
+            Robot.runAll(gamepad1);
 
             if (gamepad1.a && !a_pressed) {
                 if (Differential.isReseted()) {
-                    Differential.collect();
+                    // Differential.collect();
                 }
                 else {
                     Differential.reset();
                 }
             }
-
-// ToDo: Why do we need two buttons to move the differential?
-//            if (gamepad1.x && !x_pressed) {
-//                if (Differential.isReseted()){
-//                    Differential.move(0, 20);
-//                }
-//                else{
-//                    Differential.reset();
-//                }
-//            }
-
             if (gamepad1.y && !y_pressed) {
                 if (Claw.isOpen()) {
                     Claw.close();
@@ -89,7 +72,6 @@ public class Teleop extends LinearOpMode {
                     Lift.move(Lift.Pos.HIGH_BASKET);
                 }
             }
-// ToDo: Don't we already move the lift using b???
             if (gamepad1.right_trigger > 0.1 && LiftArm.isHorizontal() && Lift.targetPosCm + 2 <= 44) {
                 Lift.move(1);
             }

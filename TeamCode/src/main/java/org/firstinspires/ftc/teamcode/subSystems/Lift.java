@@ -34,7 +34,7 @@ public class Lift {
     public static int targetPos; // Target position of the right motor.
     private static PIDController controller; // PID controller.
 
-    public Lift(OpMode opMode) {
+    public static void initialize(OpMode opMode) {
         motors[RIGHT] = opMode.hardwareMap.get(DcMotorEx.class, "rightLift");
         motors[LEFT] = opMode.hardwareMap.get(DcMotorEx.class, "leftLift");
 

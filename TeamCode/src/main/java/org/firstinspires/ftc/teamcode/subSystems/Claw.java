@@ -16,7 +16,7 @@ public class Claw {
 
     private static Servo claw; // Servo (starting position: claw: 0).
 
-    public Claw(OpMode opMode) {
+    public static void initialize(OpMode opMode) {
         claw = opMode.hardwareMap.get(Servo.class, "claw");
     }
 

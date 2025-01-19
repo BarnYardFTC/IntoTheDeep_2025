@@ -15,10 +15,11 @@ public class Differential {
     private static final int RIGHT = 0; // Right's servo index.
     private static final int LEFT = 1; // Left's servo index.
     // Angles for moving the differential.
-    private static final int PITCH_ANGLE_INTAKE = 0;
+    private static final int PITCH_ANGLE_SAMPLE = 0;
+    private static final int PITCH_ANGLE_SPECIMEN = 20;
     private static final int PITCH_ANGLE_RESET = 175;
 
-    public Differential(OpMode opMode) {
+    public static void initialize(OpMode opMode) {
         servos[RIGHT] = opMode.hardwareMap.get(Servo.class, "rightDifferential");
         servos[LEFT] = opMode.hardwareMap.get(Servo.class, "leftDifferential");
     }
@@ -45,10 +46,17 @@ public class Differential {
     }
 
     /**
-     * Moves differential to the intake position.
+     * Moves differential to the sample intake position.
      */
-    public static void collect() {
-        move(0, PITCH_ANGLE_INTAKE);
+    public static void collectSample() {
+        move(0, PITCH_ANGLE_SAMPLE);
+    }
+
+    /**
+     * Moves the differential to the specimen intake position.
+     */
+    public static void collectSpecimen() {
+        move(0, PITCH_ANGLE_SPECIMEN);
     }
 
     /**

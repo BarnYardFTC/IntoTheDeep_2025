@@ -26,7 +26,7 @@ public class VisionProcessor {
      *
      * @param opMode: The opMode in which the huskyLens is being created.
      */
-    public VisionProcessor(OpMode opMode) {
+    public static void initialize(OpMode opMode) {
         huskyLens = opMode.hardwareMap.get(HuskyLens.class, "huskyLens");
         rate_limit = new Deadline(READ_PERIOD, TimeUnit.SECONDS);
         W0 = 7;

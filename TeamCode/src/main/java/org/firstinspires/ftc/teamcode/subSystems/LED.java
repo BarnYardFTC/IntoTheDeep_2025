@@ -9,7 +9,7 @@ public class LED {
     private static RevBlinkinLedDriver LED; // LED strip.
     private static RevBlinkinLedDriver.BlinkinPattern allianceColor; // LED strip.
 
-    public LED(OpMode opMode) {
+    public static void initialize(OpMode opMode) {
         LED = opMode.hardwareMap.get(RevBlinkinLedDriver.class, "LED");
     }
 
