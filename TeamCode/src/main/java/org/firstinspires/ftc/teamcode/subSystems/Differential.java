@@ -15,9 +15,11 @@ public class Differential {
     private static final int RIGHT = 0; // Right's servo index.
     private static final int LEFT = 1; // Left's servo index.
     // Angles for moving the differential.
-    private static final int PITCH_ANGLE_SAMPLE = 30;
+    private static final int PITCH_ANGLE_SAMPLE = 0;
     private static final int PITCH_ANGLE_SPECIMEN = 45;
     private static final int PITCH_ANGLE_RESET = 175;
+
+    public static int currentRollAngle;
 
     public static void initialize(OpMode opMode) {
         servos[RIGHT] = opMode.hardwareMap.get(Servo.class, "rightDifferential");
@@ -35,6 +37,7 @@ public class Differential {
     public static void move(int angleRoll, int anglePitch) {
         servos[RIGHT].setPosition(RIGHT_SERVO.getTargetPosition(angleRoll - anglePitch));
         servos[LEFT].setPosition(LEFT_SERVO.getTargetPosition(angleRoll + anglePitch));
+        currentRollAngle += angleRoll;
     }
 
     /**
@@ -43,6 +46,7 @@ public class Differential {
      */
     public static void reset() {
         move(0, PITCH_ANGLE_RESET);
+        currentRollAngle = 0;
     }
 
     /**

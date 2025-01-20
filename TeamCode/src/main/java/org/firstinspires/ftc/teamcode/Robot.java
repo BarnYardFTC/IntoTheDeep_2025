@@ -116,6 +116,12 @@ public class Robot {
             else
                 Differential.reset();
         }
+        if (gamepadEx.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
+            Differential.move(Differential.currentRollAngle + 20, 0);
+        }
+        if (gamepadEx.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
+            Differential.move(Differential.currentRollAngle - 20, 0);
+        }
     }
     public static void activateLift() {
         if (gamepadEx.wasJustPressed(GamepadKeys.Button.DPAD_DOWN) && !LiftArm.isHorizontal()){
@@ -201,6 +207,8 @@ public class Robot {
         opMode.telemetry.addData("Differential left: ", Differential.servos[1].getPosition());
         opMode.telemetry.addData("Differential right: ", Differential.servos[0].getPosition());
         opMode.telemetry.addData("Claw pos: ", Claw.getPosition());
+        opMode.telemetry.addData("length ", Lift.getTargetPosCm());
+        opMode.telemetry.addData("heading", Drivetrain.getRobotHeading());
         opMode.telemetry.update();
     }
 
