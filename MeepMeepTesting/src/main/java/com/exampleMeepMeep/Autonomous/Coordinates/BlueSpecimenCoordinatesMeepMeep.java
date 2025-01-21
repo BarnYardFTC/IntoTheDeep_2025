@@ -10,20 +10,20 @@ public class BlueSpecimenCoordinatesMeepMeep {
     private static final double score3X = -2;
     private static final double score4X = -5;
     private static final double score5X = -8;
-    private static final double scoreY = 33;
-    private static final double midWayMoveSpecimensY = 36;
-    private static final double moveSpecimensStart0X = -33;
+    private static final double scoreY = 38;
+    private static final double midWayMoveSpecimensY = 34;
+    private static final double moveSpecimensStart0X = -38;
     private static final double moveSpecimensStartY = 13;
-    private static final double moveSpecimensEndY = 54;
-    private static final double specimen1X = -46;
-    private static final double specimen2X = -54;
-    private static final double specimen3X = -62;
+    private static final double moveSpecimensEndY = 46;
+    private static final double specimen1X = -48;
+    private static final double specimen2X = -56;
+    private static final double specimen3X = -61.5;
     private static final double wallY = 59;
     private static final double intakeX = -46;
-    private static final double parkX = -62;
+    private static final double parkX = -60;
 
     private static final double midWayMoveSpecimensTangent = Math.toRadians(90);
-    private static final double startPoseHeading = Math.toRadians(270);
+    private static final double startPoseHeading = Math.toRadians(90);
 
     private static final Pose2d start = new Pose2d(startX, startY, startPoseHeading);
 

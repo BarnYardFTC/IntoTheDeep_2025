@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.autonomous.Coordinates.BlueSpecimenCoordin
 import org.firstinspires.ftc.teamcode.roadRunner.MecanumDrive;
 
 public class BlueSpecimenTrajectories {
-    public static MecanumDrive ignitionSystem = new MecanumDrive(hardwareMap, BlueSpecimenCoordinates.getStart());
+    public static MecanumDrive ignitionSystem;
 
     public static TrajectoryActionBuilder scorePreload = ignitionSystem.actionBuilder(BlueSpecimenCoordinates.getStart())
             .strafeToConstantHeading(BlueSpecimenCoordinates.getScore1().position);
@@ -33,29 +33,25 @@ public class BlueSpecimenTrajectories {
             .splineToConstantHeading(BlueSpecimenCoordinates.getMoveSpecimenEnd3().position, BlueSpecimenCoordinates.getStart().heading);
 
     public static TrajectoryActionBuilder scoreSecond = ignitionSystem.actionBuilder(BlueSpecimenCoordinates.getMoveSpecimenEnd3())
-            .setTangent(BlueSpecimenCoordinates.getStart().heading)
-            .splineToConstantHeading(BlueSpecimenCoordinates.getScore2().position, BlueSpecimenCoordinates.getStart().heading);
+            .strafeToConstantHeading(BlueSpecimenCoordinates.getScore2().component1());
 
     public static TrajectoryActionBuilder intakeThird = ignitionSystem.actionBuilder(BlueSpecimenCoordinates.getScore2())
             .strafeToConstantHeading(BlueSpecimenCoordinates.getIntake().position);
 
     public static TrajectoryActionBuilder scoreThird = ignitionSystem.actionBuilder(BlueSpecimenCoordinates.getIntake())
-            .setTangent(BlueSpecimenCoordinates.getStart().heading)
-            .splineToConstantHeading(BlueSpecimenCoordinates.getScore3().position, BlueSpecimenCoordinates.getStart().heading);
+            .strafeToConstantHeading(BlueSpecimenCoordinates.getScore3().component1());
 
     public static TrajectoryActionBuilder intakeFourth = ignitionSystem.actionBuilder(BlueSpecimenCoordinates.getScore3())
             .strafeToConstantHeading(BlueSpecimenCoordinates.getIntake().position);
 
     public static TrajectoryActionBuilder scoreFourth = ignitionSystem.actionBuilder(BlueSpecimenCoordinates.getIntake())
-            .setTangent(BlueSpecimenCoordinates.getStart().heading)
-            .splineToConstantHeading(BlueSpecimenCoordinates.getScore4().position, BlueSpecimenCoordinates.getStart().heading);
+            .strafeToConstantHeading(BlueSpecimenCoordinates.getScore4().component1());
 
     public static TrajectoryActionBuilder intakeFifth = ignitionSystem.actionBuilder(BlueSpecimenCoordinates.getScore4())
             .strafeToConstantHeading(BlueSpecimenCoordinates.getIntake().position);
 
     public static TrajectoryActionBuilder scoreFifth = ignitionSystem.actionBuilder(BlueSpecimenCoordinates.getIntake())
-            .setTangent(BlueSpecimenCoordinates.getStart().heading)
-            .splineToConstantHeading(BlueSpecimenCoordinates.getScore5().position, BlueSpecimenCoordinates.getStart().heading);
+            .strafeToConstantHeading(BlueSpecimenCoordinates.getScore5().component1());
 
     public static TrajectoryActionBuilder park = ignitionSystem.actionBuilder(BlueSpecimenCoordinates.getScore5())
             .strafeToConstantHeading(BlueSpecimenCoordinates.getPark().position);
@@ -65,4 +61,12 @@ public class BlueSpecimenTrajectories {
 
     public static TrajectoryActionBuilder parkFromStart = ignitionSystem.actionBuilder(BlueSpecimenCoordinates.getStart())
             .strafeToConstantHeading(BlueSpecimenCoordinates.getPark().position);
+
+    public static MecanumDrive getIgnitionSystem() {
+        return ignitionSystem;
+    }
+
+    public static void setIgnitionSystem(MecanumDrive ignitionSystem) {
+        BlueSpecimenTrajectories.ignitionSystem = ignitionSystem;
+    }
 }

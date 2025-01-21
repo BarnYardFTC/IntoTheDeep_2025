@@ -40,22 +40,21 @@ public class MeepMeep {
                 .splineToConstantHeading(RedSpecimenCoordinatesMeepMeep.getMoveSpecimenEnd3().position, RedSpecimenCoordinatesMeepMeep.getStart().heading)
 
                 .setTangent(RedSpecimenCoordinatesMeepMeep.getStart().heading)
-                .splineToConstantHeading(RedSpecimenCoordinatesMeepMeep.getScore2().position, RedSpecimenCoordinatesMeepMeep.getStart().heading)
+                .splineToConstantHeading(RedSpecimenCoordinatesMeepMeep.getIntake().position, RedSpecimenCoordinatesMeepMeep.getStart().heading)
+
+                .strafeToConstantHeading(RedSpecimenCoordinatesMeepMeep.getScore2().component1())
 
                 .strafeToConstantHeading(RedSpecimenCoordinatesMeepMeep.getIntake().position)
 
-                .setTangent(RedSpecimenCoordinatesMeepMeep.getStart().heading)
-                .splineToConstantHeading(RedSpecimenCoordinatesMeepMeep.getScore3().position, RedSpecimenCoordinatesMeepMeep.getStart().heading)
+                .strafeToConstantHeading(RedSpecimenCoordinatesMeepMeep.getScore3().component1())
 
                 .strafeToConstantHeading(RedSpecimenCoordinatesMeepMeep.getIntake().position)
 
-                .setTangent(RedSpecimenCoordinatesMeepMeep.getStart().heading)
-                .splineToConstantHeading(RedSpecimenCoordinatesMeepMeep.getScore4().position, RedSpecimenCoordinatesMeepMeep.getStart().heading)
+                .strafeToConstantHeading(RedSpecimenCoordinatesMeepMeep.getScore4().component1())
 
                 .strafeToConstantHeading(RedSpecimenCoordinatesMeepMeep.getIntake().position)
 
-                .setTangent(RedSpecimenCoordinatesMeepMeep.getStart().heading)
-                .splineToConstantHeading(RedSpecimenCoordinatesMeepMeep.getScore5().position, RedSpecimenCoordinatesMeepMeep.getStart().heading)
+                .strafeToConstantHeading(RedSpecimenCoordinatesMeepMeep.getScore5().component1())
 
                 .strafeToConstantHeading(RedSpecimenCoordinatesMeepMeep.getPark().position)
 
@@ -83,22 +82,21 @@ public class MeepMeep {
                 .splineToConstantHeading(BlueSpecimenCoordinatesMeepMeep.getMoveSpecimenEnd3().position, BlueSpecimenCoordinatesMeepMeep.getStart().heading)
 
                 .setTangent(BlueSpecimenCoordinatesMeepMeep.getStart().heading)
-                .splineToConstantHeading(BlueSpecimenCoordinatesMeepMeep.getScore2().position, BlueSpecimenCoordinatesMeepMeep.getStart().heading)
+                .splineToConstantHeading(BlueSpecimenCoordinatesMeepMeep.getIntake().position, BlueSpecimenCoordinatesMeepMeep.getStart().heading)
+
+                .strafeToConstantHeading(BlueSpecimenCoordinatesMeepMeep.getScore2().component1())
 
                 .strafeToConstantHeading(BlueSpecimenCoordinatesMeepMeep.getIntake().position)
 
-                .setTangent(BlueSpecimenCoordinatesMeepMeep.getStart().heading)
-                .splineToConstantHeading(BlueSpecimenCoordinatesMeepMeep.getScore3().position, BlueSpecimenCoordinatesMeepMeep.getStart().heading)
+                .strafeToConstantHeading(BlueSpecimenCoordinatesMeepMeep.getScore3().component1())
 
                 .strafeToConstantHeading(BlueSpecimenCoordinatesMeepMeep.getIntake().position)
 
-                .setTangent(BlueSpecimenCoordinatesMeepMeep.getStart().heading)
-                .splineToConstantHeading(BlueSpecimenCoordinatesMeepMeep.getScore4().position, BlueSpecimenCoordinatesMeepMeep.getStart().heading)
+                .strafeToConstantHeading(BlueSpecimenCoordinatesMeepMeep.getScore4().component1())
 
                 .strafeToConstantHeading(BlueSpecimenCoordinatesMeepMeep.getIntake().position)
 
-                .setTangent(BlueSpecimenCoordinatesMeepMeep.getStart().heading)
-                .splineToConstantHeading(BlueSpecimenCoordinatesMeepMeep.getScore5().position, BlueSpecimenCoordinatesMeepMeep.getStart().heading)
+                .strafeToConstantHeading(BlueSpecimenCoordinatesMeepMeep.getScore5().component1())
 
                 .strafeToConstantHeading(BlueSpecimenCoordinatesMeepMeep.getPark().position)
 

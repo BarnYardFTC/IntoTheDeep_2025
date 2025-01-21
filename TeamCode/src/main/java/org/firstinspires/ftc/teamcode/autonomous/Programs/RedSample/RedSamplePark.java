@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.autonomous.Trajactories.RedSampleTrajectories;
 
 @Config
-@Autonomous(name = "Blue_Sample_Park", group = "Autonomous")
+@Autonomous(name = "Red_Sample_Park", group = "Autonomous")
 
 public class RedSamplePark extends LinearOpMode {
     @Override

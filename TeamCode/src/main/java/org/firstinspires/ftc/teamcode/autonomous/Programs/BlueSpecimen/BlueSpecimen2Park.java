@@ -9,7 +9,9 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.autonomous.Coordinates.BlueSpecimenCoordinates;
 import org.firstinspires.ftc.teamcode.autonomous.Trajactories.BlueSpecimenTrajectories;
+import org.firstinspires.ftc.teamcode.roadRunner.MecanumDrive;
 
 @Config
 @Autonomous(name = "Blue_Specimen_2_Park", group = "Autonomous")
@@ -17,12 +19,39 @@ import org.firstinspires.ftc.teamcode.autonomous.Trajactories.BlueSpecimenTrajec
 public class BlueSpecimen2Park extends LinearOpMode {
     @Override
     public void runOpMode() {
-        waitForStart();
+        MecanumDrive ignitionSystem = new MecanumDrive(hardwareMap, BlueSpecimenCoordinates.getStart());
 
-        Action scorePreLoad = BlueSpecimenTrajectories.scorePreload.build();
-        Action moveSpecimens = BlueSpecimenTrajectories.moveSpecimens.build();
-        Action scoreSecond = BlueSpecimenTrajectories.scoreSecond.build();
-        Action park = BlueSpecimenTrajectories.parkAfterSecond.build();
+        Action scorePreLoad = ignitionSystem.actionBuilder(BlueSpecimenCoordinates.getStart())
+                .strafeToConstantHeading(BlueSpecimenCoordinates.getScore1().position).build();
+
+        Action moveSpecimens = ignitionSystem.actionBuilder(BlueSpecimenCoordinates.getScore1())
+                .setTangent(BlueSpecimenCoordinates.getMidWayMoveSpecimensTangent())
+                .splineToConstantHeading(BlueSpecimenCoordinates.getMidWayMoveSpecimens().position, BlueSpecimenCoordinates.getStart().heading)
+
+                .splineToConstantHeading(BlueSpecimenCoordinates.getMoveSpecimensStart0().position, BlueSpecimenCoordinates.getStart().heading)
+
+                .splineToConstantHeading(BlueSpecimenCoordinates.getMoveSpecimenStart1().position, BlueSpecimenCoordinates.getStart().heading)
+                .splineToConstantHeading(BlueSpecimenCoordinates.getMoveSpecimenEnd1().position, BlueSpecimenCoordinates.getStart().heading)
+
+                .splineToConstantHeading(BlueSpecimenCoordinates.getMoveSpecimenStart1().position, BlueSpecimenCoordinates.getStart().heading)
+
+                .splineToConstantHeading(BlueSpecimenCoordinates.getMoveSpecimenStart2().position, BlueSpecimenCoordinates.getStart().heading)
+                .splineToConstantHeading(BlueSpecimenCoordinates.getMoveSpecimenEnd2().position, BlueSpecimenCoordinates.getStart().heading)
+
+                .splineToConstantHeading(BlueSpecimenCoordinates.getMoveSpecimenStart2().position, BlueSpecimenCoordinates.getStart().heading)
+
+                .splineToConstantHeading(BlueSpecimenCoordinates.getMoveSpecimenStart3().position, BlueSpecimenCoordinates.getStart().heading)
+                .splineToConstantHeading(BlueSpecimenCoordinates.getMoveSpecimenEnd3().position, BlueSpecimenCoordinates.getStart().heading).build();
+
+        Action collectSecond = ignitionSystem.actionBuilder(BlueSpecimenCoordinates.getMoveSpecimenEnd3())
+                .setTangent(BlueSpecimenCoordinates.getStart().heading)
+                .splineToConstantHeading(BlueSpecimenCoordinates.getIntake().position, BlueSpecimenCoordinates.getStart().heading).build();
+
+        Action scoreSecond = ignitionSystem.actionBuilder(BlueSpecimenCoordinates.getIntake())
+                .strafeToConstantHeading(BlueSpecimenCoordinates.getScore2().component1()).build();
+
+        Action park = ignitionSystem.actionBuilder(BlueSpecimenCoordinates.getScore2())
+                .strafeToConstantHeading(BlueSpecimenCoordinates.getPark().position).build();
 
         waitForStart();
 
@@ -32,8 +61,8 @@ public class BlueSpecimen2Park extends LinearOpMode {
                 new SequentialAction(
                         scorePreLoad,
                         moveSpecimens,
-                        scoreSecond,
-                        park
+                        collectSecond,
+                        scoreSecond
                 )
         );
     }
