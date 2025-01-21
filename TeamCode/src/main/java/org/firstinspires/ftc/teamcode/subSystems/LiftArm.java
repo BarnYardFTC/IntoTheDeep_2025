@@ -86,7 +86,7 @@ public class LiftArm {
         double ff;
         if (targetAngle > 90) {
             if (Lift.getTargetPosCm() == Lift.HIGH_BASKET_POS) {
-                ff = Math.cos(Math.toRadians(75)) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH) * 1.25;
+                ff = Math.cos(Math.toRadians(75)) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH) * 1.35;
             }
             else {
                 ff = Math.cos(Math.toRadians(75)) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);

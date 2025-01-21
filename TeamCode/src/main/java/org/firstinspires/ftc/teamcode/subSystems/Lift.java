@@ -30,7 +30,7 @@ public class Lift {
     public static final double HIGH_BASKET_POS = VERTICAL_LIMIT;
     public static final double LOW_BASKET_POS = 65.4 - ROBOT_LIFT_HEIGHT;
 
-    public static final int LIFT_SPEED = 1;
+    public static final int LIFT_SPEED = 2;
 
     //ToDo: set correct values.
     public static double p = 0.0085;
@@ -124,12 +124,7 @@ public class Lift {
     }
 
     public static boolean isMoveable(double direction){
-        return (LiftArm.isHorizontal() &&
-                targetPosCm + direction <= HORIZONTAL_LIMIT &&
-                targetPosCm + direction >= 0) ||
-                (!LiftArm.isHorizontal() &&
-                targetPosCm + direction <= VERTICAL_LIMIT &&
-                targetPosCm + direction >= 0);
+        return (LiftArm.isHorizontal() && targetPosCm + LIFT_SPEED * direction <= HORIZONTAL_LIMIT && targetPosCm + LIFT_SPEED * direction >= 0) || (!LiftArm.isHorizontal() && targetPosCm + LIFT_SPEED * direction <= VERTICAL_LIMIT && targetPosCm + LIFT_SPEED * direction >= 0);
     }
 
     public enum Pos {
