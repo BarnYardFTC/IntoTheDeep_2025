@@ -13,10 +13,10 @@ public class MeepMeep {
     public static void main(String[] args) {
         com.noahbres.meepmeep.MeepMeep meepMeep = new com.noahbres.meepmeep.MeepMeep(800);
 
-        RoadRunnerBotEntity botRedSpecimen = new DefaultBotBuilder(meepMeep).setConstraints(75, 75, Math.toRadians(180), Math.toRadians(180), 14).build();
-        RoadRunnerBotEntity botBlueSpecimen = new DefaultBotBuilder(meepMeep).setConstraints(75, 75, Math.toRadians(180), Math.toRadians(180), 14).build();
-        RoadRunnerBotEntity botRedSample = new DefaultBotBuilder(meepMeep).setConstraints(75, 75, Math.toRadians(180), Math.toRadians(180), 14).build();
-        RoadRunnerBotEntity botBlueSample = new DefaultBotBuilder(meepMeep).setConstraints(75, 75, Math.toRadians(180), Math.toRadians(180), 14).build();
+        RoadRunnerBotEntity botRedSpecimen = new DefaultBotBuilder(meepMeep).setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 14).build();
+        RoadRunnerBotEntity botBlueSpecimen = new DefaultBotBuilder(meepMeep).setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 14).build();
+        RoadRunnerBotEntity botRedSample = new DefaultBotBuilder(meepMeep).setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 14).build();
+        RoadRunnerBotEntity botBlueSample = new DefaultBotBuilder(meepMeep).setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 14).build();
 
         botRedSpecimen.runAction(botRedSpecimen.getDrive().actionBuilder(RedSpecimenCoordinatesMeepMeep.getStart())
                 .strafeToConstantHeading(RedSpecimenCoordinatesMeepMeep.getScore1().position)
