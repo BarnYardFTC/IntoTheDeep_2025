@@ -16,7 +16,7 @@ public class LiftArm {
     private static final MotorProps LEFT_MOTOR = new MotorProps(1425.1, 1); // Left's motor props.
 
     private static final int VERTICAL_POS = 135; // Angle for moving the lift arm to a vertical position.
-    private static final int HORIZONTAL_POS = 5; // Angle for moving the lift arm to a horizontal position.
+    private static final int HORIZONTAL_POS = 75; // Angle for moving the lift arm to a horizontal position.
     private static final double MIN_LIFT_LENGTH = 30;
 
     //ToDo: set correct values.
@@ -94,8 +94,14 @@ public class LiftArm {
             ff = Math.cos(Math.toRadians(targetAngle)) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
         }
 
+        double power;
+
+        if (targetAngle == HORIZONTAL_POS) {
+            // Calculate motor power.
+            power = pid * 0.4 + ff * 1.6;
+        }
         // Calculate motor power.
-        double power = pid + ff;
+        power = pid + ff;
 
         // Giving power to motors.
         motors[RIGHT].setPower(power);
