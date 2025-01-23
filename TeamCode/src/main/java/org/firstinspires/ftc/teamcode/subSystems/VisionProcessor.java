@@ -38,6 +38,7 @@ public class VisionProcessor {
     /**
      * Get the orientation of a sample which is in front of the HuskyLens in degrees
      * This method is built to be used inside the while(opModeIsActive) loop.
+     *
      * @return The orientation in degrees
      */
     public static double getSampleOrientation() {

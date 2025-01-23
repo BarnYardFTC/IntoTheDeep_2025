@@ -9,7 +9,8 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.autonomous.Trajactories.RedSpecimenTrajectories;
+import org.firstinspires.ftc.teamcode.autonomous.Coordinates.RedSpecimenCoordinates;
+import org.firstinspires.ftc.teamcode.roadRunner.MecanumDrive;
 
 @Config
 @Autonomous(name = "Red_Specimen_Park", group = "Autonomous")
@@ -17,10 +18,13 @@ import org.firstinspires.ftc.teamcode.autonomous.Trajactories.RedSpecimenTraject
 public class RedSpecimenPark extends LinearOpMode {
     @Override
     public void runOpMode() {
+        MecanumDrive ignitionSystem = new MecanumDrive(hardwareMap, RedSpecimenCoordinates.getStart());
+
+        Action park = ignitionSystem.actionBuilder(RedSpecimenCoordinates.getStart())
+                .strafeToConstantHeading(RedSpecimenCoordinates.getPark().position).build();
+
         waitForStart();
 
-        Action park = RedSpecimenTrajectories.parkFromStart.build();
-        waitForStart();
 
         if (isStopRequested()) return;
 

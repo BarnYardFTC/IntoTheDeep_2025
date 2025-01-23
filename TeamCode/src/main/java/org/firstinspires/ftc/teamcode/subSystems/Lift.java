@@ -13,25 +13,19 @@ import org.firstinspires.ftc.teamcode.modules.LiftProps;
 @Config
 public class Lift {
     public static final DcMotorEx[] motors = new DcMotorEx[2];
+    public static final double LOW_CHAMBER_POS = 0;
+    public static final int LIFT_SPEED = 2;
     private static final int RIGHT = 0;
     private static final int LEFT = 1;
-
     private static final LiftProps RIGHT_MOTOR = new LiftProps(8, 4, 537.7, 1.4, 14); // Right's motor props.
     private static final LiftProps LEFT_MOTOR = new LiftProps(8, 4, 537.7, 1.4, 14); // Left's motor props.
-
     private static final double ROBOT_LIFT_HEIGHT = 50;
-
+    public static final double HIGH_CHAMBER_POS = 66 - ROBOT_LIFT_HEIGHT;
+    public static final double LOW_BASKET_POS = 65.4 - ROBOT_LIFT_HEIGHT;
     // Lift limits
     private static final double HORIZONTAL_LIMIT = 44;
     private static final double VERTICAL_LIMIT = 70;
-
-    public static final double HIGH_CHAMBER_POS = 66 - ROBOT_LIFT_HEIGHT;
-    public static final double LOW_CHAMBER_POS = 0;
     public static final double HIGH_BASKET_POS = VERTICAL_LIMIT;
-    public static final double LOW_BASKET_POS = 65.4 - ROBOT_LIFT_HEIGHT;
-
-    public static final int LIFT_SPEED = 2;
-
     //ToDo: set correct values.
     public static double p = 0.0085;
     public static double i = 0;
@@ -67,12 +61,12 @@ public class Lift {
         return targetPos;
     }
 
-    public static boolean isReseted() {
-        return motors[RIGHT].getCurrentPosition() / RIGHT_MOTOR.getENCODERS_PER_CM() < 7;
-    }
-
     public static void setTargetPos(int targetPos) {
         Lift.targetPos = targetPos;
+    }
+
+    public static boolean isReseted() {
+        return motors[RIGHT].getCurrentPosition() / RIGHT_MOTOR.getENCODERS_PER_CM() < 7;
     }
 
     public static void liftPID() {
@@ -123,7 +117,7 @@ public class Lift {
         targetPosCm += LIFT_SPEED * direction;
     }
 
-    public static boolean isMoveable(double direction){
+    public static boolean isMoveable(double direction) {
         return (LiftArm.isHorizontal() && targetPosCm + LIFT_SPEED * direction <= HORIZONTAL_LIMIT && targetPosCm + LIFT_SPEED * direction >= 0) || (!LiftArm.isHorizontal() && targetPosCm + LIFT_SPEED * direction <= VERTICAL_LIMIT && targetPosCm + LIFT_SPEED * direction >= 0);
     }
 

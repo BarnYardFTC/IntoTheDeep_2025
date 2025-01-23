@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.autonomous.Trajactories;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 
 import org.firstinspires.ftc.teamcode.autonomous.Coordinates.BlueSpecimenCoordinates;

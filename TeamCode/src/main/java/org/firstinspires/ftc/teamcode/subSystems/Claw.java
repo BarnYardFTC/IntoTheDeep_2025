@@ -4,11 +4,8 @@ package org.firstinspires.ftc.teamcode.subSystems;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 import org.firstinspires.ftc.teamcode.modules.ServoProps;
 
 @Config
@@ -46,7 +43,7 @@ public class Claw {
         return ServoProps.isServoInPosition(claw, OPENED_POSITION);
     }
 
-    public static double getPosition(){
+    public static double getPosition() {
         return claw.getPosition();
     }
 }

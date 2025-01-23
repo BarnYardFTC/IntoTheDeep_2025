@@ -1,7 +1,5 @@
 package com.exampleMeepMeep.meepmeeptesting;
 
-import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.Vector2d;
 import com.exampleMeepMeep.Autonomous.Coordinates.BlueSampleCoordinatesMeepMeep;
 import com.exampleMeepMeep.Autonomous.Coordinates.BlueSpecimenCoordinatesMeepMeep;
 import com.exampleMeepMeep.Autonomous.Coordinates.RedSampleCoordinatesMeepMeep;

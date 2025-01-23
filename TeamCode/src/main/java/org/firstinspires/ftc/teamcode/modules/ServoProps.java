@@ -28,7 +28,7 @@ public class ServoProps {
      *
      * @param MAX_ROTATION   - Max rotation of the servo.
      * @param START_POSITION - Servo's start position.
-     * @param gearRatio     - The ratio between the part we want to move and the servo's rotation. we calculate it by dividing one rotation of the part by the amount of rotations the servo does for one rotation of the part.
+     * @param gearRatio      - The ratio between the part we want to move and the servo's rotation. we calculate it by dividing one rotation of the part by the amount of rotations the servo does for one rotation of the part.
      */
     public ServoProps(int MAX_ROTATION, double START_POSITION, double gearRatio) {
         this.GEAR_RATIO = gearRatio;
