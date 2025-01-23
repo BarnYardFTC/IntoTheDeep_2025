@@ -16,8 +16,11 @@ public class LiftArm {
     private static final MotorProps LEFT_MOTOR = new MotorProps(1425.1, 1); // Left's motor props.
 
     private static final int VERTICAL_POS = 135; // Angle for moving the lift arm to a vertical position.
-    private static final int HORIZONTAL_POS = 75; // Angle for moving the lift arm to a horizontal position.
+    private static final int HORIZONTAL_POS = 5; // Angle for moving the lift arm to a horizontal position.
     private static final double MIN_LIFT_LENGTH = 30;
+
+    private static final int ACCEPTED_VERTICAL_ANGLE = 130;
+    private static final int ACCEPTED_HORIZONTAL_ANGLE = 20;
 
     //ToDo: set correct values.
     public static double p = 0.02;
@@ -59,7 +62,12 @@ public class LiftArm {
      * @return - If the current arm's position is horizontal.
      */
     public static boolean isHorizontal() {
-        return targetAngle < 45;
+        // Old: return targetAngle < 45;
+        // New: ToDo: Make sure Igal is fine with it
+        return getCurrentAngle() < ACCEPTED_HORIZONTAL_ANGLE;
+    }
+    public static boolean isVertical() {
+        return getCurrentAngle() > ACCEPTED_VERTICAL_ANGLE;
     }
 
     public static int getTargetAngle() {
@@ -96,10 +104,10 @@ public class LiftArm {
 
         double power;
 
-        if (targetAngle == HORIZONTAL_POS) {
-            // Calculate motor power.
-            power = pid * 0.4 + ff * 1.6;
-        }
+//        if (targetAngle == HORIZONTAL_POS) {
+//            // Calculate motor power.
+//            power = pid * 0.4 + ff * 1.6;
+//        }
         // Calculate motor power.
         power = pid + ff;
 
@@ -121,5 +129,9 @@ public class LiftArm {
 
     public enum Angle {
         VERTICAL, HORIZONTAL
+    }
+
+    public static double getCurrentAngle() {
+        return Math.abs(motors[RIGHT].getCurrentPosition()) / RIGHT_MOTOR.getENCODERS_PER_DEGREE();
     }
 }

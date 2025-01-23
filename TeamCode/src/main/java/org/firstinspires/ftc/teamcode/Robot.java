@@ -202,11 +202,8 @@ public class Robot {
     }
 
     public static void displayTelemetry() {
-        opMode.telemetry.addData("Differential left: ", Differential.servos[1].getPosition());
-        opMode.telemetry.addData("Differential right: ", Differential.servos[0].getPosition());
-        opMode.telemetry.addData("Claw pos: ", Claw.getPosition());
-        opMode.telemetry.addData("length ", Lift.getTargetPosCm());
         opMode.telemetry.addData("heading", Drivetrain.getRobotHeading());
+        opMode.telemetry.addData("posArm", LiftArm.getCurrentAngle());
         opMode.telemetry.update();
     }
 
