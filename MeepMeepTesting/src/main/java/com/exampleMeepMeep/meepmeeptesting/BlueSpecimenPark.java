@@ -8,7 +8,8 @@ public class BlueSpecimenPark {
     public static void main(String[] args) {
         com.noahbres.meepmeep.MeepMeep meepMeep = new com.noahbres.meepmeep.MeepMeep(800);
 
-        RoadRunnerBotEntity robot = new DefaultBotBuilder(meepMeep).setConstraints(75, 75, Math.toRadians(180), Math.toRadians(180), 14).build();
+        RoadRunnerBotEntity robot = new DefaultBotBuilder(meepMeep).setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 14).build();
+        robot.setDimensions(15, 16.5);
 
         robot.runAction(robot.getDrive().actionBuilder(BlueSpecimenCoordinatesMeepMeep.getStart())
                 .waitSeconds(26)
