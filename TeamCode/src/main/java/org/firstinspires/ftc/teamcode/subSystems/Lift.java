@@ -51,7 +51,7 @@ public class Lift {
     }
 
     public static boolean arrivedTargetPos(){
-        return false; // ToDo: Create this method
+        return targetPos == getTargetPos(); // ToDo: Create this method
     }
 
     public static double getTargetPosCm() {
