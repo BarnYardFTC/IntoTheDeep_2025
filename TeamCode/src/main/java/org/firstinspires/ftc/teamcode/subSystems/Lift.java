@@ -22,6 +22,7 @@ public class Lift {
     private static final double ROBOT_LIFT_HEIGHT = 50;
     public static final double HIGH_CHAMBER_POS = 66 - ROBOT_LIFT_HEIGHT;
     public static final double LOW_BASKET_POS = 65.4 - ROBOT_LIFT_HEIGHT;
+    public static final double POST_SCORE_HIGH_CHAMBER_POS = 65 - ROBOT_LIFT_HEIGHT;
     // Lift limits
     private static final double HORIZONTAL_LIMIT = 44;
     private static final double VERTICAL_LIMIT = 70;
@@ -47,6 +48,10 @@ public class Lift {
 
         controller = new PIDController(p, i, d);
         move(Pos.RESET);
+    }
+
+    public static boolean arrivedTargetPos(){
+        return false; // ToDo: Create this method
     }
 
     public static double getTargetPosCm() {
@@ -92,11 +97,13 @@ public class Lift {
         return motors[LEFT];
     }
 
-
     public static void move(Pos pos) {
         switch (pos) {
             case HIGH_CHAMBER:
                 targetPosCm = HIGH_CHAMBER_POS;
+                break;
+            case POST_SCORE_HIGH_CHAMBER:
+                targetPosCm = POST_SCORE_HIGH_CHAMBER_POS;
                 break;
             case LOW_CHAMBER:
                 targetPosCm = LOW_CHAMBER_POS;
@@ -122,6 +129,6 @@ public class Lift {
     }
 
     public enum Pos {
-        HIGH_CHAMBER, LOW_CHAMBER, HIGH_BASKET, LOW_BASKET, RESET
+        HIGH_CHAMBER, POST_SCORE_HIGH_CHAMBER, LOW_CHAMBER, HIGH_BASKET, LOW_BASKET, RESET
     }
 }

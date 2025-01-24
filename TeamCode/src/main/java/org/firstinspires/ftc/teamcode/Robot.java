@@ -85,10 +85,11 @@ public class Robot {
         initializeGamepad(opMode.gamepad1);
     }
 
-    /**
-     * BOG = Based On Gamepad
-     * This means that the following functions are built ONLY for Teleop usage
-     */
+    public static void autonomousSetup(){
+        Differential.reset();
+        Claw.close();
+    }
+
     public static void activateClaw() {
         if (gamepadEx.wasJustPressed(GamepadKeys.Button.Y)) {
             if (Claw.isOpen()) {
@@ -96,7 +97,7 @@ public class Robot {
                 automating_intake = true;
             } else {
                 Claw.open();
-                if (!LiftArm.isHorizontal()) {
+                if (LiftArm.isVertical()) {
                     automating_discharge = true;
                 }
             }

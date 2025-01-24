@@ -21,9 +21,6 @@ import org.firstinspires.ftc.teamcode.subSystems.LiftArm;
 public class ActionTest extends LinearOpMode {
     @Override
     public void runOpMode() {
-        Robot.initialize(this);
-        AutoFunctions autoFunctions = new AutoFunctions();
-
         MecanumDrive ignitionSystem = new MecanumDrive(hardwareMap, BlueSpecimenCoordinates.getStart());
 
         Action scorePreLoad = ignitionSystem.actionBuilder(BlueSpecimenCoordinates.getStart())
@@ -76,6 +73,11 @@ public class ActionTest extends LinearOpMode {
         Action park = ignitionSystem.actionBuilder(BlueSpecimenCoordinates.getScore5())
                 .strafeToConstantHeading(BlueSpecimenCoordinates.getPark().position).build();
 
+        Robot.initialize(this);
+        Robot.autonomousSetup();
+        AutoFunctions autoFunctions = new AutoFunctions();
+
+
         waitForStart();
 
         if (isStopRequested()) return;
@@ -84,18 +86,41 @@ public class ActionTest extends LinearOpMode {
 
                 //ToDo: Add Actions of other robot system (claw, liftArm etc.)
 
-                new SequentialAction(
-                        scorePreLoad,
-                        moveSpecimens,
-                        collectSecond,
-                        scoreSecond,
-                        collectThird,
-                        scoreThird,
-                        collectFourth,
-                        scoreFourth,
-                        collectFifth,
-                        scoreFifth,
-                        park
+                new ParallelAction(
+                        autoFunctions.liftArmPID(),
+                        new SequentialAction(
+                                new ParallelAction(
+                                    scorePreLoad,
+                                    autoFunctions.liftArmVertical()
+                                    // ToDo: *Lift moves up to high chamber pos*
+                                ),
+                                // ToDo: *Lift moves down to unscore position*,
+                                new ParallelAction(
+                                        autoFunctions.openClaw(),
+                                        autoFunctions.liftArmHorizontal(),
+                                        moveSpecimens
+                                ),
+                                moveSpecimens,
+                                new ParallelAction(
+                                        collectSecond,
+                                        autoFunctions.differentialCollectSpecimen()
+                                ),
+                                autoFunctions.closeClaw(),
+                                new ParallelAction(
+                                        scoreSecond,
+                                        autoFunctions.liftArmVertical(),
+                                        autoFunctions.differentialReset()
+                                        // ToDo: *Lift moves up to high chamber pos*
+                                ),
+                                // ToDo: Lift moves down to
+                                collectThird,
+                                scoreThird,
+                                collectFourth,
+                                scoreFourth,
+                                collectFifth,
+                                scoreFifth,
+                                park
+                        )
                 )
         );
 //        waitForStart();

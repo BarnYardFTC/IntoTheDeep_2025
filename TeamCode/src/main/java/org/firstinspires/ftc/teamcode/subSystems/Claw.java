@@ -37,10 +37,19 @@ public class Claw {
     /**
      * Checks if the claw is in the opened position.
      *
-     * @return - If the claw is opened.
+     * @return true if the claw is opened.
      */
     public static boolean isOpen() {
         return ServoProps.isServoInPosition(claw, OPENED_POSITION);
+    }
+
+    /**
+     * Check if the claw is in the closed position.
+     *
+     * @return - true if the claw is closed
+     */
+    public static boolean isClose() {
+        return ServoProps.isServoInPosition(claw, CLOSED_POSITION);
     }
 
     public static double getPosition() {
