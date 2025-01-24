@@ -202,9 +202,9 @@ public class Robot {
         Lift.move(Lift.Pos.RESET);
     }
 
+
+
     public static void displayTelemetry() {
-        opMode.telemetry.addData("heading", Drivetrain.getRobotHeading());
-        opMode.telemetry.addData("posArm", LiftArm.getCurrentAngle());
         opMode.telemetry.update();
     }
 

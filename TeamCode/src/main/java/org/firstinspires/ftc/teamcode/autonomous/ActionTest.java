@@ -9,6 +9,7 @@ import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.autonomous.Coordinates.BlueSpecimenCoordinates;
@@ -16,7 +17,7 @@ import org.firstinspires.ftc.teamcode.roadRunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subSystems.LiftArm;
 
 @Config
-@Autonomous(name = "Actions", group = "Autonomous")
+@Autonomous(name = "Testing_Autonomous", group = "Autonomous")
 
 public class ActionTest extends LinearOpMode {
     @Override
@@ -77,7 +78,6 @@ public class ActionTest extends LinearOpMode {
         Robot.autonomousSetup();
         AutoFunctions autoFunctions = new AutoFunctions();
 
-
         waitForStart();
 
         if (isStopRequested()) return;
@@ -88,38 +88,83 @@ public class ActionTest extends LinearOpMode {
 
                 new ParallelAction(
                         autoFunctions.liftArmPID(),
+                        autoFunctions.displayTelemetry(),
                         new SequentialAction(
                                 new ParallelAction(
                                     scorePreLoad,
                                     autoFunctions.liftArmVertical()
                                     // ToDo: *Lift moves up to high chamber pos*
                                 ),
-                                // ToDo: *Lift moves down to unscore position*,
+                                // ToDo: *Lift moves down to post-score pos*,
                                 new ParallelAction(
-                                        autoFunctions.openClaw(),
-                                        autoFunctions.liftArmHorizontal(),
-                                        moveSpecimens
+                                    autoFunctions.openClaw(),
+                                    autoFunctions.liftArmHorizontal(),
+                                    moveSpecimens
+                                    // ToDo: *Lift moves down to reset pos*
                                 ),
-                                moveSpecimens,
                                 new ParallelAction(
-                                        collectSecond,
-                                        autoFunctions.differentialCollectSpecimen()
+                                    collectSecond,
+                                    autoFunctions.differentialCollectSpecimen()
                                 ),
                                 autoFunctions.closeClaw(),
                                 new ParallelAction(
-                                        scoreSecond,
+                                    scoreSecond,
+                                    autoFunctions.liftArmVertical(),
+                                    autoFunctions.differentialReset()
+                                    // ToDo: *Lift moves up to high chamber pos*
+                                ),
+                                // ToDo: *Lift moves down to post-score pos*
+                                new ParallelAction(
+                                    autoFunctions.openClaw(),
+                                    autoFunctions.liftArmHorizontal(),
+                                    collectThird,
+                                    autoFunctions.differentialCollectSpecimen()
+                                    // ToDo: *Lift moves down to reset pos*
+                                ),
+                                autoFunctions.closeClaw(),
+                                new ParallelAction(
+                                        scoreThird,
                                         autoFunctions.liftArmVertical(),
                                         autoFunctions.differentialReset()
                                         // ToDo: *Lift moves up to high chamber pos*
                                 ),
-                                // ToDo: Lift moves down to
-                                collectThird,
-                                scoreThird,
-                                collectFourth,
-                                scoreFourth,
-                                collectFifth,
-                                scoreFifth,
-                                park
+                                // ToDo: *Lift moves down to post-score pos*
+                                new ParallelAction(
+                                        autoFunctions.openClaw(),
+                                        autoFunctions.liftArmHorizontal(),
+                                        collectFourth,
+                                        autoFunctions.differentialCollectSpecimen()
+                                        // ToDo: *Lift moves down to reset pos*
+                                ),
+                                autoFunctions.closeClaw(),
+                                new ParallelAction(
+                                        scoreFourth,
+                                        autoFunctions.liftArmVertical(),
+                                        autoFunctions.differentialReset()
+                                        // ToDo: *Lift moves up to high chamber pos*
+                                ),
+                                // ToDo: *Lift moves down to post-score pos*
+                                new ParallelAction(
+                                        autoFunctions.openClaw(),
+                                        autoFunctions.liftArmHorizontal(),
+                                        collectFifth,
+                                        autoFunctions.differentialCollectSpecimen()
+                                        // ToDo: *Lift moves down to reset pos*
+                                ),
+                                autoFunctions.closeClaw(),
+                                new ParallelAction(
+                                        scoreFifth,
+                                        autoFunctions.liftArmVertical(),
+                                        autoFunctions.differentialReset()
+                                        // ToDo: *Lift moves up to high chamber pos*
+                                ),
+                                // ToDo: *Lift moves down to post-score pos*
+                                new ParallelAction(
+                                        autoFunctions.openClaw(),
+                                        autoFunctions.liftArmHorizontal(),
+                                        park
+                                        // ToDo: *Lift moves down to reset pos*
+                                )
                         )
                 )
         );

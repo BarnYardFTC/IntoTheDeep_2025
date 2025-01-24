@@ -4,13 +4,19 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.subSystems.Claw;
 import org.firstinspires.ftc.teamcode.subSystems.Differential;
 import org.firstinspires.ftc.teamcode.subSystems.Lift;
 import org.firstinspires.ftc.teamcode.subSystems.LiftArm;
 
 public class AutoFunctions {
+
+    public Action displayTelemetry(){
+        return new DisplayTelemtry();
+    }
 
     public Action openClaw(){
         return new OpenClaw();
@@ -52,6 +58,14 @@ public class AutoFunctions {
         return new LiftReset();
     }
 
+    public class DisplayTelemtry implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            Robot.displayTelemetry();
+            return true;
+        }
+    }
+
     public class LiftPID implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
@@ -62,13 +76,15 @@ public class AutoFunctions {
     public class LiftHighChamber implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-
+            Lift.move(Lift.Pos.HIGH_CHAMBER);
+            return !Lift.arrivedTargetPos();
         }
     }
     public class LiftReset implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-
+            Lift.move(Lift.Pos.RESET);
+            return !Lift.arrivedTargetPos();
         }
     }
 
@@ -129,7 +145,7 @@ public class AutoFunctions {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             Differential.reset();
-            return Differential.isReseted();
+            return !Differential.isReseted();
         }
     }
 
