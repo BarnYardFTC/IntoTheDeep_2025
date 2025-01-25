@@ -16,7 +16,8 @@ public class LiftArm {
     private static final MotorProps LEFT_MOTOR = new MotorProps(1425.1, 1); // Left's motor props.
 
     private static final int VERTICAL_POS = 135; // Angle for moving the lift arm to a vertical position.
-    private static final int HORIZONTAL_POS = 5; // Angle for moving the lift arm to a horizontal position.
+    private static final int HORIZONTAL_POS_START = 60;
+    private static final int HORIZONTAL_POS_END = 5; // Angle for moving the lift arm to a horizontal position.
     private static final double MIN_LIFT_LENGTH = 30;
 
     private static final int ACCEPTED_VERTICAL_ANGLE = 130;
@@ -45,7 +46,7 @@ public class LiftArm {
 
         controller = new PIDController(p, i, d);
 
-        move(Angle.HORIZONTAL);
+        move(Angle.HORIZONTAL_END);
     }
 
     public static int getTargetPos() {
@@ -104,12 +105,18 @@ public class LiftArm {
 
         double power;
 
-//        if (targetAngle == HORIZONTAL_POS) {
-//            // Calculate motor power.
-//            power = pid * 0.4 + ff * 1.6;
-//        }
-        // Calculate motor power.
-        power = pid + ff;
+        if (isArmInPos() && targetAngle == HORIZONTAL_POS_START) {
+            move(Angle.HORIZONTAL_END);
+        }
+
+        if (!isArmInPos() && targetAngle == HORIZONTAL_POS_END) {
+            // Calculate motor power.
+            power = ff * 0.6;
+        }
+        else {
+            // Calculate motor power.
+            power = pid + ff;
+        }
 
         // Giving power to motors.
         motors[RIGHT].setPower(power);
@@ -122,13 +129,16 @@ public class LiftArm {
                 targetAngle = VERTICAL_POS;
                 break;
             case HORIZONTAL:
-                targetAngle = HORIZONTAL_POS;
+                targetAngle = HORIZONTAL_POS_START;
+                break;
+            case HORIZONTAL_END:
+                targetAngle = HORIZONTAL_POS_END;
                 break;
         }
     }
 
     public enum Angle {
-        VERTICAL, HORIZONTAL
+        VERTICAL, HORIZONTAL, HORIZONTAL_END
     }
 
     public static double getCurrentAngle() {
