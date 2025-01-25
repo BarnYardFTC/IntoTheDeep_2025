@@ -5,6 +5,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.TriggerReader;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 import org.firstinspires.ftc.teamcode.subSystems.Claw;
@@ -117,11 +118,13 @@ public class Robot {
             else
                 Differential.reset();
         }
-        if (gamepadEx.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
-            Differential.move(Differential.currentRollAngle + 20, 0);
+        if (gamepadEx.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT) && Differential.currentRollAngle + 60 <= 180) {
+            Differential.move(Differential.currentRollAngle + 60, Differential.currentPitchAngle);
+            Differential.currentRollAngle += 60;
         }
-        if (gamepadEx.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
-            Differential.move(Differential.currentRollAngle - 20, 0);
+        if (gamepadEx.wasJustPressed(GamepadKeys.Button.DPAD_LEFT) && Differential.currentRollAngle - 60 >= 0) {
+            Differential.move(Differential.currentRollAngle - 60, Differential.currentPitchAngle);
+            Differential.currentRollAngle -= 60;
         }
     }
 
@@ -205,6 +208,7 @@ public class Robot {
 
 
     public static void displayTelemetry() {
+        opMode.telemetry.addData("claw position: ", Claw.getPosition());
         opMode.telemetry.update();
     }
 

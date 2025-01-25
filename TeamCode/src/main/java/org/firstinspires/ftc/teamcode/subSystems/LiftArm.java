@@ -16,8 +16,7 @@ public class LiftArm {
     private static final MotorProps LEFT_MOTOR = new MotorProps(1425.1, 1); // Left's motor props.
 
     private static final int VERTICAL_POS = 135; // Angle for moving the lift arm to a vertical position.
-    private static final int HORIZONTAL_POS_START = 60;
-    private static final int HORIZONTAL_POS_END = 5; // Angle for moving the lift arm to a horizontal position.
+    private static final int HORIZONTAL_POS = 5;
     private static final double MIN_LIFT_LENGTH = 30;
 
     private static final int ACCEPTED_VERTICAL_ANGLE = 130;
@@ -27,7 +26,7 @@ public class LiftArm {
     public static double p = 0.02;
     public static double i = 0;
     public static double d = 0;
-    public static double f = 0.24;
+    public static double f = 0.55;
     public static int targetAngle; // Target angle of the arm.
     private static PIDController controller; // PID controller.
     private static int targetPos; // Target position of the right motor.
@@ -46,7 +45,7 @@ public class LiftArm {
 
         controller = new PIDController(p, i, d);
 
-        move(Angle.HORIZONTAL_END);
+        move(Angle.HORIZONTAL);
     }
 
     public static int getTargetPos() {
@@ -82,7 +81,7 @@ public class LiftArm {
     }
 
     public static double getCurrentAngle() {
-        return Math.abs(motors[RIGHT].getCurrentPosition()) / RIGHT_MOTOR.getENCODERS_PER_DEGREE();
+        return motors[RIGHT].getCurrentPosition() / RIGHT_MOTOR.getENCODERS_PER_DEGREE();
     }
 
     public static void liftArmPID() {
@@ -95,29 +94,14 @@ public class LiftArm {
         // Calculate PIDF values.
         double pid = controller.calculate(currentPos, targetPos);
         double ff;
-        if (targetAngle > 90) {
-            if (Lift.getTargetPosCm() == Lift.HIGH_BASKET_POS) {
-                ff = Math.cos(Math.toRadians(75)) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH) * 1.35;
-            } else {
-                ff = Math.cos(Math.toRadians(75)) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
-            }
-        } else {
-            ff = Math.cos(Math.toRadians(targetAngle)) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
-        }
-
         double power;
-
-        if (isArmInPos() && targetAngle == HORIZONTAL_POS_START) {
-            move(Angle.HORIZONTAL_END);
-        }
-
-        if (!isArmInPos() && targetAngle == HORIZONTAL_POS_END) {
-            // Calculate motor power.
-            power = ff * 0.6;
+        if (targetAngle == VERTICAL_POS) {
+            ff = Math.cos(Math.toRadians(70)) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
+            power = pid + ff;
         }
         else {
-            // Calculate motor power.
-            power = pid + ff;
+            ff = Math.cos(Math.toRadians(0)) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
+            power = pid / 2 + ff;
         }
 
         // Giving power to motors.
@@ -131,19 +115,16 @@ public class LiftArm {
                 targetAngle = VERTICAL_POS;
                 break;
             case HORIZONTAL:
-                targetAngle = HORIZONTAL_POS_START;
-                break;
-            case HORIZONTAL_END:
-                targetAngle = HORIZONTAL_POS_END;
+                targetAngle = HORIZONTAL_POS;
                 break;
         }
     }
 
     public enum Angle {
-        VERTICAL, HORIZONTAL, HORIZONTAL_END
+        VERTICAL, HORIZONTAL
     }
 
     public static boolean isArmInPos() {
-        return getCurrentAngle() <= targetAngle + 5 && getCurrentAngle() >= targetAngle - 5;
+        return getCurrentAngle() <= targetAngle + 8 && getCurrentAngle() >= targetAngle - 8;
     }
 }

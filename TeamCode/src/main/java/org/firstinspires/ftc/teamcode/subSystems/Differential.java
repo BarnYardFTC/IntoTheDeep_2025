@@ -19,6 +19,7 @@ public class Differential {
     private static final int PITCH_ANGLE_RESET = 175;
 
     public static int currentRollAngle;
+    public static int currentPitchAngle;
 
     public static void initialize(OpMode opMode) {
         servos[RIGHT] = opMode.hardwareMap.get(Servo.class, "rightDifferential");
@@ -36,7 +37,6 @@ public class Differential {
     public static void move(int angleRoll, int anglePitch) {
         servos[RIGHT].setPosition(RIGHT_SERVO.getTargetPosition(angleRoll - anglePitch));
         servos[LEFT].setPosition(LEFT_SERVO.getTargetPosition(angleRoll + anglePitch));
-        currentRollAngle += angleRoll;
     }
 
     /**
@@ -46,13 +46,17 @@ public class Differential {
     public static void reset() {
         move(0, PITCH_ANGLE_RESET);
         currentRollAngle = 0;
+        currentPitchAngle = PITCH_ANGLE_RESET;
+        servos[RIGHT].setDirection(Servo.Direction.FORWARD);
+        servos[LEFT].setDirection(Servo.Direction.FORWARD);
     }
 
     /**
      * Moves differential to the sample intake position.
      */
     public static void collectSample() {
-        move(0, PITCH_ANGLE_SAMPLE);
+        move(currentRollAngle, PITCH_ANGLE_SAMPLE);
+        currentPitchAngle = PITCH_ANGLE_SAMPLE;
     }
 
     /**
@@ -60,6 +64,7 @@ public class Differential {
      */
     public static void collectSpecimen() {
         move(0, PITCH_ANGLE_SPECIMEN);
+        currentPitchAngle = PITCH_ANGLE_SPECIMEN;
     }
 
     /**
@@ -68,6 +73,10 @@ public class Differential {
      * @return - If the differential is reseted.
      */
     public static boolean isReseted() {
-        return servos[0].getPosition() == 0;
+        return currentPitchAngle == PITCH_ANGLE_RESET;
+    }
+
+    public static boolean isCollectSamplePos() {
+        return servos[RIGHT].getPosition() == 0;
     }
 }

@@ -50,10 +50,6 @@ public class Lift {
         move(Pos.RESET);
     }
 
-    public static boolean arrivedTargetPos(){
-        return targetPos == getTargetPos(); // ToDo: Create this method
-    }
-
     public static double getTargetPosCm() {
         return targetPosCm;
     }
@@ -97,6 +93,10 @@ public class Lift {
         return motors[LEFT];
     }
 
+    public static double getCurrentLength() {
+        return Math.abs(motors[RIGHT].getCurrentPosition()) / RIGHT_MOTOR.getENCODERS_PER_CM();
+    }
+
     public static void move(Pos pos) {
         switch (pos) {
             case HIGH_CHAMBER:
@@ -130,5 +130,9 @@ public class Lift {
 
     public enum Pos {
         HIGH_CHAMBER, POST_SCORE_HIGH_CHAMBER, LOW_CHAMBER, HIGH_BASKET, LOW_BASKET, RESET
+    }
+
+    public static boolean arrivedTargetPos() {
+        return getCurrentLength() <= targetPosCm + 2 && getCurrentLength() >= targetPosCm - 2;
     }
 }
