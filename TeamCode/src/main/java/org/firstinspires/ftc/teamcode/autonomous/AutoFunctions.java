@@ -80,6 +80,13 @@ public class AutoFunctions {
             return !Lift.arrivedTargetPos();
         }
     }
+    public class LiftPostScoreHighChamber implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            Lift.move(Lift.Pos.POST_SCORE_HIGH_CHAMBER);
+            return !Lift.arrivedTargetPos();
+        }
+    }
     public class LiftReset implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
@@ -148,6 +155,4 @@ public class AutoFunctions {
             return !Differential.isReseted();
         }
     }
-
-
 }

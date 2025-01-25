@@ -17,21 +17,21 @@ public class Claw {
     private static Servo claw; // Servo (starting position: claw: 0).
 
     public static void initialize(OpMode opMode) {
-        claw = opMode.hardwareMap.get(Servo.class, "claw");
+        //claw = opMode.hardwareMap.get(Servo.class, "claw");
     }
 
     /**
      * Open claw.
      */
     public static void open() {
-        claw.setPosition(OPENED_POSITION);
+        //claw.setPosition(OPENED_POSITION);
     }
 
     /**
      * Close claw.
      */
     public static void close() {
-        claw.setPosition(CLOSED_POSITION);
+        //claw.setPosition(CLOSED_POSITION);
     }
 
     /**
@@ -40,7 +40,8 @@ public class Claw {
      * @return true if the claw is opened.
      */
     public static boolean isOpen() {
-        return ServoProps.isServoInPosition(claw, OPENED_POSITION);
+        //return ServoProps.isServoInPosition(claw, OPENED_POSITION);
+        return true;
     }
 
     /**
@@ -49,7 +50,8 @@ public class Claw {
      * @return - true if the claw is closed
      */
     public static boolean isClose() {
-        return ServoProps.isServoInPosition(claw, CLOSED_POSITION);
+        //return ServoProps.isServoInPosition(claw, CLOSED_POSITION);
+        return true;
     }
 
     public static double getPosition() {

@@ -63,8 +63,6 @@ public class LiftArm {
      * @return - If the current arm's position is horizontal.
      */
     public static boolean isHorizontal() {
-        // Old: return targetAngle < 45;
-        // New: ToDo: Make sure Igal is fine with it
         return getCurrentAngle() < ACCEPTED_HORIZONTAL_ANGLE;
     }
     public static boolean isVertical() {
@@ -81,6 +79,10 @@ public class LiftArm {
 
     public static DcMotorEx getLeftMotor() {
         return motors[LEFT];
+    }
+
+    public static double getCurrentAngle() {
+        return Math.abs(motors[RIGHT].getCurrentPosition()) / RIGHT_MOTOR.getENCODERS_PER_DEGREE();
     }
 
     public static void liftArmPID() {
@@ -139,10 +141,6 @@ public class LiftArm {
 
     public enum Angle {
         VERTICAL, HORIZONTAL, HORIZONTAL_END
-    }
-
-    public static double getCurrentAngle() {
-        return Math.abs(motors[RIGHT].getCurrentPosition()) / RIGHT_MOTOR.getENCODERS_PER_DEGREE();
     }
 
     public static boolean isArmInPos() {
