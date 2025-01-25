@@ -134,4 +134,8 @@ public class LiftArm {
     public static double getCurrentAngle() {
         return Math.abs(motors[RIGHT].getCurrentPosition()) / RIGHT_MOTOR.getENCODERS_PER_DEGREE();
     }
+
+    public static boolean isArmInPos() {
+        return getCurrentAngle() <= targetAngle + 5 && getCurrentAngle() >= targetAngle - 5;
+    }
 }
