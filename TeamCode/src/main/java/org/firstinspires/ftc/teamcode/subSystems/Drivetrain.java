@@ -30,6 +30,8 @@ public class Drivetrain {
     private static double adjustedLx; // Adjusted x axis vector of movement.
     private static double adjustedLy; // Adjusted y axis vector of movement.
 
+    private static int speed_adjustment = 1;
+
     public static void initialize(OpMode opMode) {
         motors[LF] = opMode.hardwareMap.get(DcMotorEx.class, "leftFront");
         motors[RF] = opMode.hardwareMap.get(DcMotorEx.class, "rightFront");
@@ -99,10 +101,10 @@ public class Drivetrain {
         adjustedLy = ly * Math.cos(robotHeading) + lx * Math.sin(robotHeading);
 
         // Giving power to motors.
-        motors[LF].setPower((adjustedLy + adjustedLx + rx) / maxPower);
-        motors[RF].setPower((adjustedLy - adjustedLx - rx) / maxPower);
-        motors[LB].setPower((adjustedLy - adjustedLx + rx) / maxPower);
-        motors[RB].setPower((adjustedLy + adjustedLx - rx) / maxPower);
+        motors[LF].setPower((adjustedLy + adjustedLx + rx) / maxPower / speed_adjustment);
+        motors[RF].setPower((adjustedLy - adjustedLx - rx) / maxPower / speed_adjustment);
+        motors[LB].setPower((adjustedLy - adjustedLx + rx) / maxPower / speed_adjustment);
+        motors[RB].setPower((adjustedLy + adjustedLx - rx) / maxPower / speed_adjustment);
     }
 
     /**
@@ -112,6 +114,12 @@ public class Drivetrain {
     public static void resetImu() {
         imu.resetYaw();
         imu.resetYaw();
+    }
 
+    public static void slowMode() {
+        speed_adjustment = 3;
+    }
+    public static void regularMode() {
+        speed_adjustment = 1;
     }
 }

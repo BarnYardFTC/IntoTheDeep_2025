@@ -5,7 +5,6 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.TriggerReader;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 import org.firstinspires.ftc.teamcode.subSystems.Claw;
@@ -39,9 +38,11 @@ public class Robot {
     The other variable are variables which are initialized based on this input variable.
     */
     private static OpMode opMode;
-    private static Gamepad gamepad;
+    private static Gamepad gamepad1;
+    private static Gamepad gamepad2;
     // Variables which are determined by the class based on the gamepad input
-    private static GamepadEx gamepadEx;
+    private static GamepadEx gamepadEx1;
+    private static GamepadEx gamepadEx2;
     private static TriggerReader RIGHT_TRIGGER;
     private static TriggerReader LEFT_TRIGGER;
     private static boolean automating_intake = false;
@@ -63,19 +64,21 @@ public class Robot {
     }
 
     private static void initializeGamepadEx() {
-        Robot.gamepadEx = new GamepadEx(gamepad);
+        Robot.gamepadEx1 = new GamepadEx(gamepad1);
+        Robot.gamepadEx2 = new GamepadEx(gamepad2);
     }
 
     private static void initializeRightTrigger() {
-        RIGHT_TRIGGER = new TriggerReader(gamepadEx, GamepadKeys.Trigger.RIGHT_TRIGGER, TRIGGERS_THRESHOLD);
+        RIGHT_TRIGGER = new TriggerReader(gamepadEx1, GamepadKeys.Trigger.RIGHT_TRIGGER, TRIGGERS_THRESHOLD);
     }
 
     private static void initializeLeftTrigger() {
-        LEFT_TRIGGER = new TriggerReader(gamepadEx, GamepadKeys.Trigger.LEFT_TRIGGER, TRIGGERS_THRESHOLD);
+        LEFT_TRIGGER = new TriggerReader(gamepadEx1, GamepadKeys.Trigger.LEFT_TRIGGER, TRIGGERS_THRESHOLD);
     }
 
-    private static void initializeGamepad(Gamepad gamepad) {
-        Robot.gamepad = gamepad;
+    private static void initializeGamepad(Gamepad gamepad1, Gamepad gamepad2) {
+        Robot.gamepad1 = gamepad1;
+        Robot.gamepad2 = gamepad2;
         initializeGamepadEx();
         initializeRightTrigger();
         initializeLeftTrigger();
@@ -83,7 +86,7 @@ public class Robot {
 
     public static void initializeTeleop(OpMode opMode) {
         initialize(opMode);
-        initializeGamepad(opMode.gamepad1);
+        initializeGamepad(opMode.gamepad1, opMode.gamepad2);
     }
 
     public static void autonomousSetup(){
@@ -92,7 +95,7 @@ public class Robot {
     }
 
     public static void activateClaw() {
-        if (gamepadEx.wasJustPressed(GamepadKeys.Button.Y)) {
+        if (gamepadEx1.wasJustPressed(GamepadKeys.Button.Y)) {
             if (Claw.isOpen()) {
                 Claw.close();
                 automating_intake = true;
@@ -106,32 +109,32 @@ public class Robot {
     }
 
     public static void activateDifferential() {
-        if (gamepadEx.wasJustPressed(GamepadKeys.Button.A)) {
+        if (gamepadEx1.wasJustPressed(GamepadKeys.Button.A)) {
             if (Differential.isReseted())
                 Differential.collectSample();
             else
                 Differential.reset();
         }
-        if (gamepadEx.wasJustPressed(GamepadKeys.Button.X)) {
+        if (gamepadEx1.wasJustPressed(GamepadKeys.Button.X)) {
             if (Differential.isReseted())
                 Differential.collectSpecimen();
             else
                 Differential.reset();
         }
-        if (gamepadEx.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT) && Differential.currentRollAngle + 60 <= 180) {
+        if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT) && Differential.currentRollAngle + 60 <= 180) {
             Differential.move(Differential.currentRollAngle + 60, Differential.currentPitchAngle);
             Differential.currentRollAngle += 60;
         }
-        if (gamepadEx.wasJustPressed(GamepadKeys.Button.DPAD_LEFT) && Differential.currentRollAngle - 60 >= 0) {
+        if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_LEFT) && Differential.currentRollAngle - 60 >= 0) {
             Differential.move(Differential.currentRollAngle - 60, Differential.currentPitchAngle);
             Differential.currentRollAngle -= 60;
         }
     }
 
     public static void activateLift() {
-        if (gamepadEx.wasJustPressed(GamepadKeys.Button.DPAD_DOWN) && !LiftArm.isHorizontal()) {
+        if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN) && LiftArm.isVertical()) {
             Lift.move(Lift.Pos.LOW_BASKET);
-        } else if (gamepadEx.wasJustPressed(GamepadKeys.Button.DPAD_UP) && !LiftArm.isHorizontal()) {
+        } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_UP) && LiftArm.isVertical()) {
             Lift.move(Lift.Pos.HIGH_BASKET);
         } else if (RIGHT_TRIGGER.isDown() && Lift.isMoveable(1)) {
             Lift.move(1);
@@ -141,17 +144,24 @@ public class Robot {
     }
 
     public static void activateLiftArm() {
-        if (gamepadEx.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+        if (gamepadEx1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
             LiftArm.move(LiftArm.Angle.VERTICAL);
-        } else if (gamepadEx.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+        } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
             LiftArm.move(LiftArm.Angle.HORIZONTAL);
         }
     }
 
     public static void activateDrivetrain() {
-        Drivetrain.move(gamepad);
-        if (gamepadEx.wasJustPressed(GamepadKeys.Button.B))
+        Drivetrain.move(gamepad1);
+        Drivetrain.move(gamepad2);
+        if (gamepadEx1.wasJustPressed(GamepadKeys.Button.B) && gamepadEx2.wasJustPressed(GamepadKeys.Button.B))
             Drivetrain.resetImu();
+        if (LiftArm.isHorizontal() && !Lift.isReseted()){
+            Drivetrain.slowMode();
+        }
+        else {
+            Drivetrain.regularMode();
+        }
     }
 
     public static void activateVisionProcessor() {
@@ -172,13 +182,11 @@ public class Robot {
 
         if (automating_discharge) {
             if (finishedWaitingDischarge()) {
-                if (Differential.isReseted()) {
-                    Differential.collectSample();
-                }
                 if (Lift.isReseted()) {
                     Differential.reset();
                     LiftArm.move(LiftArm.Angle.HORIZONTAL);
                 } else {
+                    Differential.collectSpecimen();
                     Lift.move(Lift.Pos.RESET);
                 }
                 if (LiftArm.isHorizontal()) {
@@ -194,7 +202,7 @@ public class Robot {
         // Shit that always keeps on working in the background
         Lift.liftPID();
         LiftArm.liftArmPID();
-        gamepadEx.readButtons();
+        gamepadEx1.readButtons();
         RIGHT_TRIGGER.readValue();
         LEFT_TRIGGER.readValue();
     }
@@ -206,9 +214,11 @@ public class Robot {
     }
 
 
-
     public static void displayTelemetry() {
         opMode.telemetry.addData("claw position: ", Claw.getPosition());
+        opMode.telemetry.addData("isHorizontal", LiftArm.isHorizontal());
+        opMode.telemetry.addData("isVertical", LiftArm.isVertical());
+        opMode.telemetry.addData("isLiftReseted", Lift.isReseted());
         opMode.telemetry.update();
     }
 
@@ -228,7 +238,7 @@ public class Robot {
 
     public static boolean finishedWaitingDischarge() {
         if (!started_waiting_discharge) {
-            rate_limit_discharge = new Deadline(300, TimeUnit.MILLISECONDS);
+            rate_limit_discharge = new Deadline(200, TimeUnit.MILLISECONDS);
             started_waiting_discharge = true;
             return false;
         }
