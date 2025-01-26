@@ -97,7 +97,7 @@ public class LiftArm {
         double power;
         if (targetAngle == VERTICAL_POS) {
             if (Lift.getTargetPosCm() == Lift.HIGH_BASKET_POS) {
-                ff = Math.cos(Math.toRadians(35)) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
+                ff = Math.cos(Math.toRadians(15)) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
                 power = pid + ff;
             }
             else {
@@ -106,7 +106,7 @@ public class LiftArm {
             }
         }
         else {
-            ff = Math.cos(Math.toRadians(0)) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
+            ff = Math.cos(Math.toRadians(targetAngle)) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
             power = pid + ff;
         }
 

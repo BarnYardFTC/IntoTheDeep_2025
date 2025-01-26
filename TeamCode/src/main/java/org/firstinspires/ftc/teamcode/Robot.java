@@ -45,13 +45,19 @@ public class Robot {
     private static GamepadEx gamepadEx2;
     private static TriggerReader RIGHT_TRIGGER;
     private static TriggerReader LEFT_TRIGGER;
+
     private static boolean automating_intake = false;
     private static Deadline rate_limit_intake;
     private static boolean started_waiting_intake = false;
 
-    private static boolean automating_discharge = false;
-    private static Deadline rate_limit_discharge;
-    private static boolean started_waiting_discharge = false;
+    private static boolean automating_reset = false;
+    private static Deadline rate_limit_reset;
+    private static boolean started_waiting_reset = false;
+
+    private static boolean automating_high_chamber_deposit =  false;
+    private static boolean automated_deposit = false;
+    private static boolean automated_lift_reset = false;
+
 
     public static void initialize(OpMode opMode) {
         //VisionProcessor.initialize(opMode);
@@ -101,9 +107,6 @@ public class Robot {
                 automating_intake = true;
             } else {
                 Claw.open();
-                if (LiftArm.isVertical()) {
-                    automating_discharge = true;
-                }
             }
         }
     }
@@ -152,12 +155,14 @@ public class Robot {
     }
 
     public static void activateDrivetrain() {
-        Drivetrain.move(gamepad1);
         Drivetrain.move(gamepad2);
-        if (gamepadEx1.wasJustPressed(GamepadKeys.Button.B) && gamepadEx2.wasJustPressed(GamepadKeys.Button.B))
+        if (gamepadEx2.wasJustPressed(GamepadKeys.Button.B))
             Drivetrain.resetImu();
-        if (LiftArm.isHorizontal() && !Lift.isReseted()){
+        else if ((LiftArm.isHorizontal() && !Lift.isReseted()) || LiftArm.isVertical() || gamepadEx2.wasJustPressed(GamepadKeys.Button.X) && !Drivetrain.isSlowed()){
             Drivetrain.slowMode();
+        }
+        else if (gamepadEx2.wasJustPressed(GamepadKeys.Button.X) && Drivetrain.isSlowed()){
+            Drivetrain.regularMode();
         }
         else {
             Drivetrain.regularMode();
@@ -180,20 +185,23 @@ public class Robot {
             activateClaw();
         }
 
-        if (automating_discharge) {
-            if (finishedWaitingDischarge()) {
-                if (Lift.isReseted()) {
-                    Differential.reset();
-                    LiftArm.move(LiftArm.Angle.HORIZONTAL);
-                } else {
-                    Differential.collectSpecimen();
-                    Lift.move(Lift.Pos.RESET);
-                }
-                if (LiftArm.isHorizontal()) {
-                    automating_discharge = false;
-                }
-            }
-        } else {
+
+        if (!automating_reset && (LiftArm.isVertical() || LiftArm.isHorizontal()) && gamepadEx2.wasJustPressed(GamepadKeys.Button.Y) && !Lift.isReseted()){
+            automating_reset = true;
+        }
+        if (automating_reset) {
+            automating_reset = reset();
+        }
+
+        if (!automating_high_chamber_deposit && LiftArm.isVertical() && ( gamepadEx2.wasJustPressed(GamepadKeys.Button.A) || gamepadEx2.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT))){
+            automating_high_chamber_deposit = true;
+        }
+
+        if (automating_high_chamber_deposit){
+            automating_high_chamber_deposit = high_chamber_deposit();
+        }
+
+        if (!automating_reset && !automating_high_chamber_deposit) {
             activateLift();
             activateLiftArm();
             activateDifferential();
@@ -203,14 +211,43 @@ public class Robot {
         Lift.liftPID();
         LiftArm.liftArmPID();
         gamepadEx1.readButtons();
+        gamepadEx2.readButtons();
         RIGHT_TRIGGER.readValue();
         LEFT_TRIGGER.readValue();
     }
 
-    public static void reset() {
-        Differential.reset();
-        LiftArm.move(LiftArm.Angle.HORIZONTAL);
-        Lift.move(Lift.Pos.RESET);
+    public static boolean high_chamber_deposit(){
+        if (!automated_deposit){
+            Lift.move(Lift.Pos.POST_SCORE_HIGH_CHAMBER);
+            if (Lift.arrivedTargetPos()){
+                automated_deposit = true;
+            }
+        }
+        if (!automated_lift_reset && automated_deposit) {
+            Claw.open();
+            automated_lift_reset = !reset();
+        }
+        return !(automated_deposit && automated_lift_reset);
+    }
+
+    public static boolean reset() {
+        if (LiftArm.isVertical()) {
+            if (Lift.isReseted()) {
+                LiftArm.move(LiftArm.Angle.HORIZONTAL);
+                Differential.reset();
+            }
+            else {
+                Lift.move(Lift.Pos.RESET);
+            }
+            return !LiftArm.isHorizontal();
+        }
+        else if (LiftArm.isHorizontal()){
+            Lift.move(Lift.Pos.RESET);
+            return !Lift.isReseted();
+        }
+        else {
+            return true;
+        }
     }
 
 
@@ -219,6 +256,7 @@ public class Robot {
         opMode.telemetry.addData("isHorizontal", LiftArm.isHorizontal());
         opMode.telemetry.addData("isVertical", LiftArm.isVertical());
         opMode.telemetry.addData("isLiftReseted", Lift.isReseted());
+        opMode.telemetry.addData("automating reset", automating_reset);
         opMode.telemetry.update();
     }
 
@@ -236,15 +274,15 @@ public class Robot {
         return false;
     }
 
-    public static boolean finishedWaitingDischarge() {
-        if (!started_waiting_discharge) {
-            rate_limit_discharge = new Deadline(200, TimeUnit.MILLISECONDS);
-            started_waiting_discharge = true;
+    public static boolean finishedWaitingReset() {
+        if (!started_waiting_reset) {
+            rate_limit_reset = new Deadline(200, TimeUnit.MILLISECONDS);
+            started_waiting_reset = true;
             return false;
         }
-        if (rate_limit_discharge.hasExpired()) {
-            rate_limit_discharge = null;
-            started_waiting_discharge = false;
+        if (rate_limit_reset.hasExpired()) {
+            rate_limit_reset = null;
+            started_waiting_reset = false;
             return true;
         }
         return false;

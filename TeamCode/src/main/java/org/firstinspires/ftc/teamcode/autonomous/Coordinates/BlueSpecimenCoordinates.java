@@ -10,7 +10,7 @@ public class BlueSpecimenCoordinates {
     private static final double score3X = -2;
     private static final double score4X = -5;
     private static final double score5X = -8;
-    private static final double scoreY = 38;
+    private static final double scoreY = 42;
     private static final double midWayMoveSpecimensY = 40;
     private static final double moveSpecimensStart0X = -36;
     private static final double moveSpecimensStartY = 13;

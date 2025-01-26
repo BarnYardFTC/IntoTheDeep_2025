@@ -66,6 +66,12 @@ public class Drivetrain {
     public static double getRobotHeading() {
         return robotHeading;
     }
+    public static double getSpeedAdjustment() {
+        return speed_adjustment;
+    }
+    public static boolean isSlowed() {
+        return speed_adjustment == 3;
+    }
 
     /**
      * This function is built to reset all the inconstant variables of the class.
