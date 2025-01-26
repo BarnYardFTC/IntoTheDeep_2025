@@ -96,12 +96,18 @@ public class LiftArm {
         double ff;
         double power;
         if (targetAngle == VERTICAL_POS) {
-            ff = Math.cos(Math.toRadians(70)) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
-            power = pid + ff;
+            if (Lift.getTargetPosCm() == Lift.HIGH_BASKET_POS) {
+                ff = Math.cos(Math.toRadians(35)) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
+                power = pid + ff;
+            }
+            else {
+                ff = Math.cos(Math.toRadians(70)) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
+                power = pid + ff;
+            }
         }
         else {
             ff = Math.cos(Math.toRadians(0)) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
-            power = pid / 2 + ff;
+            power = pid + ff;
         }
 
         // Giving power to motors.
@@ -125,6 +131,6 @@ public class LiftArm {
     }
 
     public static boolean isArmInPos() {
-        return getCurrentAngle() <= targetAngle + 8 && getCurrentAngle() >= targetAngle - 8;
+        return getCurrentAngle() <= targetAngle + 10 && getCurrentAngle() >= targetAngle - 10;
     }
 }
