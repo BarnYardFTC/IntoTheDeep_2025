@@ -21,12 +21,12 @@ public class Lift {
     private static final LiftProps LEFT_MOTOR = new LiftProps(8, 4, 537.7, 1.4, 14); // Left's motor props.
     private static final double ROBOT_LIFT_HEIGHT = 50;
     public static final double HIGH_CHAMBER_POS = 66 - ROBOT_LIFT_HEIGHT;
-    public static final double LOW_BASKET_POS = 65.4 - ROBOT_LIFT_HEIGHT;
-    public static final double POST_SCORE_HIGH_CHAMBER_POS = 75 - ROBOT_LIFT_HEIGHT;
+    public static final double LOW_BASKET_POS = 67.4 - ROBOT_LIFT_HEIGHT;
+    public static final double POST_SCORE_HIGH_CHAMBER_POS = 76 - ROBOT_LIFT_HEIGHT;
     // Lift limits
     private static final double HORIZONTAL_LIMIT = 44;
-    private static final double VERTICAL_LIMIT = 70;
-    public static final double HIGH_BASKET_POS = VERTICAL_LIMIT;
+    private static final double VERTICAL_LIMIT = 72;
+    public static final double HIGH_BASKET_POS = 66;
     //ToDo: set correct values.
     public static double p = 0.0085;
     public static double i = 0;

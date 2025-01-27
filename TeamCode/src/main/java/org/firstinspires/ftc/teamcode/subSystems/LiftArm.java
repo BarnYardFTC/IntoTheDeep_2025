@@ -101,7 +101,7 @@ public class LiftArm {
                 power = pid + ff;
             }
             else {
-                ff = Math.cos(Math.toRadians(70)) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
+                ff = Math.cos(Math.toRadians(80)) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
                 power = pid + ff;
             }
         }

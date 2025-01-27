@@ -54,9 +54,7 @@ public class Robot {
     private static Deadline rate_limit_reset;
     private static boolean started_waiting_reset = false;
 
-    private static boolean automating_high_chamber_deposit =  false;
-    private static boolean automated_deposit = false;
-    private static boolean automated_lift_reset = false;
+    private static boolean automating_high_basket_deposit = false;
 
 
     public static void initialize(OpMode opMode) {
@@ -67,6 +65,9 @@ public class Robot {
         Differential.initialize(opMode);
         Claw.initialize(opMode);
         Robot.opMode = opMode;
+
+        automating_high_basket_deposit = false;
+        automating_reset = false;
     }
 
     private static void initializeGamepadEx() {
@@ -155,13 +156,13 @@ public class Robot {
     }
 
     public static void activateDrivetrain() {
-        Drivetrain.move(gamepad2);
-        if (gamepadEx2.wasJustPressed(GamepadKeys.Button.B))
+        Drivetrain.move(gamepad1);
+        if (gamepadEx1.wasJustPressed(GamepadKeys.Button.B))
             Drivetrain.resetImu();
-        else if ((LiftArm.isHorizontal() && !Lift.isReseted()) || LiftArm.isVertical() || gamepadEx2.wasJustPressed(GamepadKeys.Button.X) && !Drivetrain.isSlowed()){
+        else if ((LiftArm.isHorizontal() && !Lift.isReseted()) || LiftArm.isVertical() || gamepadEx1.wasJustPressed(GamepadKeys.Button.X) && !Drivetrain.isSlowed()){
             Drivetrain.slowMode();
         }
-        else if (gamepadEx2.wasJustPressed(GamepadKeys.Button.X) && Drivetrain.isSlowed()){
+        else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.X) && Drivetrain.isSlowed()){
             Drivetrain.regularMode();
         }
         else {
@@ -176,35 +177,36 @@ public class Robot {
     public static void activateAll() {
         activateDrivetrain();
 
-        if (automating_intake) {
-            if (finishedWaitingIntake()) {
-                Differential.reset();
-                automating_intake = false;
-            }
-        } else {
-            activateClaw();
-        }
-
-
-        if (!automating_reset && (LiftArm.isVertical() || LiftArm.isHorizontal()) && gamepadEx2.wasJustPressed(GamepadKeys.Button.Y) && !Lift.isReseted()){
+        if (!automating_reset && (LiftArm.isVertical() || LiftArm.isHorizontal()) && gamepadEx2.wasJustPressed(GamepadKeys.Button.A) && !Lift.isReseted()){
             automating_reset = true;
         }
-        if (automating_reset) {
+        else if (automating_reset) {
             automating_reset = reset();
         }
 
-        if (!automating_high_chamber_deposit && LiftArm.isVertical() && ( gamepadEx2.wasJustPressed(GamepadKeys.Button.A) || gamepadEx2.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT))){
-            automating_high_chamber_deposit = true;
+        else if (!automating_high_basket_deposit && gamepadEx2.wasJustPressed(GamepadKeys.Button.Y)){
+            automating_high_basket_deposit = true;
         }
-
-        if (automating_high_chamber_deposit){
-            automating_high_chamber_deposit = high_chamber_deposit();
+        else if (automating_high_basket_deposit) {
+            high_basket_deposit();
+            if (Lift.getCurrentLength() > 40 && LiftArm.isVertical()) {
+                automating_high_basket_deposit = false;
+            }
         }
-
-        if (!automating_reset && !automating_high_chamber_deposit) {
+        else {
             activateLift();
             activateLiftArm();
             activateDifferential();
+
+            if (automating_intake) {
+                if (finishedWaitingIntake()) {
+                    Differential.reset();
+                    automating_intake = false;
+                }
+            }
+            else {
+                activateClaw();
+            }
         }
 
         // Shit that always keeps on working in the background
@@ -216,20 +218,13 @@ public class Robot {
         LEFT_TRIGGER.readValue();
     }
 
-    public static boolean high_chamber_deposit(){
-        if (!automated_deposit){
-            Lift.move(Lift.Pos.POST_SCORE_HIGH_CHAMBER);
-            if (Lift.arrivedTargetPos()){
-                automated_deposit = true;
-            }
+    public static void high_basket_deposit(){
+        if (LiftArm.isVertical()){
+            Lift.move(Lift.Pos.HIGH_BASKET);
         }
-        if (!automated_lift_reset && automated_deposit) {
-            Claw.open();
-            if (finishedWaitingReset()){
-                automated_lift_reset = !reset();
-            }
+        else {
+            LiftArm.move(LiftArm.Angle.VERTICAL);
         }
-        return !(automated_deposit && automated_lift_reset);
     }
 
     public static boolean reset() {
@@ -254,12 +249,11 @@ public class Robot {
 
 
     public static void displayTelemetry() {
-        opMode.telemetry.addData("claw position: ", Claw.getPosition());
-        opMode.telemetry.addData("isHorizontal", LiftArm.isHorizontal());
-        opMode.telemetry.addData("isVertical", LiftArm.isVertical());
-        opMode.telemetry.addData("isLiftReseted", Lift.isReseted());
-        opMode.telemetry.addData("automating reset", automating_reset);
-        opMode.telemetry.addData("automating deposit", automating_high_chamber_deposit);
+        opMode.telemetry.addData("Lift reseted", Lift.isReseted());
+        opMode.telemetry.addData("Lift target pos", Lift.getTargetPosCm());
+        opMode.telemetry.addData("Lift current length", Lift.getCurrentLength());
+        opMode.telemetry.addData("heading", Drivetrain.getRobotHeading());
+
         opMode.telemetry.update();
     }
 
