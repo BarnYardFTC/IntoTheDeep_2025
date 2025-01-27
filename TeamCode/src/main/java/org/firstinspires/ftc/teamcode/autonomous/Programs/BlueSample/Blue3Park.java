@@ -14,9 +14,9 @@ import org.firstinspires.ftc.teamcode.autonomous.Coordinates.BlueSpecimenCoordin
 import org.firstinspires.ftc.teamcode.roadRunner.MecanumDrive;
 
 @Config
-@Autonomous(name = "Blue_Sample_4_Park", group = "Autonomous")
+@Autonomous(name = "Blue_Sample_3_Park", group = "Autonomous")
 
-public class BlueSample4Park extends LinearOpMode {
+public class Blue3Park extends LinearOpMode {
     @Override
     public void runOpMode() {
         MecanumDrive ignitionSystem = new MecanumDrive(hardwareMap, BlueSampleCoordinates.getStart());
@@ -24,14 +24,14 @@ public class BlueSample4Park extends LinearOpMode {
         Action scorePreLoad = ignitionSystem.actionBuilder(BlueSampleCoordinates.getStart())
                 .setTangent(BlueSampleCoordinates.getScoreTangent())
                 .splineToLinearHeading(BlueSampleCoordinates.getScore(), BlueSampleCoordinates.getIntake2HeadingChange())
-                
+
                 .build();
 
         Action intake2 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore())
                 .splineToLinearHeading(BlueSampleCoordinates.getIntake2(), BlueSampleCoordinates.getIntake2HeadingChange())
-                
+
                 .build();
-        
+
         Action score2 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getIntake2())
                 .setTangent(BlueSampleCoordinates.getScoreTangent())
                 .splineToLinearHeading(BlueSampleCoordinates.getScore(), BlueSampleCoordinates.getIntake2HeadingChange())
@@ -39,17 +39,7 @@ public class BlueSample4Park extends LinearOpMode {
 
         Action intake3 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore())
                 .splineToLinearHeading(BlueSampleCoordinates.getIntake3(), BlueSampleCoordinates.getIntake2HeadingChange())
-                
-                .build();
 
-        Action intake4 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore())
-                .splineToLinearHeading(BlueSampleCoordinates.getIntake4(), BlueSampleCoordinates.getIntake4HeadingChange())
-
-                .build();
-
-        Action score4 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getIntake4())
-                .setTangent(BlueSampleCoordinates.getScoreTangent())
-                .splineToLinearHeading(BlueSampleCoordinates.getScore(), BlueSampleCoordinates.getIntake4HeadingChange())
                 .build();
 
         Action park = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore())
@@ -69,8 +59,6 @@ public class BlueSample4Park extends LinearOpMode {
                         score2,
                         intake3,
                         score2,
-                        intake4,
-                        score4,
                         park
                 )
         );

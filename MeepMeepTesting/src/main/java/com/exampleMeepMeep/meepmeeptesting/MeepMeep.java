@@ -107,13 +107,13 @@ public class MeepMeep {
 
         botRedSample.runAction(botRedSample.getDrive().actionBuilder(RedSampleCoordinatesMeepMeep.getStart())
                 .waitSeconds(26)
-                .strafeToConstantHeading(RedSampleCoordinatesMeepMeep.getPark().position)
+                .strafeToConstantHeading(RedSampleCoordinatesMeepMeep.getPark1().position)
 
                 .build());
 
         botBlueSample.runAction(botBlueSample.getDrive().actionBuilder(BlueSampleCoordinatesMeepMeep.getStart())
                 .waitSeconds(26)
-                .strafeToConstantHeading(BlueSampleCoordinatesMeepMeep.getPark().position)
+                .strafeToConstantHeading(BlueSampleCoordinatesMeepMeep.getPark1().position)
 
                 .build());
 

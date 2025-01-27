@@ -10,21 +10,24 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.autonomous.Coordinates.BlueSampleCoordinates;
-import org.firstinspires.ftc.teamcode.autonomous.Trajactories.BlueSampleTrajectories;
+import org.firstinspires.ftc.teamcode.autonomous.Coordinates.BlueSpecimenCoordinates;
 import org.firstinspires.ftc.teamcode.roadRunner.MecanumDrive;
 
 @Config
-@Autonomous(name = "Blue_Sample_Park", group = "Autonomous")
+@Autonomous(name = "Blue_Sample_1_Park", group = "Autonomous")
 
-public class BlueSamplePark extends LinearOpMode {
+public class Blue1Park extends LinearOpMode {
     @Override
     public void runOpMode() {
         MecanumDrive ignitionSystem = new MecanumDrive(hardwareMap, BlueSampleCoordinates.getStart());
 
-        Action park = ignitionSystem.actionBuilder(BlueSampleCoordinates.getStart())
+        Action scorePreLoad = ignitionSystem.actionBuilder(BlueSampleCoordinates.getStart())
                 .setTangent(BlueSampleCoordinates.getScoreTangent())
                 .splineToLinearHeading(BlueSampleCoordinates.getScore(), BlueSampleCoordinates.getIntake2HeadingChange())
 
+                .build();
+
+        Action park = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore())
                 .strafeToLinearHeading(BlueSampleCoordinates.getPark1().component1(), BlueSampleCoordinates.getPark1().heading)
 
                 .strafeToConstantHeading(BlueSampleCoordinates.getPark2().component1())
@@ -36,6 +39,7 @@ public class BlueSamplePark extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
+                        scorePreLoad,
                         park
                 )
         );

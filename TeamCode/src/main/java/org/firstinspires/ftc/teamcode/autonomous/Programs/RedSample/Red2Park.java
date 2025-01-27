@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.autonomous.Programs.RedSample;
+package org.firstinspires.ftc.teamcode.autonomous.Programs.BlueSample;
 
 // Import
 
@@ -10,22 +10,35 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.autonomous.Coordinates.BlueSampleCoordinates;
+import org.firstinspires.ftc.teamcode.autonomous.Coordinates.BlueSpecimenCoordinates;
 import org.firstinspires.ftc.teamcode.autonomous.Coordinates.RedSampleCoordinates;
-import org.firstinspires.ftc.teamcode.autonomous.Trajactories.BlueSampleTrajectories;
 import org.firstinspires.ftc.teamcode.roadRunner.MecanumDrive;
 
 @Config
-@Autonomous(name = "Red_Sample_Park", group = "Autonomous")
+@Autonomous(name = "Red_Sample_2_Park", group = "Autonomous")
 
-public class RedSamplePark extends LinearOpMode {
+public class Red2Park extends LinearOpMode {
     @Override
     public void runOpMode() {
         MecanumDrive ignitionSystem = new MecanumDrive(hardwareMap, RedSampleCoordinates.getStart());
 
-        Action park = ignitionSystem.actionBuilder(RedSampleCoordinates.getStart())
+        Action scorePreLoad = ignitionSystem.actionBuilder(RedSampleCoordinates.getStart())
                 .setTangent(RedSampleCoordinates.getScoreTangent())
                 .splineToLinearHeading(RedSampleCoordinates.getScore(), RedSampleCoordinates.getIntake2HeadingChange())
 
+                .build();
+
+        Action intake2 = ignitionSystem.actionBuilder(RedSampleCoordinates.getScore())
+                .splineToLinearHeading(RedSampleCoordinates.getIntake2(), RedSampleCoordinates.getIntake2HeadingChange())
+
+                .build();
+
+        Action score2 = ignitionSystem.actionBuilder(RedSampleCoordinates.getIntake2())
+                .setTangent(RedSampleCoordinates.getScoreTangent())
+                .splineToLinearHeading(RedSampleCoordinates.getScore(), RedSampleCoordinates.getIntake2HeadingChange())
+                .build();
+
+        Action park = ignitionSystem.actionBuilder(RedSampleCoordinates.getScore())
                 .strafeToLinearHeading(RedSampleCoordinates.getPark1().component1(), RedSampleCoordinates.getPark1().heading)
 
                 .strafeToConstantHeading(RedSampleCoordinates.getPark2().component1())
@@ -37,6 +50,9 @@ public class RedSamplePark extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
+                        scorePreLoad,
+                        intake2,
+                        score2,
                         park
                 )
         );

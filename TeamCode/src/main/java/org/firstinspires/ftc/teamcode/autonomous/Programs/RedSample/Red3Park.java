@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.autonomous.Programs.RedSample;
+package org.firstinspires.ftc.teamcode.autonomous.Programs;
 
 // Import
 
@@ -15,9 +15,9 @@ import org.firstinspires.ftc.teamcode.autonomous.Coordinates.RedSampleCoordinate
 import org.firstinspires.ftc.teamcode.roadRunner.MecanumDrive;
 
 @Config
-@Autonomous(name = "Red_Sample_4_Park", group = "Autonomous")
+@Autonomous(name = "Red_Sample_3_Park", group = "Autonomous")
 
-public class RedSample4Park extends LinearOpMode {
+public class Red3Park extends LinearOpMode {
     @Override
     public void runOpMode() {
         MecanumDrive ignitionSystem = new MecanumDrive(hardwareMap, RedSampleCoordinates.getStart());
@@ -43,16 +43,6 @@ public class RedSample4Park extends LinearOpMode {
 
                 .build();
 
-        Action intake4 = ignitionSystem.actionBuilder(RedSampleCoordinates.getScore())
-                .splineToLinearHeading(RedSampleCoordinates.getIntake4(), RedSampleCoordinates.getIntake4HeadingChange())
-
-                .build();
-
-        Action score4 = ignitionSystem.actionBuilder(RedSampleCoordinates.getIntake4())
-                .setTangent(RedSampleCoordinates.getScoreTangent())
-                .splineToLinearHeading(RedSampleCoordinates.getScore(), RedSampleCoordinates.getIntake4HeadingChange())
-                .build();
-
         Action park = ignitionSystem.actionBuilder(RedSampleCoordinates.getScore())
                 .strafeToLinearHeading(RedSampleCoordinates.getPark1().component1(), RedSampleCoordinates.getPark1().heading)
 
@@ -70,8 +60,6 @@ public class RedSample4Park extends LinearOpMode {
                         score2,
                         intake3,
                         score2,
-                        intake4,
-                        score4,
                         park
                 )
         );

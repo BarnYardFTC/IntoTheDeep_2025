@@ -12,7 +12,8 @@ public class RedSampleCoordinates {
     private static final double intake3X = -60;
     private static final double intake4X = -57;
     private static final double intake4Y = -37;
-    private static final double parkX = -26;
+    private static final double park1X = -36;
+    private static final double park2X = -26;
     private static final double parkY = -10;
     private static final double startPoseHeading = Math.toRadians(0);
     private static final double scorePoseHeading = Math.toRadians(45);
@@ -27,7 +28,8 @@ public class RedSampleCoordinates {
     private static final Pose2d intake2 = new Pose2d(intake2X, intake2Y, intake2PoseHeading);
     private static final Pose2d intake3 = new Pose2d(intake3X, intake2Y, intake2PoseHeading);
     private static final Pose2d intake4 = new Pose2d(intake4X, intake4Y, intake4PoseHeading);
-    private static final Pose2d park = new Pose2d(parkX, parkY, parkPoseHeading);
+    private static final Pose2d park1 = new Pose2d(park1X, parkY, parkPoseHeading);
+    private static final Pose2d park2 = new Pose2d(park2X, parkY, parkPoseHeading);
 
     public static Pose2d getStart() {
         return start;
@@ -49,8 +51,11 @@ public class RedSampleCoordinates {
         return intake4;
     }
 
-    public static Pose2d getPark() {
-        return park;
+    public static Pose2d getPark1() {
+        return park1;
+    }
+    public static Pose2d getPark2() {
+        return park2;
     }
 
     public static double getScoreTangent() {
