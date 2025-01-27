@@ -11,5 +11,5 @@ public class RedSampleTrajectories {
     public static MecanumDrive ignitionSystem = new MecanumDrive(hardwareMap, RedSampleCoordinates.getStart());
     public static TrajectoryActionBuilder parkFromStart = ignitionSystem.actionBuilder(RedSampleCoordinates.getStart())
             .waitSeconds(26)
-            .strafeToConstantHeading(RedSampleCoordinates.getPark().position);
+            .strafeToConstantHeading(RedSampleCoordinates.getPark1().position);
 }

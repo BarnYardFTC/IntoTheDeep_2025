@@ -22,7 +22,7 @@ public class Lift {
     private static final double ROBOT_LIFT_HEIGHT = 50;
     public static final double HIGH_CHAMBER_POS = 66 - ROBOT_LIFT_HEIGHT;
     public static final double LOW_BASKET_POS = 67.4 - ROBOT_LIFT_HEIGHT;
-    public static final double POST_SCORE_HIGH_CHAMBER_POS = 76 - ROBOT_LIFT_HEIGHT;
+    public static final double POST_SCORE_HIGH_CHAMBER_POS = 77 - ROBOT_LIFT_HEIGHT;
     // Lift limits
     private static final double HORIZONTAL_LIMIT = 44;
     private static final double VERTICAL_LIMIT = 72;

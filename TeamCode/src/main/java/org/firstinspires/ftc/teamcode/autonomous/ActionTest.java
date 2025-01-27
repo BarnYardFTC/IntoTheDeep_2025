@@ -76,7 +76,6 @@ public class ActionTest extends LinearOpMode {
                 .strafeToConstantHeading(BlueSpecimenCoordinates.getPark().position).build();
 
         Robot.initialize(this);
-        Robot.autonomousSetup();
         AutoFunctions autoFunctions = new AutoFunctions();
 
         waitForStart();
@@ -90,12 +89,10 @@ public class ActionTest extends LinearOpMode {
                         autoFunctions.liftArmPID(),
                         autoFunctions.displayTelemetry(),
                         new SequentialAction(
+                                autoFunctions.setup(),
                                 new ParallelAction(
                                     scorePreLoad,
-                                    new SequentialAction(
-                                            autoFunctions.liftArmVertical(),
-                                            autoFunctions.moveLift(Lift.Pos.HIGH_CHAMBER)
-                                    )
+                                    autoFunctions.liftArmVertical()
                                 ),
                                 autoFunctions.moveLift(Lift.Pos.POST_SCORE_HIGH_CHAMBER),
                                 new ParallelAction(
@@ -111,13 +108,11 @@ public class ActionTest extends LinearOpMode {
                                     autoFunctions.differentialCollectSpecimen()
                                 ),
                                 autoFunctions.closeClaw(),
+                                autoFunctions.waitClaw(),
                                 new ParallelAction(
                                     scoreSecond,
                                     autoFunctions.differentialReset(),
-                                    new SequentialAction(
-                                        autoFunctions.liftArmVertical(),
-                                        autoFunctions.moveLift(Lift.Pos.HIGH_CHAMBER)
-                                    )
+                                    autoFunctions.liftArmVertical()
                                 ),
                                 autoFunctions.moveLift(Lift.Pos.POST_SCORE_HIGH_CHAMBER),
                                 new ParallelAction(
@@ -130,13 +125,12 @@ public class ActionTest extends LinearOpMode {
                                     )
                                 ),
                                 autoFunctions.closeClaw(),
+                                autoFunctions.waitClaw(),
                                 new ParallelAction(
                                         scoreThird,
                                         autoFunctions.differentialReset(),
-                                        new SequentialAction(
-                                            autoFunctions.liftArmVertical(),
-                                            autoFunctions.moveLift(Lift.Pos.HIGH_CHAMBER)
-                                        )
+                                        autoFunctions.liftArmVertical()
+
                                 ),
                                 autoFunctions.moveLift(Lift.Pos.POST_SCORE_HIGH_CHAMBER),
                                 new ParallelAction(
@@ -149,32 +143,11 @@ public class ActionTest extends LinearOpMode {
                                         )
                                 ),
                                 autoFunctions.closeClaw(),
+                                autoFunctions.waitClaw(),
                                 new ParallelAction(
                                         scoreFourth,
                                         autoFunctions.differentialReset(),
-                                        new SequentialAction(
-                                                autoFunctions.liftArmVertical(),
-                                                autoFunctions.moveLift(Lift.Pos.HIGH_CHAMBER)
-                                        )
-                                ),
-                                autoFunctions.moveLift(Lift.Pos.POST_SCORE_HIGH_CHAMBER),
-                                new ParallelAction(
-                                        autoFunctions.openClaw(),
-                                        collectFifth,
-                                        new SequentialAction(
-                                                autoFunctions.moveLift(Lift.Pos.RESET),
-                                                autoFunctions.liftArmHorizontal(),
-                                                autoFunctions.differentialCollectSpecimen()
-                                        )
-                                ),
-                                autoFunctions.closeClaw(),
-                                new ParallelAction(
-                                        scoreFifth,
-                                        autoFunctions.differentialReset(),
-                                        new SequentialAction(
-                                                autoFunctions.liftArmVertical(),
-                                                autoFunctions.moveLift(Lift.Pos.HIGH_CHAMBER)
-                                        )
+                                        autoFunctions.liftArmVertical()
                                 ),
                                 autoFunctions.moveLift(Lift.Pos.POST_SCORE_HIGH_CHAMBER),
                                 new ParallelAction(

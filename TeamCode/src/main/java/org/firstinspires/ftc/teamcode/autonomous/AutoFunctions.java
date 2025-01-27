@@ -52,10 +52,33 @@ public class AutoFunctions {
         if (pos == Lift.Pos.HIGH_CHAMBER){
             return new LiftHighChamber();
         }
+        else if (pos == Lift.Pos.POST_SCORE_HIGH_CHAMBER){
+            return new LiftPostScoreHighChamber();
+        }
         else if (pos == Lift.Pos.RESET){
             return new LiftReset();
         }
         return new LiftReset();
+    }
+
+    public Action waitClaw(){
+        return new WaitClaw();
+    }
+
+    public Action setup(){
+        return new Setup();
+    }
+
+    public Action waitAutonomous(){
+        return new WaitAutonomous();
+    }
+
+    public class Setup implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            Robot.autonomousSetup();
+            return false;
+        }
     }
 
     public class DisplayTelemtry implements Action {
@@ -73,6 +96,12 @@ public class AutoFunctions {
             return true;
         }
     }
+    public class WaitAutonomous implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            return !Robot.finishedWaitingAutonomous();
+        }
+    }
     public class LiftHighChamber implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
@@ -80,6 +109,7 @@ public class AutoFunctions {
             return !Lift.arrivedTargetPos();
         }
     }
+
     public class LiftPostScoreHighChamber implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
@@ -155,4 +185,12 @@ public class AutoFunctions {
             return !Differential.isReseted();
         }
     }
+
+    public class WaitClaw implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            return !Robot.finishedWaitingClaw();
+        }
+    }
+
 }

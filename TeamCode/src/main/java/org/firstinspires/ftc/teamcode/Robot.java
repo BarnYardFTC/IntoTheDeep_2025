@@ -50,6 +50,9 @@ public class Robot {
     private static Deadline rate_limit_intake;
     private static boolean started_waiting_intake = false;
 
+    private static Deadline rate_limit_chamber;
+    private static boolean started_waiting_chamber = false;
+
     private static boolean automating_reset = false;
     private static Deadline rate_limit_reset;
     private static boolean started_waiting_reset = false;
@@ -271,15 +274,29 @@ public class Robot {
         return false;
     }
 
-    public static boolean finishedWaitingReset() {
+    public static boolean finishedWaitingClaw() {
         if (!started_waiting_reset) {
-            rate_limit_reset = new Deadline(200, TimeUnit.MILLISECONDS);
+            rate_limit_reset = new Deadline(300, TimeUnit.MILLISECONDS);
             started_waiting_reset = true;
             return false;
         }
         if (rate_limit_reset.hasExpired()) {
             rate_limit_reset = null;
             started_waiting_reset = false;
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean finishedWaitingAutonomous(){
+        if (!started_waiting_chamber) {
+            rate_limit_chamber = new Deadline(10000, TimeUnit.MILLISECONDS);
+            started_waiting_chamber = true;
+            return false;
+        }
+        if (rate_limit_chamber.hasExpired()) {
+            rate_limit_chamber = null;
+            started_waiting_chamber = false;
             return true;
         }
         return false;

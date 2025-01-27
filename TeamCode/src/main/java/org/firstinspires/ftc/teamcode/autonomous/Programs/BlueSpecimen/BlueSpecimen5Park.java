@@ -4,16 +4,20 @@ package org.firstinspires.ftc.teamcode.autonomous.Programs.BlueSpecimen;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.autonomous.AutoFunctions;
 import org.firstinspires.ftc.teamcode.autonomous.Coordinates.BlueSpecimenCoordinates;
 import org.firstinspires.ftc.teamcode.roadRunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.subSystems.Lift;
 
 @Config
-@Autonomous(name = "Blue_Specimen_5_Park", group = "Autonomous")
+//@Autonomous(name = "Blue_Specimen_5_Park", group = "Autonomous")
 
 public class BlueSpecimen5Park extends LinearOpMode {
     @Override
@@ -70,23 +74,117 @@ public class BlueSpecimen5Park extends LinearOpMode {
         Action park = ignitionSystem.actionBuilder(BlueSpecimenCoordinates.getScore5())
                 .strafeToConstantHeading(BlueSpecimenCoordinates.getPark().position).build();
 
+        Robot.initialize(this);
+        Robot.autonomousSetup();
+        AutoFunctions autoFunctions = new AutoFunctions();
+
         waitForStart();
 
         if (isStopRequested()) return;
 
         Actions.runBlocking(
-                new SequentialAction(
-                        scorePreLoad,
-                        moveSpecimens,
-                        collectSecond,
-                        scoreSecond,
-                        collectThird,
-                        scoreThird,
-                        collectFourth,
-                        scoreFourth,
-                        collectFifth,
-                        scoreFifth,
-                        park
+
+                new ParallelAction(
+                        autoFunctions.liftPID(),
+                        autoFunctions.liftArmPID(),
+                        autoFunctions.displayTelemetry(),
+                        new SequentialAction(
+                                new ParallelAction(
+                                        scorePreLoad,
+                                        new SequentialAction(
+                                                autoFunctions.liftArmVertical(),
+                                                autoFunctions.moveLift(Lift.Pos.HIGH_CHAMBER)
+                                        )
+                                ),
+                                autoFunctions.moveLift(Lift.Pos.POST_SCORE_HIGH_CHAMBER),
+                                new ParallelAction(
+                                        autoFunctions.openClaw(),
+                                        moveSpecimens,
+                                        new SequentialAction(
+                                                autoFunctions.moveLift(Lift.Pos.RESET),
+                                                autoFunctions.liftArmHorizontal()
+                                        )
+                                ),
+                                new ParallelAction(
+                                        collectSecond,
+                                        autoFunctions.differentialCollectSpecimen()
+                                ),
+                                autoFunctions.closeClaw(),
+                                new ParallelAction(
+                                        scoreSecond,
+                                        autoFunctions.differentialReset(),
+                                        new SequentialAction(
+                                                autoFunctions.liftArmVertical(),
+                                                autoFunctions.moveLift(Lift.Pos.HIGH_CHAMBER)
+                                        )
+                                ),
+                                autoFunctions.moveLift(Lift.Pos.POST_SCORE_HIGH_CHAMBER),
+                                new ParallelAction(
+                                        autoFunctions.openClaw(),
+                                        collectThird,
+                                        new SequentialAction(
+                                                autoFunctions.moveLift(Lift.Pos.RESET),
+                                                autoFunctions.liftArmHorizontal(),
+                                                autoFunctions.differentialCollectSpecimen()
+                                        )
+                                ),
+                                autoFunctions.closeClaw(),
+                                new ParallelAction(
+                                        scoreThird,
+                                        autoFunctions.differentialReset(),
+                                        new SequentialAction(
+                                                autoFunctions.liftArmVertical(),
+                                                autoFunctions.moveLift(Lift.Pos.HIGH_CHAMBER)
+                                        )
+                                ),
+                                autoFunctions.moveLift(Lift.Pos.POST_SCORE_HIGH_CHAMBER),
+                                new ParallelAction(
+                                        autoFunctions.openClaw(),
+                                        collectFourth,
+                                        new SequentialAction(
+                                                autoFunctions.moveLift(Lift.Pos.RESET),
+                                                autoFunctions.liftArmHorizontal(),
+                                                autoFunctions.differentialCollectSpecimen()
+                                        )
+                                ),
+                                autoFunctions.closeClaw(),
+                                new ParallelAction(
+                                        scoreFourth,
+                                        autoFunctions.differentialReset(),
+                                        new SequentialAction(
+                                                autoFunctions.liftArmVertical(),
+                                                autoFunctions.moveLift(Lift.Pos.HIGH_CHAMBER)
+                                        )
+                                ),
+                                autoFunctions.moveLift(Lift.Pos.POST_SCORE_HIGH_CHAMBER),
+                                new ParallelAction(
+                                        autoFunctions.openClaw(),
+                                        collectFifth,
+                                        new SequentialAction(
+                                                autoFunctions.moveLift(Lift.Pos.RESET),
+                                                autoFunctions.liftArmHorizontal(),
+                                                autoFunctions.differentialCollectSpecimen()
+                                        )
+                                ),
+                                autoFunctions.closeClaw(),
+                                new ParallelAction(
+                                        scoreFifth,
+                                        autoFunctions.differentialReset(),
+                                        new SequentialAction(
+                                                autoFunctions.liftArmVertical(),
+                                                autoFunctions.moveLift(Lift.Pos.HIGH_CHAMBER)
+                                        )
+                                ),
+                                autoFunctions.moveLift(Lift.Pos.POST_SCORE_HIGH_CHAMBER),
+                                new ParallelAction(
+                                        autoFunctions.openClaw(),
+                                        park,
+                                        new SequentialAction(
+                                                autoFunctions.moveLift(Lift.Pos.RESET),
+                                                autoFunctions.liftArmHorizontal()
+                                        )
+                                )
+                        )
                 )
         );
     }
