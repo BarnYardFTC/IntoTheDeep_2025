@@ -225,7 +225,9 @@ public class Robot {
         }
         if (!automated_lift_reset && automated_deposit) {
             Claw.open();
-            automated_lift_reset = !reset();
+            if (finishedWaitingReset()){
+                automated_lift_reset = !reset();
+            }
         }
         return !(automated_deposit && automated_lift_reset);
     }
@@ -257,6 +259,7 @@ public class Robot {
         opMode.telemetry.addData("isVertical", LiftArm.isVertical());
         opMode.telemetry.addData("isLiftReseted", Lift.isReseted());
         opMode.telemetry.addData("automating reset", automating_reset);
+        opMode.telemetry.addData("automating deposit", automating_high_chamber_deposit);
         opMode.telemetry.update();
     }
 
