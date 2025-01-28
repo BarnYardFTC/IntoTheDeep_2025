@@ -58,6 +58,15 @@ public class AutoFunctions {
         else if (pos == Lift.Pos.RESET){
             return new LiftReset();
         }
+        else if (pos == Lift.Pos.LOW_BASKET){
+            return new LiftLowBasket();
+        }
+        else if (pos == Lift.Pos.HIGH_BASKET){
+            return new LiftHighBasket();
+        }
+        else if (pos == Lift.Pos.SAMPLE_COLLECTION){
+            return new LiftSampleCollection();
+        }
         return new LiftReset();
     }
 
@@ -109,7 +118,27 @@ public class AutoFunctions {
             return !Lift.arrivedTargetPos();
         }
     }
-
+    public class LiftHighBasket implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            Lift.move(Lift.Pos.HIGH_BASKET);
+            return !Lift.arrivedTargetPos();
+        }
+    }
+    public class LiftLowBasket implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            Lift.move(Lift.Pos.LOW_BASKET);
+            return !Lift.arrivedTargetPos();
+        }
+    }
+    public class LiftSampleCollection implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            Lift.move(Lift.Pos.LOW_BASKET);
+            return !Lift.arrivedTargetPos();
+        }
+    }
     public class LiftPostScoreHighChamber implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {

@@ -4,17 +4,22 @@ package org.firstinspires.ftc.teamcode.autonomous.Programs.BlueSample;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.autonomous.AutoFunctions;
 import org.firstinspires.ftc.teamcode.autonomous.Coordinates.BlueSampleCoordinates;
 import org.firstinspires.ftc.teamcode.autonomous.Coordinates.BlueSpecimenCoordinates;
 import org.firstinspires.ftc.teamcode.roadRunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.subSystems.Lift;
+import org.firstinspires.ftc.teamcode.subSystems.LiftArm;
 
 @Config
-@Autonomous(name = "Blue_Sample_4_Park", group = "Autonomous")
+@Autonomous(name = "Blue_Sample_4_Park !", group = "Autonomous")
 
 public class BlueSample4Park extends LinearOpMode {
     @Override
@@ -58,21 +63,59 @@ public class BlueSample4Park extends LinearOpMode {
                 .strafeToConstantHeading(BlueSampleCoordinates.getPark2().component1())
                 .build();
 
+        Robot.initialize(this);
+        AutoFunctions autoFunctions = new AutoFunctions();
         waitForStart();
+        Robot.autonomousSetup();
 
         if (isStopRequested()) return;
 
         Actions.runBlocking(
-                new SequentialAction(
-                        scorePreLoad,
-                        intake2,
-                        score2,
-                        intake3,
+                new ParallelAction(
+                    autoFunctions.liftPID(),
+                    autoFunctions.liftArmPID(),
+                    autoFunctions.displayTelemetry(),
+                    new SequentialAction(
+                        new ParallelAction(
+                            scorePreLoad,
+                            new SequentialAction(
+                                autoFunctions.liftArmVertical(),
+                                autoFunctions.moveLift(Lift.Pos.HIGH_BASKET)
+                            )
+                        ),
+                        autoFunctions.waitClaw(),
+                        autoFunctions.openClaw(),
+                        new ParallelAction(
+                            intake2,
+                            new SequentialAction(
+                                autoFunctions.moveLift(Lift.Pos.RESET),
+                                autoFunctions.liftArmHorizontal(),
+                                autoFunctions.moveLift(Lift.Pos.SAMPLE_COLLECTION)
+                            )
+                        ),
+                        new ParallelAction(
+                            score2,
+                            new SequentialAction(
+                                autoFunctions.liftArmVertical(),
+                                autoFunctions.moveLift(Lift.Pos.HIGH_BASKET)
+                            )
+                        ),
+                        new ParallelAction(
+                            intake3,
+                            new SequentialAction(
+                                autoFunctions.moveLift(Lift.Pos.RESET),
+                                autoFunctions.liftArmHorizontal(),
+                                autoFunctions.moveLift(Lift.Pos.SAMPLE_COLLECTION)
+                            )
+                        ),
+
                         score2,
                         intake4,
                         score4,
                         park
+                    )
                 )
+
         );
     }
 }
