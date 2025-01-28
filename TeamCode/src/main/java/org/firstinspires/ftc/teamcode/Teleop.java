@@ -19,7 +19,7 @@ public class Teleop extends LinearOpMode {
         Robot.initializeTeleop(this);
 
         Differential.reset();
-        Claw.open();
+        Claw.close();
 
         waitForStart();
 
