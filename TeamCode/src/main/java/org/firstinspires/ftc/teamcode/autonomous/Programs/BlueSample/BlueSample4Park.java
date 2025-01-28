@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.autonomous.Programs.BlueSample;
 
 // Import
 
+import static org.firstinspires.ftc.teamcode.autonomous.Coordinates.BlueSpecimenCoordinates.score3;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
@@ -108,8 +110,7 @@ public class BlueSample4Park extends LinearOpMode {
                                 autoFunctions.moveLift(Lift.Pos.SAMPLE_COLLECTION)
                             )
                         ),
-
-                        score2,
+                        intake3,
                         intake4,
                         score4,
                         park
