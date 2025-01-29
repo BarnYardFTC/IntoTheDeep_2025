@@ -6,61 +6,107 @@ import com.arcrobotics.ftclib.gamepad.TriggerReader;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 import org.firstinspires.ftc.teamcode.subSystems.Claw;
 import org.firstinspires.ftc.teamcode.subSystems.Differential;
 import org.firstinspires.ftc.teamcode.subSystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subSystems.Lift;
 import org.firstinspires.ftc.teamcode.subSystems.LiftArm;
-
-import java.util.concurrent.TimeUnit;
+import org.firstinspires.ftc.teamcode.subSystems.TimerHelper;
 
 /**
- * Gamepad Buttons Documentation:
- * A: Move differential to Collect-Sample/Reset position
- * B: Reset IMU's heading
- * X: Move differential to Collect-Specimen/Reset position
- * Y: Open/Close Claw. Claw opened – Reset every system of the robot | Claw closed – Reset only the differential
- * Dpad-Down: Move Lift to the Low Basket (When claw is opened the lift will automatically reset)
- * Dpad-Up: Move Lift to the High Basket (When claw is opened the lift will automatically reset)
- * Right-Trigger: Open the lift
- * Left-Trigger: Close the lift
- * Right-Bumper: Rotate the lift to it's vertical position
- * Left-Bumper: Rotate the lift to it's horizontal position
+ * ========General Description=======
+ * This class connects between the different classes of the project in order
+ * to bring the software of the robot to life.
+ * Here, you will see final and changing variables which are needed in order to connect
+ * between the different classes.
+ * This Robot class has functions & variables which are designed for the Autonomous programs,
+ * and functions & variables which are designed for the teleop for the Teleop program.
+ * The only input this class requires is the current opMode which is running.
+ * Using that input only, the class is able to fully run the robot, both in the Teleop
+ * and Autonomous periods.
+
+ * =========Teleop========
+ * In the Teleop period, the software runs based on inputs from two Gamepads which are
+ * run by our Team's drivers. Following is a button guide:
+
+ *  -Gamepad1-
+ *  This gamepad is used by the main driver and it gives access to every system of the robot.
+ * A: Move Differential down to collect-sample position
+ * B: Reset the IMU (used in case of electrical induction which disrupts proper driving)
+ * Y: Close Claw, followed by an automation of the differential when sample/specimen is collected
+ * X: Activate/Deactivate slow mode
+ * Joysticks: Drive the robot
+ * Dpad-up: Move Lift to high-basket position
+ * Dpad-down: Move Lift low-basket position
+ * Dpad-right: Adjust Differential for sample intake
+ * Dpad-left: Adjust Differential for sample intake
+ * Right-Bumper: Move Arm to a vertical position
+ * Left-Bumper: Move Arm to a horizontal position
+ * Right-Trigger: Open the Lift 'Manually'
+ * Left-Trigger: Close the Lift 'Manually'
+
+ * -Gamepad2-
+ * This gamepad serves an improvement by giving option for different automations of the robot.
+ * This is an improvement because it takes tasks away from the main driver and by doing that
+ * makes the operation of driving the robot faster.
+ * A: Reset the Lift and Arm (=close lift & bring Arm down if necessary)
+ * Y: Bring the Lift and Arm to a high-basket-discharge position
+
+ * =========Autonomous========
+ * // ToDo: Finish renovating the Autonomous and document here
  */
+
+
 
 public class Robot {
 
-    // Final Variables
-    private static final double TRIGGERS_THRESHOLD = 0.1; // When the trigger value exceeds this value, the trigger is considered active
-    /*
+    /**
+     * Final Variables (Constants)
+     */
+    // When the trigger value exceeds this value, the trigger is considered active
+    private static final double TRIGGERS_THRESHOLD = 0.1;
+
+    // Waiting times
+    private static final int INTAKE_DURATION = 200;
+
+    /**
     The only variable the class requires as an input.
     The other variable are variables which are initialized based on this input variable.
     */
     private static OpMode opMode;
-    private static Gamepad gamepad1;
-    private static Gamepad gamepad2;
-    // Variables which are determined by the class based on the gamepad input
+
+    /**
+     * Gamepads we run the Teleop based on in the Teleop Period.
+     * TriggerReader is used only for gamepad1
+     */
     private static GamepadEx gamepadEx1;
     private static GamepadEx gamepadEx2;
     private static TriggerReader RIGHT_TRIGGER;
     private static TriggerReader LEFT_TRIGGER;
 
-    private static boolean automating_intake = false;
-    private static Deadline rate_limit_intake;
-    private static boolean started_waiting_intake = false;
-
-    private static Deadline rate_limit_chamber;
-    private static boolean started_waiting_chamber = false;
-
-    private static boolean automating_reset = false;
-    private static Deadline rate_limit_reset;
-    private static boolean started_waiting_reset = false;
-
-    private static boolean automating_high_basket_deposit = false;
+    /**
+     * Flags - variables that we use in order to keep track of certain information about the robot
+     */
+    private static boolean automating_intake;
+    private static boolean automating_reset;
+    private static boolean automating_high_basket_deposit;
 
 
+    /**
+     * Time Tracking - variable used to keep track of time while an opMode runs
+     */
+    private static TimerHelper timer;
+
+
+
+    /**
+     * Initialize the Robot.
+     * Usage: Teleop & Autonomous
+     * @param opMode Current opMode which runs on the robot
+     */
     public static void initialize(OpMode opMode) {
+
+        // Initialize every system of the robot
         //VisionProcessor.initialize(opMode);
         LiftArm.initialize(opMode);
         Lift.initialize(opMode);
@@ -69,11 +115,16 @@ public class Robot {
         Claw.initialize(opMode);
         Robot.opMode = opMode;
 
-        automating_high_basket_deposit = false;
+        // reset flags
+        automating_intake = false;
         automating_reset = false;
+        automating_high_basket_deposit = false;
+
+        // Create a timer
+        timer = new TimerHelper();
     }
 
-    private static void initializeGamepadEx() {
+    private static void initializeGamepadEx(Gamepad gamepad1, Gamepad gamepad2) {
         Robot.gamepadEx1 = new GamepadEx(gamepad1);
         Robot.gamepadEx2 = new GamepadEx(gamepad2);
     }
@@ -86,17 +137,15 @@ public class Robot {
         LEFT_TRIGGER = new TriggerReader(gamepadEx1, GamepadKeys.Trigger.LEFT_TRIGGER, TRIGGERS_THRESHOLD);
     }
 
-    private static void initializeGamepad(Gamepad gamepad1, Gamepad gamepad2) {
-        Robot.gamepad1 = gamepad1;
-        Robot.gamepad2 = gamepad2;
-        initializeGamepadEx();
+    private static void initializeGamepads(Gamepad gamepad1, Gamepad gamepad2) {
+        initializeGamepadEx(gamepad1, gamepad2);
         initializeRightTrigger();
         initializeLeftTrigger();
     }
 
     public static void initializeTeleop(OpMode opMode) {
         initialize(opMode);
-        initializeGamepad(opMode.gamepad1, opMode.gamepad2);
+        initializeGamepads(opMode.gamepad1, opMode.gamepad2);
     }
 
     public static void autonomousSetup(){
@@ -159,7 +208,7 @@ public class Robot {
     }
 
     public static void activateDrivetrain() {
-        Drivetrain.move(gamepad1);
+        Drivetrain.move(gamepadEx1);
         if (gamepadEx1.wasJustPressed(GamepadKeys.Button.B))
             Drivetrain.resetImu();
         else if ((LiftArm.isHorizontal() && !Lift.isReseted()) || LiftArm.isVertical() || gamepadEx1.wasJustPressed(GamepadKeys.Button.X) && !Drivetrain.isSlowed()){
@@ -202,7 +251,7 @@ public class Robot {
             activateDifferential();
 
             if (automating_intake) {
-                if (finishedWaitingIntake()) {
+                if (hasElapsed(INTAKE_DURATION)) {
                     Differential.reset();
                     automating_intake = false;
                 }
@@ -260,45 +309,12 @@ public class Robot {
         opMode.telemetry.update();
     }
 
-    public static boolean finishedWaitingIntake() {
-        if (!started_waiting_intake) {
-            rate_limit_intake = new Deadline(200, TimeUnit.MILLISECONDS);
-            started_waiting_intake = true;
-            return false;
-        }
-        if (rate_limit_intake.hasExpired()) {
-            rate_limit_intake = null;
-            started_waiting_intake = false;
-            return true;
-        }
-        return false;
+    public static boolean hasElapsed(int durationMilliseconds){
+        return timer.hasElapsed(durationMilliseconds);
     }
 
-    public static boolean finishedWaitingClaw() {
-        if (!started_waiting_reset) {
-            rate_limit_reset = new Deadline(300, TimeUnit.MILLISECONDS);
-            started_waiting_reset = true;
-            return false;
-        }
-        if (rate_limit_reset.hasExpired()) {
-            rate_limit_reset = null;
-            started_waiting_reset = false;
-            return true;
-        }
-        return false;
-    }
 
-    public static boolean finishedWaitingAutonomous(){
-        if (!started_waiting_chamber) {
-            rate_limit_chamber = new Deadline(10000, TimeUnit.MILLISECONDS);
-            started_waiting_chamber = true;
-            return false;
-        }
-        if (rate_limit_chamber.hasExpired()) {
-            rate_limit_chamber = null;
-            started_waiting_chamber = false;
-            return true;
-        }
-        return false;
+    public static int getIntakeDuration(){
+        return INTAKE_DURATION;
     }
 }

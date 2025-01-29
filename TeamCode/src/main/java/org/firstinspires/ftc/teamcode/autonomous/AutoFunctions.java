@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.subSystems.Claw;
@@ -70,17 +69,14 @@ public class AutoFunctions {
         return new LiftReset();
     }
 
-    public Action waitClaw(){
-        return new WaitClaw();
+    public Action waitIntake(){
+        return new WaitIntake();
     }
 
     public Action setup(){
         return new Setup();
     }
 
-    public Action waitAutonomous(){
-        return new WaitAutonomous();
-    }
 
     public class Setup implements Action {
         @Override
@@ -103,12 +99,6 @@ public class AutoFunctions {
         public boolean run(@NonNull TelemetryPacket packet) {
             Lift.liftPID();
             return true;
-        }
-    }
-    public class WaitAutonomous implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            return !Robot.finishedWaitingAutonomous();
         }
     }
     public class LiftHighChamber implements Action {
@@ -215,10 +205,10 @@ public class AutoFunctions {
         }
     }
 
-    public class WaitClaw implements Action {
+    public class WaitIntake implements Action { //ToDo: Fucking useless. Use Robot.finishedWaitingIntake() (*Aviv Screaming at himself*).
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            return !Robot.finishedWaitingClaw();
+            return !Robot.hasElapsed(Robot.getIntakeDuration());
         }
     }
 

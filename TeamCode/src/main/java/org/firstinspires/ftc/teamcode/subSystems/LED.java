@@ -52,3 +52,4 @@
 //        allianceColor = autonomousAllianceColor;
 //    }
 //}
+

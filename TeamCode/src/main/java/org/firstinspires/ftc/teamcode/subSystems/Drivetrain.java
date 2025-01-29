@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subSystems;
 
 //Imports.
 
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -31,6 +32,8 @@ public class Drivetrain {
     private static double adjustedLy; // Adjusted y axis vector of movement.
 
     private static int speed_adjustment = 1;
+
+    private static final int SLOW_MODE_DIVIDER = 3;
 
     public static void initialize(OpMode opMode) {
         motors[LF] = opMode.hardwareMap.get(DcMotorEx.class, "leftFront");
@@ -92,11 +95,11 @@ public class Drivetrain {
      *
      * @param gamepad - Rc inputs for all needed joysticks and axis of said joysticks.
      */
-    public static void move(Gamepad gamepad) {
+    public static void move(GamepadEx gamepad) {
         // Setting variables
-        lx = gamepad.left_stick_x;
-        ly = -gamepad.left_stick_y;
-        rx = gamepad.right_stick_x;
+        lx = gamepad.getLeftX();
+        ly = gamepad.getLeftY();
+        rx = gamepad.getRightX();
         robotHeading = -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
         // Calculating maxPower for saving the ratio of motor powers.
@@ -123,7 +126,7 @@ public class Drivetrain {
     }
 
     public static void slowMode() {
-        speed_adjustment = 3;
+        speed_adjustment = SLOW_MODE_DIVIDER;
     }
     public static void regularMode() {
         speed_adjustment = 1;
