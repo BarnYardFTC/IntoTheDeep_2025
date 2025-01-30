@@ -108,7 +108,6 @@ public class ActionTest extends LinearOpMode {
                                     autoFunctions.differentialCollectSpecimen()
                                 ),
                                 autoFunctions.closeClaw(),
-                                autoFunctions.waitClaw(),
                                 new ParallelAction(
                                     scoreSecond,
                                     autoFunctions.differentialReset(),
@@ -125,7 +124,6 @@ public class ActionTest extends LinearOpMode {
                                     )
                                 ),
                                 autoFunctions.closeClaw(),
-                                autoFunctions.waitClaw(),
                                 new ParallelAction(
                                         scoreThird,
                                         autoFunctions.differentialReset(),
@@ -143,7 +141,6 @@ public class ActionTest extends LinearOpMode {
                                         )
                                 ),
                                 autoFunctions.closeClaw(),
-                                autoFunctions.waitClaw(),
                                 new ParallelAction(
                                         scoreFourth,
                                         autoFunctions.differentialReset(),

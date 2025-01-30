@@ -86,7 +86,6 @@ public class BlueSpecimenPark extends LinearOpMode {
                         collectSecond,
                         autoFunctions.openClaw(),
                         scoreSecond,
-                        autoFunctions.waitAutonomous(),
                         park
                 )
         );
