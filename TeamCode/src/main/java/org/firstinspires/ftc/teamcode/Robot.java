@@ -69,6 +69,7 @@ public class Robot {
     // Waiting times
     private static final int INTAKE_DURATION = 200;
 
+
     /**
     The only variable the class requires as an input.
     The other variable are variables which are initialized based on this input variable.
@@ -124,35 +125,65 @@ public class Robot {
         timer = new TimerHelper();
     }
 
+    /**
+     * Assign the GamepadEx variables using the gamepads provided as an input.
+     * GamepadEx is basically a better version of Gamepad
+     * @param gamepad1 user1
+     * @param gamepad2 user2
+     */
     private static void initializeGamepadEx(Gamepad gamepad1, Gamepad gamepad2) {
         Robot.gamepadEx1 = new GamepadEx(gamepad1);
         Robot.gamepadEx2 = new GamepadEx(gamepad2);
     }
 
-    private static void initializeRightTrigger() {
+    /**
+     * Initialize the two triggers of gamepad1 so that they are ready for usage (gamepad2 uses no triggers)
+     */
+    private static void initializeTriggers() {
         RIGHT_TRIGGER = new TriggerReader(gamepadEx1, GamepadKeys.Trigger.RIGHT_TRIGGER, TRIGGERS_THRESHOLD);
-    }
-
-    private static void initializeLeftTrigger() {
         LEFT_TRIGGER = new TriggerReader(gamepadEx1, GamepadKeys.Trigger.LEFT_TRIGGER, TRIGGERS_THRESHOLD);
     }
 
+    /**
+     * Prepare the gamepads for provision of inputs
+     * @param gamepad1 gamepad1/user1
+     * @param gamepad2 gamepad2/user2
+     */
     private static void initializeGamepads(Gamepad gamepad1, Gamepad gamepad2) {
         initializeGamepadEx(gamepad1, gamepad2);
-        initializeRightTrigger();
-        initializeLeftTrigger();
+        initializeTriggers();
     }
 
+    /**
+     * Initialize everything needed to fully run a Teleop (driver controlled)
+     * @param opMode Current opMode which is running
+     */
     public static void initializeTeleop(OpMode opMode) {
         initialize(opMode);
         initializeGamepads(opMode.gamepad1, opMode.gamepad2);
     }
 
+    /**
+     * Move all the systems of the robot to where they should be at the beginning of the autonomous
+     */
     public static void autonomousSetup(){
         Differential.reset();
         Claw.close();
     }
 
+    /**
+     * Activate the gamepads
+     */
+    public static void activateGamepads(){
+        gamepadEx1.readButtons();
+        gamepadEx2.readButtons();
+        RIGHT_TRIGGER.readValue();
+        LEFT_TRIGGER.readValue();
+    }
+
+    /**
+     * Activate the claw according to gamepad inputs
+     */
     public static void activateClaw() {
         if (gamepadEx1.wasJustPressed(GamepadKeys.Button.Y)) {
             if (Claw.isOpen()) {
@@ -164,6 +195,9 @@ public class Robot {
         }
     }
 
+    /**
+     * Active the differential according to gamepad inputs
+     */
     public static void activateDifferential() {
         if (gamepadEx1.wasJustPressed(GamepadKeys.Button.A)) {
             if (Differential.isReseted())
@@ -187,8 +221,18 @@ public class Robot {
         }
     }
 
+    /**
+     * Activate the lift according to gamepad inputs
+     */
     public static void activateLift() {
-        if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN) && LiftArm.isVertical()) {
+        if (automating_reset){
+            reset();
+            automating_reset = !isReset();
+        }
+        else if (gamepadEx2.wasJustPressed(GamepadKeys.Button.A) && !isAutomating()){
+            automating_reset = true;
+        }
+        else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN) && LiftArm.isVertical()) {
             Lift.move(Lift.Pos.LOW_BASKET);
         } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_UP) && LiftArm.isVertical()) {
             Lift.move(Lift.Pos.HIGH_BASKET);
@@ -199,14 +243,27 @@ public class Robot {
         }
     }
 
+    /**
+     * Activate the liftArm according to gamepad inputs
+     */
     public static void activateLiftArm() {
-        if (gamepadEx1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+        if (automating_reset){
+            reset();
+            automating_reset = !isReset();
+        }
+        else if (gamepadEx2.wasJustPressed(GamepadKeys.Button.A) && !isAutomating()){
+            automating_reset = true;
+        }
+        else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
             LiftArm.move(LiftArm.Angle.VERTICAL);
         } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
             LiftArm.move(LiftArm.Angle.HORIZONTAL);
         }
     }
 
+    /**
+     * Activate the driveTrain according to gamepad inputs
+     */
     public static void activateDrivetrain() {
         Drivetrain.move(gamepadEx1);
         if (gamepadEx1.wasJustPressed(GamepadKeys.Button.B))
@@ -226,17 +283,13 @@ public class Robot {
         // ToDo: Write a code for sample collection. Than add this method to activateAll() and remove the comment that prevents the HuskyLens' initialization
     }
 
+    /**
+     * Activate all of the systems of the bot at once
+     */
     public static void activateAll() {
         activateDrivetrain();
 
-        if (!automating_reset && (LiftArm.isVertical() || LiftArm.isHorizontal()) && gamepadEx2.wasJustPressed(GamepadKeys.Button.A) && !Lift.isReseted()){
-            automating_reset = true;
-        }
-        else if (automating_reset) {
-            automating_reset = reset();
-        }
-
-        else if (!automating_high_basket_deposit && gamepadEx2.wasJustPressed(GamepadKeys.Button.Y)){
+        if (!automating_high_basket_deposit && gamepadEx2.wasJustPressed(GamepadKeys.Button.Y)){
             automating_high_basket_deposit = true;
         }
         else if (automating_high_basket_deposit) {
@@ -264,12 +317,11 @@ public class Robot {
         // Shit that always keeps on working in the background
         Lift.liftPID();
         LiftArm.liftArmPID();
-        gamepadEx1.readButtons();
-        gamepadEx2.readButtons();
-        RIGHT_TRIGGER.readValue();
-        LEFT_TRIGGER.readValue();
     }
 
+    /**
+     * An automation function for a high basket deposit
+     */
     public static void high_basket_deposit(){
         if (LiftArm.isVertical()){
             Lift.move(Lift.Pos.HIGH_BASKET);
@@ -279,29 +331,37 @@ public class Robot {
         }
     }
 
-    public static boolean reset() {
-        if (LiftArm.isVertical()) {
-            if (Lift.isReseted()) {
-                LiftArm.move(LiftArm.Angle.HORIZONTAL);
-                Differential.reset();
-            }
-            else {
-                Lift.move(Lift.Pos.RESET);
-            }
-            return !LiftArm.isHorizontal();
-        }
-        else if (LiftArm.isHorizontal()){
-            Lift.move(Lift.Pos.RESET);
-            return !Lift.isReseted();
+    /**
+     * An automation for a reset of the robot (lift and liftArm)
+     */
+    public static void reset() {
+        if (Lift.isReseted()){
+            LiftArm.move(LiftArm.Angle.HORIZONTAL);
         }
         else {
-            return true;
+            Lift.move(Lift.Pos.RESET);
         }
     }
 
+    /**
+     * @return true if the robot is reset
+     */
+    public static boolean isReset(){
+        return Lift.arrivedTargetPos() && LiftArm.isHorizontal();
+    }
 
+    /**
+     * @return true if the robot is automating
+     */
+    public static boolean isAutomating(){
+        return automating_reset || automating_intake || automating_high_basket_deposit;
+    }
+
+    /**
+     * Display whatever is needed on telemetry
+     */
     public static void displayTelemetry() {
-        opMode.telemetry.addData("Lift reseted", Lift.isReseted());
+        opMode.telemetry.addData("Lift reset", Lift.isReseted());
         opMode.telemetry.addData("Lift target pos", Lift.getTargetPosCm());
         opMode.telemetry.addData("Lift current length", Lift.getCurrentLength());
         opMode.telemetry.addData("heading", Drivetrain.getRobotHeading());
@@ -309,11 +369,18 @@ public class Robot {
         opMode.telemetry.update();
     }
 
+    /**
+     * Keep track of a specific amount of time
+     * @param durationMilliseconds the amount of time in milliseconds
+     * @return true when the specified time has elapsed
+     */
     public static boolean hasElapsed(int durationMilliseconds){
         return timer.hasElapsed(durationMilliseconds);
     }
 
-
+    /**
+     * Getters
+     */
     public static int getIntakeDuration(){
         return INTAKE_DURATION;
     }

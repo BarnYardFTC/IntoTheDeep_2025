@@ -128,7 +128,14 @@ public class Lift {
     }
 
     public static boolean isMoveable(double direction) {
-        return (LiftArm.isHorizontal() && targetPosCm + LIFT_SPEED * direction <= HORIZONTAL_LIMIT && targetPosCm + LIFT_SPEED * direction >= 0) || (!LiftArm.isHorizontal() && targetPosCm + LIFT_SPEED * direction <= VERTICAL_LIMIT && targetPosCm + LIFT_SPEED * direction >= 0);
+        return (LiftArm.isHorizontal() &&
+                targetPosCm + LIFT_SPEED * direction <= HORIZONTAL_LIMIT &&
+                targetPosCm + LIFT_SPEED * direction >= 0 &&
+                arrivedTargetPos()) ||
+                (!LiftArm.isVertical() &&
+                        targetPosCm + LIFT_SPEED * direction <= VERTICAL_LIMIT &&
+                        targetPosCm + LIFT_SPEED * direction >= 0 &&
+                        arrivedTargetPos());
     }
 
     public enum Pos {
@@ -136,6 +143,6 @@ public class Lift {
     }
 
     public static boolean arrivedTargetPos() {
-        return getCurrentLength() <= targetPosCm + 2 && getCurrentLength() >= targetPosCm - 2;
+        return getCurrentLength() <= targetPosCm + LIFT_SPEED && getCurrentLength() >= targetPosCm - LIFT_SPEED;
     }
 }
