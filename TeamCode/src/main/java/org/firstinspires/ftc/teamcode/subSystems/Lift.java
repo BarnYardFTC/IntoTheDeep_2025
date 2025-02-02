@@ -24,10 +24,12 @@ public class Lift {
     public static final double LOW_BASKET_POS = 67.4 - ROBOT_LIFT_HEIGHT;
     public static final double POST_SCORE_HIGH_CHAMBER_POS = 77 - ROBOT_LIFT_HEIGHT;
     public static final double SAMPLE_COLLECTION_POS = 6; // ToDo: Find value for autonomous
+
     // Lift limits
     private static final double HORIZONTAL_LIMIT = 44;
     private static final double VERTICAL_LIMIT = 72;
     public static final double HIGH_BASKET_POS = 66;
+    public static final double ARRIVED_HIGH_BASKET_POS = 40;
     //ToDo: set correct values.
     public static double p = 0.0085;
     public static double i = 0;
