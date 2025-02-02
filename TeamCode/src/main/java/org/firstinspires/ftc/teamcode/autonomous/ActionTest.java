@@ -14,6 +14,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.autonomous.Coordinates.BlueSpecimenCoordinates;
 import org.firstinspires.ftc.teamcode.roadRunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.subSystems.Claw;
+import org.firstinspires.ftc.teamcode.subSystems.Differential;
 import org.firstinspires.ftc.teamcode.subSystems.Lift;
 import org.firstinspires.ftc.teamcode.subSystems.LiftArm;
 
@@ -76,7 +78,6 @@ public class ActionTest extends LinearOpMode {
                 .strafeToConstantHeading(BlueSpecimenCoordinates.getPark().position).build();
 
         Robot.initialize(this);
-        AutoFunctions autoFunctions = new AutoFunctions();
 
         waitForStart();
 
@@ -85,74 +86,74 @@ public class ActionTest extends LinearOpMode {
         Actions.runBlocking(
 
                 new ParallelAction(
-                        autoFunctions.liftPID(),
-                        autoFunctions.liftArmPID(),
-                        autoFunctions.displayTelemetry(),
+                        Lift.liftPID(),
+                        LiftArm.liftArmPID(),
+                        Robot.displayTelemetry(),
                         new SequentialAction(
-                                autoFunctions.setup(),
+                                Robot.setup(),
                                 new ParallelAction(
                                     scorePreLoad,
-                                    autoFunctions.liftArmVertical()
+                                    LiftArm.liftArmVertical()
                                 ),
-                                autoFunctions.moveLift(Lift.Pos.POST_SCORE_HIGH_CHAMBER),
+                                Lift.moveLift(Lift.Pos.POST_SCORE_HIGH_CHAMBER),
                                 new ParallelAction(
-                                    autoFunctions.openClaw(),
+                                    Claw.openClaw(),
                                     moveSpecimens,
                                     new SequentialAction(
-                                        autoFunctions.moveLift(Lift.Pos.RESET),
-                                        autoFunctions.liftArmHorizontal()
+                                        Lift.moveLift(Lift.Pos.RESET),
+                                        LiftArm.liftArmHorizontal()
                                     )
                                 ),
                                 new ParallelAction(
                                     collectSecond,
-                                    autoFunctions.differentialCollectSpecimen()
+                                    Differential.differentialCollectSpecimen()
                                 ),
-                                autoFunctions.closeClaw(),
+                                Claw.closeClaw(),
                                 new ParallelAction(
                                     scoreSecond,
-                                    autoFunctions.differentialReset(),
-                                    autoFunctions.liftArmVertical()
+                                    Differential.differentialReset(),
+                                    LiftArm.liftArmVertical()
                                 ),
-                                autoFunctions.moveLift(Lift.Pos.POST_SCORE_HIGH_CHAMBER),
+                                Lift.moveLift(Lift.Pos.POST_SCORE_HIGH_CHAMBER),
                                 new ParallelAction(
-                                    autoFunctions.openClaw(),
+                                    Claw.openClaw(),
                                     collectThird,
                                     new SequentialAction(
-                                        autoFunctions.moveLift(Lift.Pos.RESET),
-                                        autoFunctions.liftArmHorizontal(),
-                                        autoFunctions.differentialCollectSpecimen()
+                                        Lift.moveLift(Lift.Pos.RESET),
+                                        LiftArm.liftArmHorizontal(),
+                                        Differential.differentialCollectSpecimen()
                                     )
                                 ),
-                                autoFunctions.closeClaw(),
+                                Claw.closeClaw(),
                                 new ParallelAction(
                                         scoreThird,
-                                        autoFunctions.differentialReset(),
-                                        autoFunctions.liftArmVertical()
+                                        Differential.differentialReset(),
+                                        LiftArm.liftArmVertical()
 
                                 ),
-                                autoFunctions.moveLift(Lift.Pos.POST_SCORE_HIGH_CHAMBER),
+                                Lift.moveLift(Lift.Pos.POST_SCORE_HIGH_CHAMBER),
                                 new ParallelAction(
-                                        autoFunctions.openClaw(),
+                                        Claw.openClaw(),
                                         collectFourth,
                                         new SequentialAction(
-                                                autoFunctions.moveLift(Lift.Pos.RESET),
-                                                autoFunctions.liftArmHorizontal(),
-                                                autoFunctions.differentialCollectSpecimen()
+                                                Lift.moveLift(Lift.Pos.RESET),
+                                                LiftArm.liftArmHorizontal(),
+                                                Differential.differentialCollectSpecimen()
                                         )
                                 ),
-                                autoFunctions.closeClaw(),
+                                Claw.closeClaw(),
                                 new ParallelAction(
                                         scoreFourth,
-                                        autoFunctions.differentialReset(),
-                                        autoFunctions.liftArmVertical()
+                                        Differential.differentialReset(),
+                                        LiftArm.liftArmVertical()
                                 ),
-                                autoFunctions.moveLift(Lift.Pos.POST_SCORE_HIGH_CHAMBER),
+                                Lift.moveLift(Lift.Pos.POST_SCORE_HIGH_CHAMBER),
                                 new ParallelAction(
-                                        autoFunctions.openClaw(),
+                                        Claw.openClaw(),
                                         park,
                                         new SequentialAction(
-                                                autoFunctions.moveLift(Lift.Pos.RESET),
-                                                autoFunctions.liftArmHorizontal()
+                                                Lift.moveLift(Lift.Pos.RESET),
+                                                LiftArm.liftArmHorizontal()
                                         )
                                 )
                         )

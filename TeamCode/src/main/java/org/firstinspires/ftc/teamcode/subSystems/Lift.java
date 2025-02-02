@@ -2,7 +2,11 @@ package org.firstinspires.ftc.teamcode.subSystems;
 
 // Imports.
 
+import androidx.annotation.NonNull;
+
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -73,7 +77,7 @@ public class Lift {
         return (motors[RIGHT].getCurrentPosition() / RIGHT_MOTOR.getENCODERS_PER_CM()) < 4;
     }
 
-    public static void liftPID() {
+    public static void PID() {
         controller.setPID(p, i, d);
 
         // Sets the current and target position of the motor.
@@ -146,5 +150,85 @@ public class Lift {
 
     public static boolean arrivedTargetPos() {
         return getCurrentLength() <= targetPosCm + LIFT_SPEED && getCurrentLength() >= targetPosCm - LIFT_SPEED;
+    }
+
+
+    /**
+     * Autonomous Actions - Actions which can be used in the autonomous programs.
+     */
+
+    private static class LiftPID implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            PID();
+            return true;
+        }
+    }
+    public static Action liftPID(){
+        return new LiftPID();
+    }
+
+    public static class LiftHighChamber implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            move(Pos.HIGH_CHAMBER);
+            return !arrivedTargetPos();
+        }
+    }
+    public static class LiftHighBasket implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            move(Lift.Pos.HIGH_BASKET);
+            return !arrivedTargetPos();
+        }
+    }
+    public static class LiftLowBasket implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            move(Pos.LOW_BASKET);
+            return !arrivedTargetPos();
+        }
+    }
+    public static class LiftSampleCollection implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            move(Lift.Pos.LOW_BASKET);
+            return !arrivedTargetPos();
+        }
+    }
+    public static class LiftPostScoreHighChamber implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            move(Pos.POST_SCORE_HIGH_CHAMBER);
+            return !arrivedTargetPos();
+        }
+    }
+    public static class LiftReset implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            move(Pos.RESET);
+            return !arrivedTargetPos();
+        }
+    }
+    public static Action moveLift(Lift.Pos pos){
+        if (pos == Pos.HIGH_CHAMBER){
+            return new LiftHighChamber();
+        }
+        else if (pos == Pos.POST_SCORE_HIGH_CHAMBER){
+            return new LiftPostScoreHighChamber();
+        }
+        else if (pos == Pos.RESET){
+            return new LiftReset();
+        }
+        else if (pos == Pos.LOW_BASKET){
+            return new LiftLowBasket();
+        }
+        else if (pos == Pos.HIGH_BASKET){
+            return new LiftHighBasket();
+        }
+        else if (pos == Pos.SAMPLE_COLLECTION){
+            return new LiftSampleCollection();
+        }
+        return new LiftReset();
     }
 }

@@ -2,7 +2,11 @@ package org.firstinspires.ftc.teamcode.subSystems;
 
 // Imports.
 
+import androidx.annotation.NonNull;
+
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -54,5 +58,32 @@ public class Claw {
 
     public static double getPosition() {
         return claw.getPosition();
+    }
+
+
+    /**
+     * Autonomous Actions - Actions which can be used in the autonomous programs.
+     */
+
+    public static class OpenClaw implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            open();
+            return !isOpen();
+        }
+    }
+    public static Action openClaw() {
+        return new OpenClaw();
+    }
+
+    public static class CloseClaw implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            close();
+            return !isClose();
+        }
+    }
+    public static Action closeClaw(){
+        return new CloseClaw();
     }
 }

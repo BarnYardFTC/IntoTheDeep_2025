@@ -2,6 +2,10 @@ package org.firstinspires.ftc.teamcode.subSystems;
 
 // Imports.
 
+import androidx.annotation.NonNull;
+
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -72,11 +76,49 @@ public class Differential {
      *
      * @return - If the differential is reseted.
      */
-    public static boolean isReseted() {
+    public static boolean isReset() {
         return currentPitchAngle == PITCH_ANGLE_RESET;
     }
 
     public static boolean isCollectSamplePos() {
         return servos[RIGHT].getPosition() == 0;
+    }
+
+
+    /**
+     * Autonomous Actions - Actions which can be used in the autonomous programs.
+     */
+
+    public static class DifferentialCollectSpecimen implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            Differential.collectSpecimen();
+            return Differential.isReset();
+        }
+    }
+    public static Action differentialCollectSpecimen(){
+        return new DifferentialCollectSpecimen();
+    }
+
+    public static class DifferentialCollectSample implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            Differential.collectSample();
+            return Differential.isReset();
+        }
+    }
+    public static Action differentialCollectSample(){
+        return new DifferentialCollectSample();
+    }
+
+    public static class DifferentialReset implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            Differential.reset();
+            return !Differential.isReset();
+        }
+    }
+    public static Action differentialReset(){
+        return new DifferentialReset();
     }
 }

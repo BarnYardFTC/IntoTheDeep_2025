@@ -1,5 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
+import androidx.annotation.NonNull;
+
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.SequentialAction;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.TriggerReader;
@@ -163,6 +168,11 @@ public class Robot {
         initializeGamepads(opMode.gamepad1, opMode.gamepad2);
     }
 
+    public static void teleOpSetup(){
+        Differential.reset();
+        Claw.close();
+    }
+
     /**
      * Move all the systems of the robot to where they should be at the beginning of the autonomous
      */
@@ -208,13 +218,13 @@ public class Robot {
             automated_reset = didReset();
         }
         else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.A)) {
-            if (Differential.isReseted())
+            if (Differential.isReset())
                 Differential.collectSample();
             else
                 Differential.reset();
         }
         else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.X)) {
-            if (Differential.isReseted())
+            if (Differential.isReset())
                 Differential.collectSpecimen();
             else
                 Differential.reset();
@@ -235,7 +245,7 @@ public class Robot {
     public static void activateLift() {
         if (!automated_reset){
             reset();
-            automated_reset = didReset();
+            automated_reset = true;
         }
         else if (!automated_high_basket_deposit){
             highBasketDeposit();
@@ -257,7 +267,7 @@ public class Robot {
             Lift.move(-1);
         }
 
-        Lift.liftPID();
+        Lift.PID();
     }
 
     /**
@@ -278,7 +288,7 @@ public class Robot {
             LiftArm.move(LiftArm.Angle.HORIZONTAL);
         }
 
-        LiftArm.liftArmPID();
+        LiftArm.PID();
     }
 
     /**
@@ -309,6 +319,7 @@ public class Robot {
         activateClaw();
         activateDifferential();
         activateGamepads();
+        activateTelemetry();
     }
 
     /**
@@ -343,6 +354,10 @@ public class Robot {
         if (hasElapsed(INTAKE_DURATION)){
             Differential.reset();
         }
+
+        new SequentialAction(
+
+        );
     }
 
     /**
@@ -362,7 +377,7 @@ public class Robot {
      * @return true if the robot finished the intake of a sample/specimen from the floor
      */
     public static boolean didIntake(){
-        return Differential.isReseted();
+        return Differential.isReset();
     }
 
     /**
@@ -375,7 +390,7 @@ public class Robot {
     /**
      * Display whatever is needed on telemetry
      */
-    public static void displayTelemetry() {
+    public static void activateTelemetry() {
         opMode.telemetry.addData("Lift reset", Lift.isReseted());
         opMode.telemetry.addData("Lift target pos", Lift.getTargetPosCm());
         opMode.telemetry.addData("Lift current length", Lift.getCurrentLength());
@@ -398,5 +413,37 @@ public class Robot {
      */
     public static int getIntakeDuration(){
         return INTAKE_DURATION;
+    }
+
+
+    /**
+     * ========AUTONOMOUS ACTIONS================
+     * This section of the class contains autonomous actions which are used in the autonomous programs.
+     * The actions divide into two parts:
+     * 1. The Actions themselves - Classes containing the actual actions the robot does.
+     * 2. The methods in which these Actions are used - methods returning the Actions.
+     */
+
+    public static class Setup implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            Robot.autonomousSetup();
+            return false;
+        }
+    }
+    public static Action setup() {
+        return new Setup();
+    }
+
+    public static class DisplayTelemetry implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            Robot.activateTelemetry();
+            return true;
+        }
+    }
+
+    public static Action displayTelemetry(){
+        return new DisplayTelemetry();
     }
 }

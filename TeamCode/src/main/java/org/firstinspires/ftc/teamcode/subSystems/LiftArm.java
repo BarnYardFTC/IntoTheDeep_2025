@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.subSystems;
 
+import androidx.annotation.NonNull;
+
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -84,7 +88,7 @@ public class LiftArm {
         return motors[RIGHT].getCurrentPosition() / RIGHT_MOTOR.getENCODERS_PER_DEGREE();
     }
 
-    public static void liftArmPID() {
+    public static void PID() {
         controller.setPID(p, i, d);
 
         // Sets the current and target position of the motor.
@@ -132,5 +136,43 @@ public class LiftArm {
 
     public static boolean isArmInPos() {
         return getCurrentAngle() <= targetAngle + 10 && getCurrentAngle() >= targetAngle - 10;
+    }
+
+
+    /**
+     * Autonomous Actions - Actions which can be used in the autonomous programs.
+     */
+
+    public static class LiftArmVertical implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            move(LiftArm.Angle.VERTICAL);
+            return !isVertical();
+        }
+    }
+    public static Action liftArmVertical(){
+        return new LiftArmVertical();
+    }
+
+    public static class LiftArmHorizontal implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            move(LiftArm.Angle.HORIZONTAL);
+            return !isHorizontal();
+        }
+    }
+    public static Action liftArmHorizontal(){
+        return new LiftArmHorizontal();
+    }
+
+    public static class LiftArmPID implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            LiftArm.PID();
+            return true;
+        }
+    }
+    public static Action liftArmPID(){
+        return new LiftArmPID();
     }
 }

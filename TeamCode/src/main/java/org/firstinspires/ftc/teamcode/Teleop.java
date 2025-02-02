@@ -12,21 +12,13 @@ import org.firstinspires.ftc.teamcode.subSystems.Differential;
 @TeleOp(name = "INTO_THE_DEEP")
 
 public class Teleop extends LinearOpMode {
-
     @Override
     public void runOpMode() {
-
         Robot.initializeTeleop(this);
-
-        Differential.reset();
-        Claw.close();
-
+        Robot.teleOpSetup();
         waitForStart();
-
-        while (opModeIsActive()) {
-
+        while (opModeIsActive() && !isStopRequested()) {
             Robot.activateAll();
-            Robot.displayTelemetry();
         }
     }
 }
