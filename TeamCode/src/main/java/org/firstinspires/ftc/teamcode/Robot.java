@@ -93,9 +93,8 @@ public class Robot {
     /**
      * Flags - variables that we use in order to keep track of certain information about the robot
      */
-    private static boolean automated_intake;
-    private static boolean automated_reset;
-    private static boolean automated_high_basket_deposit;
+    private static boolean automating_reset;
+    private static boolean automating_high_basket_deposit;
 
 
     /**
@@ -122,9 +121,8 @@ public class Robot {
         Robot.opMode = opMode;
 
         // reset flags
-        automated_intake = false;
-        automated_reset = false;
-        automated_high_basket_deposit = false;
+        automating_reset = false;
+        automating_high_basket_deposit = false;
 
         // Create a timer
         timer = new TimerHelper();
@@ -195,16 +193,13 @@ public class Robot {
      * Activate the claw according to gamepad inputs
      */
     public static void activateClaw() {
-        if (!automated_intake){
-            intake();
-            automated_intake = didIntake();
-        }
-        else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.Y) && notAutomating()) {
-            if (Claw.isOpen()) {
-                Claw.close();
-                automated_intake = false;
-            } else {
-                Claw.open();
+        if (!isClawAutomating()){
+            if (gamepadEx1.wasJustPressed(GamepadKeys.Button.Y)) {
+                if (Claw.isOpen()) {
+                    Claw.close();
+                } else {
+                    Claw.open();
+                }
             }
         }
     }
@@ -213,29 +208,27 @@ public class Robot {
      * Active the differential according to gamepad inputs
      */
     public static void activateDifferential() {
-        if (!automated_reset){
-            reset();
-            automated_reset = didReset();
-        }
-        else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.A)) {
-            if (Differential.isReset())
-                Differential.collectSample();
-            else
-                Differential.reset();
-        }
-        else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.X)) {
-            if (Differential.isReset())
-                Differential.collectSpecimen();
-            else
-                Differential.reset();
-        }
-        else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT) && Differential.currentRollAngle + 60 <= 180) {
-            Differential.move(Differential.currentRollAngle + 60, Differential.currentPitchAngle);
-            Differential.currentRollAngle += 60;
-        }
-        else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_LEFT) && Differential.currentRollAngle - 60 >= 0) {
-            Differential.move(Differential.currentRollAngle - 60, Differential.currentPitchAngle);
-            Differential.currentRollAngle -= 60;
+        if (!isDifferentialAutomating()){
+            if (gamepadEx1.wasJustPressed(GamepadKeys.Button.A)) {
+                if (Differential.isReset())
+                    Differential.collectSample();
+                else
+                    Differential.reset();
+            }
+            else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.X)) {
+                if (Differential.isReset())
+                    Differential.collectSpecimen();
+                else
+                    Differential.reset();
+            }
+            else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT) && Differential.currentRollAngle + 60 <= 180) {
+                Differential.move(Differential.currentRollAngle + 60, Differential.currentPitchAngle);
+                Differential.currentRollAngle += 60;
+            }
+            else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_LEFT) && Differential.currentRollAngle - 60 >= 0) {
+                Differential.move(Differential.currentRollAngle - 60, Differential.currentPitchAngle);
+                Differential.currentRollAngle -= 60;
+            }
         }
     }
 
@@ -243,28 +236,30 @@ public class Robot {
      * Activate the lift according to gamepad inputs
      */
     public static void activateLift() {
-        if (!automated_reset){
+        if (!isLiftAutomating()){
+            if (gamepadEx2.wasJustPressed(GamepadKeys.Button.A)){
+                automating_reset = false;
+            }
+            else if (gamepadEx2.wasJustPressed(GamepadKeys.Button.Y)) {
+                automating_high_basket_deposit = false;
+            }
+            if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN) && LiftArm.isVertical()) {
+                Lift.move(Lift.Pos.LOW_BASKET);
+            } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_UP) && LiftArm.isVertical()) {
+                Lift.move(Lift.Pos.HIGH_BASKET);
+            } else if (RIGHT_TRIGGER.isDown() && Lift.isMoveable(1)) {
+                Lift.move(1);
+            } else if (LEFT_TRIGGER.isDown() && Lift.isMoveable(-1)) {
+                Lift.move(-1);
+            }
+        }
+        else if (!automating_reset){
             reset();
-            automated_reset = true;
+            automating_reset = true;
         }
-        else if (!automated_high_basket_deposit){
+        else if (!automating_high_basket_deposit){
             highBasketDeposit();
-            automated_high_basket_deposit = didArriveHighBasket();
-        }
-        else if (gamepadEx2.wasJustPressed(GamepadKeys.Button.A) && notAutomating()){
-            automated_reset = false;
-        }
-        else if (gamepadEx2.wasJustPressed(GamepadKeys.Button.Y)) {
-            automated_high_basket_deposit = false;
-        }
-        else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN) && LiftArm.isVertical()) {
-            Lift.move(Lift.Pos.LOW_BASKET);
-        } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_UP) && LiftArm.isVertical()) {
-            Lift.move(Lift.Pos.HIGH_BASKET);
-        } else if (RIGHT_TRIGGER.isDown() && Lift.isMoveable(1)) {
-            Lift.move(1);
-        } else if (LEFT_TRIGGER.isDown() && Lift.isMoveable(-1)) {
-            Lift.move(-1);
+            automating_high_basket_deposit = true;
         }
 
         Lift.PID();
@@ -274,18 +269,12 @@ public class Robot {
      * Activate the liftArm according to gamepad inputs
      */
     public static void activateLiftArm() {
-        if (!automated_reset){
-            reset();
-            automated_reset = didReset();
-        }
-        if (!automated_high_basket_deposit){
-            highBasketDeposit();
-            automated_high_basket_deposit = didArriveHighBasket();
-        }
-        else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-            LiftArm.move(LiftArm.Angle.VERTICAL);
-        } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
-            LiftArm.move(LiftArm.Angle.HORIZONTAL);
+        if (!isLiftArmAutomating()){
+            if (gamepadEx1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+                LiftArm.move(LiftArm.Angle.VERTICAL);
+            } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+                LiftArm.move(LiftArm.Angle.HORIZONTAL);
+            }
         }
 
         LiftArm.PID();
@@ -326,38 +315,31 @@ public class Robot {
      * An automation function for a high basket deposit
      */
     public static void highBasketDeposit(){
-        if (LiftArm.isVertical()){
-            Lift.move(Lift.Pos.HIGH_BASKET);
-        }
-        else {
-            LiftArm.move(LiftArm.Angle.VERTICAL);
-        }
+
+        // ToDo: Rewrite the function using Actions
+
+//        if (LiftArm.isVertical()){
+//            Lift.move(Lift.Pos.HIGH_BASKET);
+//        }
+//        else {
+//            LiftArm.move(LiftArm.Angle.VERTICAL);
+//        }
     }
 
     /**
      * An automation for a reset of the robot (lift and liftArm)
      */
     public static void reset() {
-        if (Lift.isReseted()){
-            Differential.reset(); //ToDo: Add a break here if needed
-            LiftArm.move(LiftArm.Angle.HORIZONTAL);
-        }
-        else {
-            Lift.move(Lift.Pos.RESET);
-        }
-    }
 
-    /**
-     * Intake a sample/specimen from the floor
-     */
-    public static void intake() {
-        if (hasElapsed(INTAKE_DURATION)){
-            Differential.reset();
-        }
+        // ToDo: Rewrite the function using Actions
 
-        new SequentialAction(
-
-        );
+//        Differential.reset();
+//        if (Lift.isReseted()){
+//            LiftArm.move(LiftArm.Angle.HORIZONTAL);
+//        }
+//        else {
+//            Lift.move(Lift.Pos.RESET);
+//        }
     }
 
     /**
@@ -374,17 +356,26 @@ public class Robot {
     }
 
     /**
-     * @return true if the robot finished the intake of a sample/specimen from the floor
-     */
-    public static boolean didIntake(){
-        return Differential.isReset();
-    }
-
-    /**
      * @return true if the robot is automating
      */
-    public static boolean notAutomating(){
-        return !(automated_reset || automated_intake || automated_high_basket_deposit);
+    public static boolean isRobotAutomating(){
+        return automating_reset || automating_high_basket_deposit;
+    }
+
+    public static boolean isLiftAutomating(){
+        return automating_reset || automating_high_basket_deposit;
+    }
+
+    public static boolean isLiftArmAutomating(){
+        return automating_reset || automating_high_basket_deposit;
+    }
+
+    public static boolean isClawAutomating(){
+        return false;
+    }
+
+    public static boolean isDifferentialAutomating(){
+        return automating_reset;
     }
 
     /**
