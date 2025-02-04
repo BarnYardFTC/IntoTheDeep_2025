@@ -235,35 +235,81 @@ public class Robot {
     /**
      * Activate the lift according to gamepad inputs
      */
-    public static void activateLift() {
-        if (!isLiftAutomating()){
-            if (gamepadEx2.wasJustPressed(GamepadKeys.Button.A)){
-                automating_reset = false;
-            }
-            else if (gamepadEx2.wasJustPressed(GamepadKeys.Button.Y)) {
-                automating_high_basket_deposit = false;
-            }
-            if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN) && LiftArm.isVertical()) {
-                Lift.move(Lift.Pos.LOW_BASKET);
-            } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_UP) && LiftArm.isVertical()) {
-                Lift.move(Lift.Pos.HIGH_BASKET);
-            } else if (RIGHT_TRIGGER.isDown() && Lift.isMoveable(1)) {
-                Lift.move(1);
-            } else if (LEFT_TRIGGER.isDown() && Lift.isMoveable(-1)) {
-                Lift.move(-1);
-            }
+//    public static void activateLift() {
+//        if (!isLiftAutomating()){
+//            if (gamepadEx2.wasJustPressed(GamepadKeys.Button.A)){
+//                automating_reset = false;
+//            }
+//            else if (gamepadEx2.wasJustPressed(GamepadKeys.Button.Y)) {
+//                automating_high_basket_deposit = false;
+//            }
+//            if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN) && LiftArm.isVertical()) {
+//                Lift.move(Lift.Pos.LOW_BASKET);
+//            } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_UP) && LiftArm.isVertical()) {
+//                Lift.move(Lift.Pos.HIGH_BASKET);
+//            } else if (RIGHT_TRIGGER.isDown() && Lift.isMoveable(1)) {
+//                Lift.move(1);
+//            } else if (LEFT_TRIGGER.isDown() && Lift.isMoveable(-1)) {
+//                Lift.move(-1);
+//            }
+//        }
+//        else if (!automating_reset){
+//            reset();
+//            automating_reset = true;
+//        }
+//        else if (!automating_high_basket_deposit){
+//            highBasketDeposit();
+//            automating_high_basket_deposit = true;
+//        }
+//
+//        Lift.PID();
+//    }
+
+    private static class ActivateLift implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+//            if (!isLiftAutomating()){
+//                if (gamepadEx2.wasJustPressed(GamepadKeys.Button.A)){
+//                    automating_reset = true;
+//                }
+//                else if (gamepadEx2.wasJustPressed(GamepadKeys.Button.Y)) {
+//                    automating_high_basket_deposit = true;
+//                }
+//                else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN) && LiftArm.isVertical()) {
+//                    Lift.move(Lift.Pos.LOW_BASKET);
+//                } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_UP) && LiftArm.isVertical()) {
+//                    Lift.move(Lift.Pos.HIGH_BASKET);
+//                } else if (RIGHT_TRIGGER.isDown() && Lift.isMoveable(1)) {
+//                    Lift.move(1);
+//                } else if (LEFT_TRIGGER.isDown() && Lift.isMoveable(-1)) {
+//                    Lift.move(-1);
+//                }
+//            }
+            opMode.telemetry.addLine("1");
+            opMode.telemetry.update();
+            //Lift.PID();
+            return true;
         }
-        else if (!automating_reset){
-            reset();
-            automating_reset = true;
-        }
-        else if (!automating_high_basket_deposit){
-            highBasketDeposit();
-            automating_high_basket_deposit = true;
+    }
+    private static class ActivateLift2 implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            opMode.telemetry.addLine("2");
+            opMode.telemetry.update();
+            //Lift.PID();
+            return true;
         }
 
-        Lift.PID();
     }
+    public static Action activateLift(){
+        if (false) {
+            return new ActivateLift();
+        }
+        else {
+            return new ActivateLift2();
+        }
+    }
+
 
     /**
      * Activate the liftArm according to gamepad inputs
@@ -382,12 +428,7 @@ public class Robot {
      * Display whatever is needed on telemetry
      */
     public static void activateTelemetry() {
-        opMode.telemetry.addData("Lift reset", Lift.isReseted());
-        opMode.telemetry.addData("Lift target pos", Lift.getTargetPosCm());
-        opMode.telemetry.addData("Lift current length", Lift.getCurrentLength());
-        opMode.telemetry.addData("heading", Drivetrain.getRobotHeading());
 
-        opMode.telemetry.update();
     }
 
     /**
@@ -429,7 +470,9 @@ public class Robot {
     public static class DisplayTelemetry implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            Robot.activateTelemetry();
+            opMode.telemetry.addData("automating reset: ", automating_reset);
+            opMode.telemetry.addData("automating high basket: ", automating_high_basket_deposit);
+            opMode.telemetry.update();
             return true;
         }
     }

@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 // Imports.
 
+import com.acmerobotics.roadrunner.ParallelAction;
+import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -15,10 +17,15 @@ public class Teleop extends LinearOpMode {
     @Override
     public void runOpMode() {
         Robot.initializeTeleop(this);
-        Robot.teleOpSetup();
+//        Robot.teleOpSetup();
         waitForStart();
-        while (opModeIsActive() && !isStopRequested()) {
-            Robot.activateAll();
-        }
+//            Robot.activateAll();
+        if (isStopRequested()) return;
+
+        Actions.runBlocking(
+                new ParallelAction(
+                        Robot.activateLift()
+                )
+        );
     }
 }
