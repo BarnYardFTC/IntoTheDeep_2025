@@ -426,7 +426,26 @@ public class Robot {
                 )
         );
     }
-
+    public static void runBlueSample4Park(){
+        Actions.runBlocking(
+                new ParallelAction()
+        );
+    }
+    public static void runBlueSpecimen4Park(){
+        Actions.runBlocking(
+                new ParallelAction()
+        );
+    }
+    public static void runRedSample4Park(){
+        Actions.runBlocking(
+                new ParallelAction()
+        );
+    }
+    public static void runRedSpecimen4Park(){
+        Actions.runBlocking(
+                new ParallelAction()
+        );
+    }
 
     /*
     ========Getter Methods========
