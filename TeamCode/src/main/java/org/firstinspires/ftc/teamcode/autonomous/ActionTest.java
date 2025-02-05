@@ -90,7 +90,6 @@ public class ActionTest extends LinearOpMode {
                         LiftArm.liftArmPID(),
                         Robot.displayTelemetry(),
                         new SequentialAction(
-                                Robot.setup(),
                                 new ParallelAction(
                                     scorePreLoad,
                                     LiftArm.liftArmVertical()

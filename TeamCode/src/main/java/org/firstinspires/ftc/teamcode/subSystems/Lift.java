@@ -149,7 +149,14 @@ public class Lift {
     }
 
     public static boolean arrivedTargetPos() {
-        return getCurrentLength() <= targetPosCm + LIFT_SPEED && getCurrentLength() >= targetPosCm - LIFT_SPEED;
+        if (targetPos == HIGH_BASKET_POS)
+            return arrivedHighBasket();
+        else
+            return getCurrentLength() <= targetPosCm + LIFT_SPEED && getCurrentLength() >= targetPosCm - LIFT_SPEED;
+    }
+
+    public static boolean arrivedHighBasket() {
+        return getCurrentLength() > ARRIVED_HIGH_BASKET_POS && LiftArm.isVertical();
     }
 
 

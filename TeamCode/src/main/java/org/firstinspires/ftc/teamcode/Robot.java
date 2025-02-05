@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.ftc.Actions;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.TriggerReader;
@@ -56,54 +58,52 @@ import org.firstinspires.ftc.teamcode.subSystems.TimerHelper;
  * makes the operation of driving the robot faster.
  * A: Reset the Lift and Arm (=close lift & bring Arm down if necessary)
  * Y: Bring the Lift and Arm to a high-basket-discharge position
-
- * =========Autonomous========
- * // ToDo: Finish renovating the Autonomous and document here
  */
 
 
 
 public class Robot {
 
-    /**
-     * Final Variables (Constants)
-     */
+    /*
+    =======FINAL VARIABLES (CONSTANTS)========
+    */
     // When the trigger value exceeds this value, the trigger is considered active
     private static final double TRIGGERS_THRESHOLD = 0.1;
-
     // Waiting times
     private static final int INTAKE_DURATION = 200;
 
 
-    /**
+    /*
     The only variable the class requires as an input.
     The other variable are variables which are initialized based on this input variable.
     */
     private static OpMode opMode;
 
-    /**
-     * Gamepads we run the Teleop based on in the Teleop Period.
-     * TriggerReader is used only for gamepad1
-     */
+
+    /*
+    Gamepads we run the Teleop based on in the Teleop Period.
+    TriggerReader is used only for gamepad1
+    */
     private static GamepadEx gamepadEx1;
     private static GamepadEx gamepadEx2;
     private static TriggerReader RIGHT_TRIGGER;
     private static TriggerReader LEFT_TRIGGER;
 
-    /**
-     * Flags - variables that we use in order to keep track of certain information about the robot
-     */
-    private static boolean automating_reset;
-    private static boolean automating_high_basket_deposit;
 
-
-    /**
-     * Time Tracking - variable used to keep track of time while an opMode runs
+    /*
+    =========FLAGS=========
      */
+    // Booleans
+    private static boolean is_reset_automating;
+    private static boolean is_high_basket_automating;
+    //Time Tracking
     private static TimerHelper timer;
 
 
 
+    /*
+    ========INITIALIZATION METHODS========
+     */
     /**
      * Initialize the Robot.
      * Usage: Teleop & Autonomous
@@ -121,13 +121,12 @@ public class Robot {
         Robot.opMode = opMode;
 
         // reset flags
-        automating_reset = false;
-        automating_high_basket_deposit = false;
+        is_reset_automating = false;
+        is_high_basket_automating = false;
 
         // Create a timer
         timer = new TimerHelper();
     }
-
     /**
      * Assign the GamepadEx variables using the gamepads provided as an input.
      * GamepadEx is basically a better version of Gamepad
@@ -138,7 +137,6 @@ public class Robot {
         Robot.gamepadEx1 = new GamepadEx(gamepad1);
         Robot.gamepadEx2 = new GamepadEx(gamepad2);
     }
-
     /**
      * Initialize the two triggers of gamepad1 so that they are ready for usage (gamepad2 uses no triggers)
      */
@@ -146,7 +144,6 @@ public class Robot {
         RIGHT_TRIGGER = new TriggerReader(gamepadEx1, GamepadKeys.Trigger.RIGHT_TRIGGER, TRIGGERS_THRESHOLD);
         LEFT_TRIGGER = new TriggerReader(gamepadEx1, GamepadKeys.Trigger.LEFT_TRIGGER, TRIGGERS_THRESHOLD);
     }
-
     /**
      * Prepare the gamepads for provision of inputs
      * @param gamepad1 gamepad1/user1
@@ -156,7 +153,6 @@ public class Robot {
         initializeGamepadEx(gamepad1, gamepad2);
         initializeTriggers();
     }
-
     /**
      * Initialize everything needed to fully run a Teleop (driver controlled)
      * @param opMode Current opMode which is running
@@ -165,12 +161,13 @@ public class Robot {
         initialize(opMode);
         initializeGamepads(opMode.gamepad1, opMode.gamepad2);
     }
-
-    public static void teleOpSetup(){
+    /**
+     * Move all the systems of the robot to where they should be at the beginning of the teleop
+     */
+    public static void teleopSetup(){
         Differential.reset();
         Claw.close();
     }
-
     /**
      * Move all the systems of the robot to where they should be at the beginning of the autonomous
      */
@@ -179,305 +176,263 @@ public class Robot {
         Claw.close();
     }
 
-    /**
-     * Activate the gamepads
-     */
-    public static void activateGamepads(){
-        gamepadEx1.readButtons();
-        gamepadEx2.readButtons();
-        RIGHT_TRIGGER.readValue();
-        LEFT_TRIGGER.readValue();
+    /*
+    ===========Flag functions===========
+    */
+    public static boolean isLiftAutomating(){
+        return is_reset_automating || is_high_basket_automating;
+    }
+    public static boolean isLiftArmAutomating(){
+        return is_reset_automating || is_high_basket_automating;
+    }
+    public static boolean isDifferentialAutomating(){
+        return is_reset_automating;
     }
 
-    /**
-     * Activate the claw according to gamepad inputs
+    /*
+    ==========Automations==========
+    */
+    public static Action highBasketDeposit() {
+        return new SequentialAction(
+                LiftArm.liftArmVertical(),
+                Lift.moveLift(Lift.Pos.HIGH_BASKET)
+        );
+    }
+    public static Action reset() {
+        return new SequentialAction(
+                Differential.differentialReset(),
+                Lift.moveLift(Lift.Pos.RESET),
+                LiftArm.liftArmHorizontal()
+        );
+    }
+
+
+    /*
+    ========ACTIONS===========
      */
-    public static void activateClaw() {
-        if (!isClawAutomating()){
+    public static class ActivateGamepads implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            // Read the inputs from both gamepads and triggers
+            gamepadEx1.readButtons();
+            gamepadEx2.readButtons();
+            RIGHT_TRIGGER.readValue();
+            LEFT_TRIGGER.readValue();
+
+            return true; // Keep this action running during TeleOp
+        }
+    }
+    public static class ActivateClaw implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            // Check if the Y button was just pressed
             if (gamepadEx1.wasJustPressed(GamepadKeys.Button.Y)) {
+                // Toggle the claw open or closed
                 if (Claw.isOpen()) {
                     Claw.close();
                 } else {
                     Claw.open();
                 }
             }
+
+            return true; // Keep this action running during TeleOp
         }
     }
-
-    /**
-     * Active the differential according to gamepad inputs
-     */
-    public static void activateDifferential() {
-        if (!isDifferentialAutomating()){
-            if (gamepadEx1.wasJustPressed(GamepadKeys.Button.A)) {
-                if (Differential.isReset())
-                    Differential.collectSample();
-                else
-                    Differential.reset();
-            }
-            else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.X)) {
-                if (Differential.isReset())
-                    Differential.collectSpecimen();
-                else
-                    Differential.reset();
-            }
-            else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT) && Differential.currentRollAngle + 60 <= 180) {
-                Differential.move(Differential.currentRollAngle + 60, Differential.currentPitchAngle);
-                Differential.currentRollAngle += 60;
-            }
-            else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_LEFT) && Differential.currentRollAngle - 60 >= 0) {
-                Differential.move(Differential.currentRollAngle - 60, Differential.currentPitchAngle);
-                Differential.currentRollAngle -= 60;
-            }
-        }
-    }
-
-    /**
-     * Activate the lift according to gamepad inputs
-     */
-//    public static void activateLift() {
-//        if (!isLiftAutomating()){
-//            if (gamepadEx2.wasJustPressed(GamepadKeys.Button.A)){
-//                automating_reset = false;
-//            }
-//            else if (gamepadEx2.wasJustPressed(GamepadKeys.Button.Y)) {
-//                automating_high_basket_deposit = false;
-//            }
-//            if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN) && LiftArm.isVertical()) {
-//                Lift.move(Lift.Pos.LOW_BASKET);
-//            } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_UP) && LiftArm.isVertical()) {
-//                Lift.move(Lift.Pos.HIGH_BASKET);
-//            } else if (RIGHT_TRIGGER.isDown() && Lift.isMoveable(1)) {
-//                Lift.move(1);
-//            } else if (LEFT_TRIGGER.isDown() && Lift.isMoveable(-1)) {
-//                Lift.move(-1);
-//            }
-//        }
-//        else if (!automating_reset){
-//            reset();
-//            automating_reset = true;
-//        }
-//        else if (!automating_high_basket_deposit){
-//            highBasketDeposit();
-//            automating_high_basket_deposit = true;
-//        }
-//
-//        Lift.PID();
-//    }
-
-    private static class ActivateLift implements Action {
+    public static class ActivateDifferential implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-//            if (!isLiftAutomating()){
-//                if (gamepadEx2.wasJustPressed(GamepadKeys.Button.A)){
-//                    automating_reset = true;
-//                }
-//                else if (gamepadEx2.wasJustPressed(GamepadKeys.Button.Y)) {
-//                    automating_high_basket_deposit = true;
-//                }
-//                else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN) && LiftArm.isVertical()) {
-//                    Lift.move(Lift.Pos.LOW_BASKET);
-//                } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_UP) && LiftArm.isVertical()) {
-//                    Lift.move(Lift.Pos.HIGH_BASKET);
-//                } else if (RIGHT_TRIGGER.isDown() && Lift.isMoveable(1)) {
-//                    Lift.move(1);
-//                } else if (LEFT_TRIGGER.isDown() && Lift.isMoveable(-1)) {
-//                    Lift.move(-1);
-//                }
-//            }
-            opMode.telemetry.addLine("1");
-            opMode.telemetry.update();
-            //Lift.PID();
+            // Only allow manual control if no automation is running
+            if (!isDifferentialAutomating()) {
+                if (gamepadEx1.wasJustPressed(GamepadKeys.Button.A)) {
+                    if (Differential.isReset()) {
+                        Differential.collectSample();
+                    } else {
+                        Differential.reset();
+                    }
+                } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.X)) {
+                    if (Differential.isReset()) {
+                        Differential.collectSpecimen();
+                    } else {
+                        Differential.reset();
+                    }
+                } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT) && Differential.currentRollAngle + 60 <= 180) {
+                    Differential.move(Differential.currentRollAngle + 60, Differential.currentPitchAngle);
+                    Differential.currentRollAngle += 60;
+                } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_LEFT) && Differential.currentRollAngle - 60 >= 0) {
+                    Differential.move(Differential.currentRollAngle - 60, Differential.currentPitchAngle);
+                    Differential.currentRollAngle -= 60;
+                }
+            }
+
+            return true; // Keep this action running during TeleOp
+        }
+    }
+    public static class ActivateLift implements Action {
+        private Action currentAutomation = null;
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            // Only allow manual control if no automation is running
+            if (!isLiftAutomating()) {
+                if (gamepadEx2.wasJustPressed(GamepadKeys.Button.A)) {
+                    currentAutomation = reset();
+                    is_reset_automating = true; // Mark reset automation as active
+                } else if (gamepadEx2.wasJustPressed(GamepadKeys.Button.Y)) {
+                    currentAutomation = highBasketDeposit();
+                    is_high_basket_automating = true; // Mark high basket deposit as active
+                }
+
+                if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN) && LiftArm.isVertical()) {
+                    Lift.move(Lift.Pos.LOW_BASKET);
+                } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_UP) && LiftArm.isVertical()) {
+                    Lift.move(Lift.Pos.HIGH_BASKET);
+                } else if (RIGHT_TRIGGER.isDown() && Lift.isMoveable(1)) {
+                    Lift.move(1);
+                } else if (LEFT_TRIGGER.isDown() && Lift.isMoveable(-1)) {
+                    Lift.move(-1);
+                }
+            }
+
+            // If an automation is running, execute it until completion
+            if (currentAutomation != null) {
+                if (!currentAutomation.run(packet)) {
+                    // Mark respective automation as inactive when finished
+                    if (is_reset_automating) {
+                        is_reset_automating = false;
+                    } else if (is_high_basket_automating) {
+                        is_high_basket_automating = false;
+                    }
+                    currentAutomation = null; // Reset currentAutomation
+                }
+            }
+
+            Lift.PID(); // Ensure Lift PID control runs continuously
+            return true; // Keep this action running during TeleOp
+        }
+    }
+    public static class ActivateLiftArm implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            // Check if the LiftArm is currently automating
+            // If it is, we don't want to interfere with its movement
+            if (!isLiftArmAutomating()) {
+
+                // If the right bumper was just pressed, move the LiftArm to the vertical position
+                if (gamepadEx1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+                    LiftArm.move(LiftArm.Angle.VERTICAL);
+
+                    // If the left bumper was just pressed, move the LiftArm to the horizontal position
+                } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+                    LiftArm.move(LiftArm.Angle.HORIZONTAL);
+                }
+            }
+
+            LiftArm.liftArmPID(); // Activate the Lift Arm
+
+            // Return true so this action keeps running throughout the TeleOp period,
+            // allowing continuous input response
             return true;
         }
     }
-    private static class ActivateLift2 implements Action {
+    public static class ActivateDrivetrain implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            opMode.telemetry.addLine("2");
-            opMode.telemetry.update();
-            //Lift.PID();
+            // Move the drivetrain based on the gamepad input
+            Drivetrain.move(gamepadEx1);
+
+            // Check if the B button is pressed to reset the IMU
+            if (gamepadEx1.wasJustPressed(GamepadKeys.Button.B)) {
+                Drivetrain.resetImu();
+            }
+            // Check if the lift arm is horizontal and lift is not reset, or if the lift arm is vertical
+            // or if the X button is pressed and the drivetrain is not slowed
+            else if ((LiftArm.isHorizontal() && !Lift.isReseted()) || LiftArm.isVertical() ||
+                    (gamepadEx1.wasJustPressed(GamepadKeys.Button.X) && !Drivetrain.isSlowed())) {
+                Drivetrain.slowMode();
+            }
+            // If the X button is pressed and the drivetrain is already slowed, revert to regular mode
+            else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.X) && Drivetrain.isSlowed()) {
+                Drivetrain.regularMode();
+            }
+            // Default case: Set drivetrain to regular mode
+            else {
+                Drivetrain.regularMode();
+            }
+
+            // Return true to indicate that the action should continue running and check conditions again
             return true;
         }
-
     }
-    public static Action activateLift(){
-        if (false) {
-            return new ActivateLift();
-        }
-        else {
-            return new ActivateLift2();
+    public static class DisplayTelemetry implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            opMode.telemetry.update();
+            return true;
         }
     }
+    public static class HasElapsed implements Action {
+        private final int durationMilliseconds;
 
-
-    /**
-     * Activate the liftArm according to gamepad inputs
-     */
-    public static void activateLiftArm() {
-        if (!isLiftArmAutomating()){
-            if (gamepadEx1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-                LiftArm.move(LiftArm.Angle.VERTICAL);
-            } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
-                LiftArm.move(LiftArm.Angle.HORIZONTAL);
-            }
+        // Constructor to set the duration
+        public HasElapsed(int durationMilliseconds) {
+            this.durationMilliseconds = durationMilliseconds;
         }
 
-        LiftArm.PID();
-    }
-
-    /**
-     * Activate the driveTrain according to gamepad inputs
-     */
-    public static void activateDrivetrain() {
-        Drivetrain.move(gamepadEx1);
-        if (gamepadEx1.wasJustPressed(GamepadKeys.Button.B))
-            Drivetrain.resetImu();
-        else if ((LiftArm.isHorizontal() && !Lift.isReseted()) || LiftArm.isVertical() || gamepadEx1.wasJustPressed(GamepadKeys.Button.X) && !Drivetrain.isSlowed()){
-            Drivetrain.slowMode();
-        }
-        else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.X) && Drivetrain.isSlowed()){
-            Drivetrain.regularMode();
-        }
-        else {
-            Drivetrain.regularMode();
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            // Return true if the specified duration has elapsed
+            return !timer.hasElapsed(durationMilliseconds);
         }
     }
 
-    /**
-     * Activate all of the systems of the bot at once
+    public static Action activateGamepads() {
+        return new ActivateGamepads();
+    }
+    public static Action activateDifferential() {
+        return new ActivateDifferential();
+    }
+    public static Action activateClaw() {
+        return new ActivateClaw();
+    }
+    public static Action activateLift() {
+        return new ActivateLift();
+    }
+    public static Action activateLiftArm() {
+        return new ActivateLiftArm();
+    }
+    public static Action activateDrivetrain() {
+        return new ActivateDrivetrain();
+    }
+    public static Action displayTelemetry(){
+        return new DisplayTelemetry();
+    }
+    public static Action hasElapsed(int durationMilliseconds) {
+        return new HasElapsed(durationMilliseconds);
+    }
+
+
+    /*
+    =========Programs========
      */
-    public static void activateAll() {
-        activateDrivetrain();
-        activateLift();
-        activateLiftArm();
-        activateClaw();
-        activateDifferential();
-        activateGamepads();
-        activateTelemetry();
+    public static void runTeleop(){
+        Actions.runBlocking(
+                new ParallelAction(
+                        displayTelemetry(),
+                        activateDrivetrain(),
+                        activateLiftArm(),
+                        activateLift(),
+                        activateDifferential(),
+                        activateClaw(),
+                        activateGamepads()
+                )
+        );
     }
 
-    /**
-     * An automation function for a high basket deposit
-     */
-    public static void highBasketDeposit(){
 
-        // ToDo: Rewrite the function using Actions
-
-//        if (LiftArm.isVertical()){
-//            Lift.move(Lift.Pos.HIGH_BASKET);
-//        }
-//        else {
-//            LiftArm.move(LiftArm.Angle.VERTICAL);
-//        }
-    }
-
-    /**
-     * An automation for a reset of the robot (lift and liftArm)
-     */
-    public static void reset() {
-
-        // ToDo: Rewrite the function using Actions
-
-//        Differential.reset();
-//        if (Lift.isReseted()){
-//            LiftArm.move(LiftArm.Angle.HORIZONTAL);
-//        }
-//        else {
-//            Lift.move(Lift.Pos.RESET);
-//        }
-    }
-
-    /**
-     * @return true if the lift and liftArm are in the position for a high-basket-deposit
-     */
-    public static boolean didArriveHighBasket(){
-        return Lift.getCurrentLength() > Lift.ARRIVED_HIGH_BASKET_POS && LiftArm.isVertical();
-    }
-    /**
-     * @return true if the robot has reset already
-     */
-    public static boolean didReset(){
-        return Lift.arrivedTargetPos() && LiftArm.isHorizontal();
-    }
-
-    /**
-     * @return true if the robot is automating
-     */
-    public static boolean isRobotAutomating(){
-        return automating_reset || automating_high_basket_deposit;
-    }
-
-    public static boolean isLiftAutomating(){
-        return automating_reset || automating_high_basket_deposit;
-    }
-
-    public static boolean isLiftArmAutomating(){
-        return automating_reset || automating_high_basket_deposit;
-    }
-
-    public static boolean isClawAutomating(){
-        return false;
-    }
-
-    public static boolean isDifferentialAutomating(){
-        return automating_reset;
-    }
-
-    /**
-     * Display whatever is needed on telemetry
-     */
-    public static void activateTelemetry() {
-
-    }
-
-    /**
-     * Keep track of a specific amount of time
-     * @param durationMilliseconds the amount of time in milliseconds
-     * @return true when the specified time has elapsed
-     */
-    public static boolean hasElapsed(int durationMilliseconds){
-        return timer.hasElapsed(durationMilliseconds);
-    }
-
-    /**
-     * Getter Methods
+    /*
+    ========Getter Methods========
      */
     public static int getIntakeDuration(){
         return INTAKE_DURATION;
     }
 
-
-    /**
-     * ========AUTONOMOUS ACTIONS================
-     * This section of the class contains autonomous actions which are used in the autonomous programs.
-     * The actions divide into two parts:
-     * 1. The Actions themselves - Classes containing the actual actions the robot does.
-     * 2. The methods in which these Actions are used - methods returning the Actions.
-     */
-
-    public static class Setup implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            Robot.autonomousSetup();
-            return false;
-        }
-    }
-    public static Action setup() {
-        return new Setup();
-    }
-
-    public static class DisplayTelemetry implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            opMode.telemetry.addData("automating reset: ", automating_reset);
-            opMode.telemetry.addData("automating high basket: ", automating_high_basket_deposit);
-            opMode.telemetry.update();
-            return true;
-        }
-    }
-
-    public static Action displayTelemetry(){
-        return new DisplayTelemetry();
-    }
 }
