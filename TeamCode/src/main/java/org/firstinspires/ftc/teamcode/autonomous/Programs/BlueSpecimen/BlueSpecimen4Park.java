@@ -4,16 +4,22 @@ package org.firstinspires.ftc.teamcode.autonomous.Programs.BlueSpecimen;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.autonomous.Coordinates.BlueSpecimenCoordinates;
 import org.firstinspires.ftc.teamcode.roadRunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.subSystems.Claw;
+import org.firstinspires.ftc.teamcode.subSystems.Differential;
+import org.firstinspires.ftc.teamcode.subSystems.Lift;
+import org.firstinspires.ftc.teamcode.subSystems.LiftArm;
 
 @Config
-//@Autonomous(name = "Blue_Specimen_4_Park", group = "Autonomous")
+@Autonomous(name = "Blue_Specimen_4_Park", group = "Autonomous")
 
 public class BlueSpecimen4Park extends LinearOpMode {
     @Override
@@ -69,16 +75,67 @@ public class BlueSpecimen4Park extends LinearOpMode {
         if (isStopRequested()) return;
 
         Actions.runBlocking(
-                new SequentialAction(
-                        scorePreLoad,
-                        moveSpecimens,
-                        collectSecond,
-                        scoreSecond,
-                        collectThird,
-                        scoreThird,
-                        collectFourth,
-                        scoreFourth,
-                        park
+                new ParallelAction(
+                        Lift.liftPID(),
+                        LiftArm.liftArmPID(),
+                        Robot.displayTelemetry(),
+                        new SequentialAction(
+                                new ParallelAction(
+                                        scorePreLoad,
+                                        LiftArm.liftArmVertical()
+                                ),
+                                Robot.scoreSpecimen(),
+
+                                new ParallelAction(
+                                        Robot.reset(),
+                                        moveSpecimens
+                                ),
+
+                                new ParallelAction(
+                                        collectSecond,
+                                        Differential.differentialCollectSpecimen()
+                                ),
+                                Claw.closeClaw(),
+                                Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
+                                new ParallelAction(
+                                        scoreSecond,
+                                        Differential.differentialReset(),
+                                        LiftArm.liftArmVertical()
+                                ),
+                                Robot.scoreSpecimen(),
+
+                                new ParallelAction(
+                                        Robot.reset(),
+                                        collectThird
+                                ),
+                                Claw.closeClaw(),
+                                Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
+                                new ParallelAction(
+                                        scoreThird,
+                                        Differential.differentialReset(),
+                                        LiftArm.liftArmVertical()
+
+                                ),
+                                Robot.scoreSpecimen(),
+
+                                new ParallelAction(
+                                        Robot.reset(),
+                                        collectFourth
+                                ),
+                                Claw.closeClaw(),
+                                Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
+                                new ParallelAction(
+                                        scoreFourth,
+                                        Differential.differentialReset(),
+                                        LiftArm.liftArmVertical()
+                                ),
+                                Robot.scoreSpecimen(),
+
+                                new ParallelAction(
+                                        Robot.reset(),
+                                        park
+                                )
+                        )
                 )
         );
     }

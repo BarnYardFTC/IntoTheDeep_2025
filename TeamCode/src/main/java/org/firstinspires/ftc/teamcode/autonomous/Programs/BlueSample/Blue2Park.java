@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.autonomous.Coordinates.BlueSpecimenCoordin
 import org.firstinspires.ftc.teamcode.roadRunner.MecanumDrive;
 
 @Config
-@Autonomous(name = "Blue_Sample_2_Park", group = "Autonomous")
+//@Autonomous(name = "Blue_Sample_2_Park", group = "Autonomous")
 
 public class Blue2Park extends LinearOpMode {
     @Override

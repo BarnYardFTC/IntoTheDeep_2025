@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.autonomous.Programs.BlueSample;
+package org.firstinspires.ftc.teamcode.autonomous.Programs.RedSample;
 
 // Import
 
@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.autonomous.Coordinates.RedSampleCoordinate
 import org.firstinspires.ftc.teamcode.roadRunner.MecanumDrive;
 
 @Config
-@Autonomous(name = "Red_Sample_2_Park", group = "Autonomous")
+//@Autonomous(name = "Red_Sample_2_Park", group = "Autonomous")
 
 public class Red2Park extends LinearOpMode {
     @Override

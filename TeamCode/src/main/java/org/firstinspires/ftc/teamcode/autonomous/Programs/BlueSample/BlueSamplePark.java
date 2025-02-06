@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.autonomous.Trajactories.BlueSampleTrajecto
 import org.firstinspires.ftc.teamcode.roadRunner.MecanumDrive;
 
 @Config
-@Autonomous(name = "Blue_Sample_Park", group = "Autonomous")
+//@Autonomous(name = "Blue_Sample_Park", group = "Autonomous")
 
 public class BlueSamplePark extends LinearOpMode {
     @Override

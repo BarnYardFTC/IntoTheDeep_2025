@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.autonomous.Coordinates.RedSpecimenCoordina
 import org.firstinspires.ftc.teamcode.roadRunner.MecanumDrive;
 
 @Config
-@Autonomous(name = "Red_Specimen_2_Park", group = "Autonomous")
+//@Autonomous(name = "Red_Specimen_2_Park", group = "Autonomous")
 
 public class RedSpecimen2Park extends LinearOpMode {
     @Override

@@ -58,6 +58,7 @@ import org.firstinspires.ftc.teamcode.subSystems.TimerHelper;
  * makes the operation of driving the robot faster.
  * A: Reset the Lift and Arm (=close lift & bring Arm down if necessary)
  * Y: Bring the Lift and Arm to a high-basket-discharge position
+ * B: Score a specimen on the high chamber
  */
 
 
@@ -69,9 +70,8 @@ public class Robot {
     */
     // When the trigger value exceeds this value, the trigger is considered active
     private static final double TRIGGERS_THRESHOLD = 0.1;
-    // Waiting times
-    private static final int INTAKE_DURATION = 200;
-
+    // The time it takes between when a sample is closed and the robot moved away from the basket
+    public static final int POST_SCORE_DELAY = 500;
 
     /*
     The only variable the class requires as an input.
@@ -96,10 +96,9 @@ public class Robot {
     // Booleans
     private static boolean is_reset_automating;
     private static boolean is_high_basket_automating;
+    private static boolean is_specimen_automating;
     //Time Tracking
     private static TimerHelper timer;
-
-
 
     /*
     ========INITIALIZATION METHODS========
@@ -123,6 +122,7 @@ public class Robot {
         // reset flags
         is_reset_automating = false;
         is_high_basket_automating = false;
+        is_specimen_automating = false;
 
         // Create a timer
         timer = new TimerHelper();
@@ -179,6 +179,7 @@ public class Robot {
     /*
     ===========Flag functions===========
     */
+    // ToDo: Add is_specimen_automating when method is made
     public static boolean isLiftAutomating(){
         return is_reset_automating || is_high_basket_automating;
     }
@@ -205,12 +206,25 @@ public class Robot {
                 LiftArm.liftArmHorizontal()
         );
     }
+    public static Action scoreSpecimen() {
+        return new SequentialAction(
+                // ToDo: move the lift to scoring position
+                // ToDo: move LiftArm/Differential so that the specimen gets scored
+                Claw.openClaw()
+        );
+    }
+    public static Action scoreSpecimenAndReset() {
+        return new SequentialAction(
+                scoreSpecimen(),
+                reset()
+        );
+    }
 
 
     /*
     ========ACTIONS===========
      */
-    public static class ActivateGamepads implements Action {
+    private static class ActivateGamepads implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             // Read the inputs from both gamepads and triggers
@@ -222,7 +236,7 @@ public class Robot {
             return true; // Keep this action running during TeleOp
         }
     }
-    public static class ActivateClaw implements Action {
+    private static class ActivateClaw implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             // Check if the Y button was just pressed
@@ -238,7 +252,7 @@ public class Robot {
             return true; // Keep this action running during TeleOp
         }
     }
-    public static class ActivateDifferential implements Action {
+    private static class ActivateDifferential implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             // Only allow manual control if no automation is running
@@ -267,7 +281,7 @@ public class Robot {
             return true; // Keep this action running during TeleOp
         }
     }
-    public static class ActivateLift implements Action {
+    private static class ActivateLift implements Action {
         private Action currentAutomation = null;
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
@@ -280,8 +294,12 @@ public class Robot {
                     currentAutomation = highBasketDeposit();
                     is_high_basket_automating = true; // Mark high basket deposit as active
                 }
+                else if (gamepadEx2.wasJustPressed(GamepadKeys.Button.B)){
+                    currentAutomation = scoreSpecimenAndReset();
+                    is_specimen_automating = true; // Mark specimen deposit as active
+                }
 
-                if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN) && LiftArm.isVertical()) {
+                else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN) && LiftArm.isVertical()) {
                     Lift.move(Lift.Pos.LOW_BASKET);
                 } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_UP) && LiftArm.isVertical()) {
                     Lift.move(Lift.Pos.HIGH_BASKET);
@@ -301,6 +319,9 @@ public class Robot {
                     } else if (is_high_basket_automating) {
                         is_high_basket_automating = false;
                     }
+                    else if (is_specimen_automating) {
+                        is_specimen_automating = false;
+                    }
                     currentAutomation = null; // Reset currentAutomation
                 }
             }
@@ -309,7 +330,7 @@ public class Robot {
             return true; // Keep this action running during TeleOp
         }
     }
-    public static class ActivateLiftArm implements Action {
+    private static class ActivateLiftArm implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             // Check if the LiftArm is currently automating
@@ -333,7 +354,7 @@ public class Robot {
             return true;
         }
     }
-    public static class ActivateDrivetrain implements Action {
+    private static class ActivateDrivetrain implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             // Move the drivetrain based on the gamepad input
@@ -362,14 +383,14 @@ public class Robot {
             return true;
         }
     }
-    public static class DisplayTelemetry implements Action {
+    private static class DisplayTelemetry implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             opMode.telemetry.update();
             return true;
         }
     }
-    public static class HasElapsed implements Action {
+    private static class HasElapsed implements Action {
         private final int durationMilliseconds;
 
         // Constructor to set the duration
@@ -409,49 +430,5 @@ public class Robot {
         return new HasElapsed(durationMilliseconds);
     }
 
-
-    /*
-    =========Programs========
-     */
-    public static void runTeleop(){
-        Actions.runBlocking(
-                new ParallelAction(
-                        displayTelemetry(),
-                        activateDrivetrain(),
-                        activateLiftArm(),
-                        activateLift(),
-                        activateDifferential(),
-                        activateClaw(),
-                        activateGamepads()
-                )
-        );
-    }
-    public static void runBlueSample4Park(){
-        Actions.runBlocking(
-                new ParallelAction()
-        );
-    }
-    public static void runBlueSpecimen4Park(){
-        Actions.runBlocking(
-                new ParallelAction()
-        );
-    }
-    public static void runRedSample4Park(){
-        Actions.runBlocking(
-                new ParallelAction()
-        );
-    }
-    public static void runRedSpecimen4Park(){
-        Actions.runBlocking(
-                new ParallelAction()
-        );
-    }
-
-    /*
-    ========Getter Methods========
-     */
-    public static int getIntakeDuration(){
-        return INTAKE_DURATION;
-    }
 
 }

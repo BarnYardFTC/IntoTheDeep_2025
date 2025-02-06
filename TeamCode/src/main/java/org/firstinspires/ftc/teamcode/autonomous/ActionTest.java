@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.subSystems.Lift;
 import org.firstinspires.ftc.teamcode.subSystems.LiftArm;
 
 @Config
-@Autonomous(name = "Testing_Autonomous", group = "Autonomous")
+//@Autonomous(name = "Testing_Autonomous", group = "Autonomous")
 
 public class ActionTest extends LinearOpMode {
     @Override
@@ -84,91 +84,7 @@ public class ActionTest extends LinearOpMode {
         if (isStopRequested()) return;
 
         Actions.runBlocking(
-
-                new ParallelAction(
-                        Lift.liftPID(),
-                        LiftArm.liftArmPID(),
-                        Robot.displayTelemetry(),
-                        new SequentialAction(
-                                new ParallelAction(
-                                    scorePreLoad,
-                                    LiftArm.liftArmVertical()
-                                ),
-                                Lift.moveLift(Lift.Pos.POST_SCORE_HIGH_CHAMBER),
-                                new ParallelAction(
-                                    Claw.openClaw(),
-                                    moveSpecimens,
-                                    new SequentialAction(
-                                        Lift.moveLift(Lift.Pos.RESET),
-                                        LiftArm.liftArmHorizontal()
-                                    )
-                                ),
-                                new ParallelAction(
-                                    collectSecond,
-                                    Differential.differentialCollectSpecimen()
-                                ),
-                                Claw.closeClaw(),
-                                new ParallelAction(
-                                    scoreSecond,
-                                    Differential.differentialReset(),
-                                    LiftArm.liftArmVertical()
-                                ),
-                                Lift.moveLift(Lift.Pos.POST_SCORE_HIGH_CHAMBER),
-                                new ParallelAction(
-                                    Claw.openClaw(),
-                                    collectThird,
-                                    new SequentialAction(
-                                        Lift.moveLift(Lift.Pos.RESET),
-                                        LiftArm.liftArmHorizontal(),
-                                        Differential.differentialCollectSpecimen()
-                                    )
-                                ),
-                                Claw.closeClaw(),
-                                new ParallelAction(
-                                        scoreThird,
-                                        Differential.differentialReset(),
-                                        LiftArm.liftArmVertical()
-
-                                ),
-                                Lift.moveLift(Lift.Pos.POST_SCORE_HIGH_CHAMBER),
-                                new ParallelAction(
-                                        Claw.openClaw(),
-                                        collectFourth,
-                                        new SequentialAction(
-                                                Lift.moveLift(Lift.Pos.RESET),
-                                                LiftArm.liftArmHorizontal(),
-                                                Differential.differentialCollectSpecimen()
-                                        )
-                                ),
-                                Claw.closeClaw(),
-                                new ParallelAction(
-                                        scoreFourth,
-                                        Differential.differentialReset(),
-                                        LiftArm.liftArmVertical()
-                                ),
-                                Lift.moveLift(Lift.Pos.POST_SCORE_HIGH_CHAMBER),
-                                new ParallelAction(
-                                        Claw.openClaw(),
-                                        park,
-                                        new SequentialAction(
-                                                Lift.moveLift(Lift.Pos.RESET),
-                                                LiftArm.liftArmHorizontal()
-                                        )
-                                )
-                        )
-                )
+                new SequentialAction()
         );
-//        waitForStart();
-//
-//        if (isStopRequested()) return;
-//
-//        Actions.runBlocking(
-//                new ParallelAction(
-//                        autoFunctions.liftArmPID(),
-//                        new SequentialAction(
-//                                autoFunctions.liftArmVertical()
-//                        )
-//                )
-//        );
     }
 }

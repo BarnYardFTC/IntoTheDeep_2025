@@ -53,13 +53,14 @@ public class Drivetrain {
         }
 
         // Setting imu attributes.
-        // TODO: Make sure to update the orientation attributes
-        imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.RIGHT, RevHubOrientationOnRobot.UsbFacingDirection.FORWARD)));
+
+        imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP, RevHubOrientationOnRobot.UsbFacingDirection.RIGHT)));
 
         imu.resetYaw(); // Reset imu heading.
 
         resetVariables(); // Setting initial values to the variables.
     }
+
 
     /**
      * Get the robot heading given from the imu.
