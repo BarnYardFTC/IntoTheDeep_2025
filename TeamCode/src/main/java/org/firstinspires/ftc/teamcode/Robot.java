@@ -32,9 +32,6 @@ import org.firstinspires.ftc.teamcode.subSystems.TimerHelper;
  * Using that input only, the class is able to fully run the robot, both in the Teleop
  * and Autonomous periods.
 
- * =========Teleop========
- * In the Teleop period, the software runs based on inputs from two Gamepads which are
- * run by our Team's drivers. Following is a button guide:
 
  *  -Gamepad1-
  *  This gamepad is used by the main driver and it gives access to every system of the robot.
