@@ -7,6 +7,8 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.subSystems.Claw;
+
 // TeleOp name.
 @TeleOp(name = "INTO_THE_DEEP")
 
@@ -19,13 +21,13 @@ public class Teleop extends LinearOpMode {
         if (isStopRequested()) return;
         Actions.runBlocking(
                 new ParallelAction(
-                        Robot.displayTelemetry(),
-                        Robot.activateDrivetrain(),
-                        Robot.activateLiftArm(),
-                        Robot.activateLift(),
-                        Robot.activateDifferential(),
-                        Robot.activateClaw(),
-                        Robot.activateGamepads()
+                        Robot.displayTelemetry()
+//                        Robot.activateDrivetrain(),
+//                        Robot.activateLiftArm(),
+//                        Robot.activateLift(),
+//                        Robot.activateDifferential(),
+//                        Robot.activateClaw(),
+//                        Robot.activateGamepads()
                 )
         );
     }

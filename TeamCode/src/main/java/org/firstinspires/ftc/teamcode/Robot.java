@@ -383,6 +383,7 @@ public class Robot {
     private static class DisplayTelemetry implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
+            opMode.telemetry.addLine("Telemetry working :D");
             opMode.telemetry.update();
             return true;
         }
