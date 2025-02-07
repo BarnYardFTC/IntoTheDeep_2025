@@ -21,13 +21,13 @@ public class Teleop extends LinearOpMode {
         if (isStopRequested()) return;
         Actions.runBlocking(
                 new ParallelAction(
-                        Robot.displayTelemetry()
-//                        Robot.activateDrivetrain(),
-//                        Robot.activateLiftArm(),
-//                        Robot.activateLift(),
-//                        Robot.activateDifferential(),
-//                        Robot.activateClaw(),
-//                        Robot.activateGamepads()
+                        Robot.displayTelemetry(),
+                        Robot.activateGamepads(),
+                        Robot.activateDrivetrain(),
+                        Robot.activateLiftArm(),
+                        Robot.activateLift(),
+                        Robot.activateDifferential(),
+                        Robot.activateClaw()
                 )
         );
     }
