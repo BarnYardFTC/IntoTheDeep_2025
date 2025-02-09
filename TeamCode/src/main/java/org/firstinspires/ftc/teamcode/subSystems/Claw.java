@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.modules.ServoProps;
 public class Claw {
     // Servo positions.
     public static double OPENED_POSITION = 0; // Opened claw position.
-    public static double CLOSED_POSITION = 0.7; // Closed claw position.
+    public static double CLOSED_POSITION = 0.6; // Closed claw position.
 
     private static Servo claw; // Servo (starting position: claw: 0).
 

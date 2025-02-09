@@ -163,7 +163,7 @@ public class Robot {
      */
     public static void teleopSetup(){
         Differential.reset();
-        Claw.close();
+        Claw.open();
     }
     /**
      * Move all the systems of the robot to where they should be at the beginning of the autonomous
@@ -332,19 +332,19 @@ public class Robot {
         public boolean run(@NonNull TelemetryPacket packet) {
             // Check if the LiftArm is currently automating
             // If it is, we don't want to interfere with its movement
-//            if (!isLiftArmAutomating()) {
+            if (!isLiftArmAutomating()) {
 
-            // If the right bumper was just pressed, move the LiftArm to the vertical position
-            if (gamepadEx1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-                LiftArm.move(LiftArm.Angle.VERTICAL);
+                // If the right bumper was just pressed, move the LiftArm to the vertical position
+                if (gamepadEx1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+                    LiftArm.move(LiftArm.Angle.VERTICAL);
 
-                // If the left bumper was just pressed, move the LiftArm to the horizontal position
-            } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
-                LiftArm.move(LiftArm.Angle.HORIZONTAL);
+                    // If the left bumper was just pressed, move the LiftArm to the horizontal position
+                } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+                    LiftArm.move(LiftArm.Angle.HORIZONTAL);
+                }
             }
-//            }
 
-            LiftArm.liftArmPID(); // Activate the Lift Arm
+            LiftArm.PID(); // Activate the Lift Arm
 
             // Return true so this action keeps running throughout the TeleOp period,
             // allowing continuous input response
@@ -383,7 +383,10 @@ public class Robot {
     private static class DisplayTelemetry implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            opMode.telemetry.addLine("Telemetry working :D");
+            opMode.telemetry.addData("lift moveable +: ", Lift.isMoveable(1));
+            opMode.telemetry.addData("lift moveable -: ", Lift.isMoveable(-1));
+            opMode.telemetry.addData("lift arm vertical: ", LiftArm.isVertical());
+            opMode.telemetry.addData("lift arm horizontal: ", LiftArm.isHorizontal());
             opMode.telemetry.update();
             return true;
         }
