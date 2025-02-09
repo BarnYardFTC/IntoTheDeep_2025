@@ -30,7 +30,7 @@ public class LiftArm {
     public static double p = 0.02;
     public static double i = 0;
     public static double d = 0;
-    public static double f = 0.55;
+    public static double f = 0.57;
     public static int targetAngle; // Target angle of the arm.
     private static PIDController controller; // PID controller.
     private static int targetPos; // Target position of the right motor.
@@ -90,33 +90,43 @@ public class LiftArm {
 
     public static void PID() {
         controller.setPID(p, i, d);
-
-        // Sets the current and target position of the motor.
-        int currentPos = motors[RIGHT].getCurrentPosition();
+        int armPos = motors[RIGHT].getCurrentPosition();
         targetPos = RIGHT_MOTOR.getAngleToEncoder(targetAngle);
+        double pid = controller.calculate(armPos, targetPos);
+        double ff = Math.cos(Math.toRadians(targetPos / RIGHT_MOTOR.getENCODERS_PER_DEGREE())) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
 
-        // Calculate PIDF values.
-        double pid = controller.calculate(currentPos, targetPos);
-        double ff;
-        double power;
-        if (targetAngle == VERTICAL_POS) {
-            if (Lift.getTargetPosCm() == Lift.HIGH_BASKET_POS) {
-                ff = Math.cos(Math.toRadians(15)) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
-                power = pid + ff;
-            }
-            else {
-                ff = Math.cos(Math.toRadians(80)) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
-                power = pid + ff;
-            }
-        }
-        else {
-            ff = Math.cos(Math.toRadians(targetAngle)) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
-            power = pid + ff;
-        }
+        double power = pid + ff;
 
-        // Giving power to motors.
         motors[RIGHT].setPower(power);
         motors[LEFT].setPower(power);
+
+
+//        // Sets the current and target position of the motor.
+//        int currentPos = motors[RIGHT].getCurrentPosition();
+//        targetPos = RIGHT_MOTOR.getAngleToEncoder(targetAngle);
+//
+//        // Calculate PIDF values.
+//        double pid = controller.calculate(currentPos, targetPos);
+//        double ff;
+//        double power;
+//        if (targetAngle == VERTICAL_POS) {
+//            if (Lift.getTargetPosCm() == Lift.HIGH_BASKET_POS) {
+//                ff = Math.cos(Math.toRadians(15)) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
+//                power = pid + ff;
+//            }
+//            else {
+//                ff = Math.cos(Math.toRadians(80)) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
+//                power = pid + ff;
+//            }
+//        }
+//        else {
+//            ff = Math.cos(Math.toRadians(targetAngle)) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
+//            power = pid + ff;
+//        }
+//
+//        // Giving power to motors.
+//        motors[RIGHT].setPower(power);
+//        motors[LEFT].setPower(power);
     }
 
     public static void move(Angle angle) {

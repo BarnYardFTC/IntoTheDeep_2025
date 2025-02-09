@@ -387,6 +387,8 @@ public class Robot {
             opMode.telemetry.addData("lift moveable -: ", Lift.isMoveable(-1));
             opMode.telemetry.addData("lift arm vertical: ", LiftArm.isVertical());
             opMode.telemetry.addData("lift arm horizontal: ", LiftArm.isHorizontal());
+            opMode.telemetry.addData("Lift target pos", Lift.targetPosCm);
+            opMode.telemetry.addData("is true", Lift.getTargetPosCm() == Lift.HIGH_BASKET_POS);
             opMode.telemetry.update();
             return true;
         }
