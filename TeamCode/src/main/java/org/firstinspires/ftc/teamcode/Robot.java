@@ -192,14 +192,14 @@ public class Robot {
     */
     public static Action highBasketDeposit() {
         return new SequentialAction(
-                LiftArm.liftArmVertical(),
-                Lift.moveLift(Lift.Pos.HIGH_BASKET)
+                LiftArm.liftArmVertical()
+//                Lift.moveLift(Lift.Pos.HIGH_BASKET)
         );
     }
     public static Action reset() {
         return new SequentialAction(
                 Differential.differentialReset(),
-                Lift.moveLift(Lift.Pos.RESET),
+//                Lift.moveLift(Lift.Pos.RESET),
                 LiftArm.liftArmHorizontal()
         );
     }
@@ -388,7 +388,8 @@ public class Robot {
             opMode.telemetry.addData("lift arm vertical: ", LiftArm.isVertical());
             opMode.telemetry.addData("lift arm horizontal: ", LiftArm.isHorizontal());
             opMode.telemetry.addData("Lift target pos", Lift.targetPosCm);
-            opMode.telemetry.addData("is true", Lift.getTargetPosCm() == Lift.HIGH_BASKET_POS);
+            opMode.telemetry.addData("is high basket", Lift.getTargetPosCm() == Lift.HIGH_BASKET_POS);
+            opMode.telemetry.addData("current liftArm position", LiftArm.getCurrentPosition());
             opMode.telemetry.update();
             return true;
         }

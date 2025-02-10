@@ -7,6 +7,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.subSystems.Lift;
 import org.firstinspires.ftc.teamcode.subSystems.LiftArm;
 
 // TeleOp name.
@@ -26,8 +27,8 @@ public class ArmPIDTuning extends LinearOpMode {
         while (opModeIsActive()) {
             LiftArm.PID();
 
-            telemetry.addData("pos", LiftArm.getTargetPos());
-            telemetry.addData("current", LiftArm.getRightMotor().getCurrentPosition());
+            telemetry.addData("target pos", LiftArm.target);
+            telemetry.addData("current pos", LiftArm.getRightMotor().getCurrentPosition());
             telemetry.addData("powerR", LiftArm.getRightMotor().getPower());
             telemetry.addData("powerL", LiftArm.getLeftMotor().getPower());
             telemetry.update();

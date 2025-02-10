@@ -24,16 +24,16 @@ public class LiftArm {
     private static final double MIN_LIFT_LENGTH = 30;
 
     private static final int ACCEPTED_VERTICAL_ANGLE = 130;
-    private static final int ACCEPTED_HORIZONTAL_ANGLE = 20;
+//    private static final int ACCEPTED_HORIZONTAL_ANGLE = 20;
 
     //ToDo: set correct values.
     public static double p = 0.02;
     public static double i = 0;
     public static double d = 0;
     public static double f = 0.57;
-    public static int targetAngle; // Target angle of the arm.
+    //public static int targetAngle; // Target angle of the arm.
     private static PIDController controller; // PID controller.
-    private static int targetPos; // Target position of the right motor.
+//    private static int targetPos; // Target position of the right motor.
 
     public static void initialize(OpMode opMode) {
         motors[RIGHT] = opMode.hardwareMap.get(DcMotorEx.class, "rightArm");
@@ -52,13 +52,13 @@ public class LiftArm {
         move(Angle.HORIZONTAL);
     }
 
-    public static int getTargetPos() {
-        return targetPos;
-    }
+//    public static int getTargetPos() {
+//        return targetPos;
+//    }
 
-    public static void setTargetPos(int targetPos) {
-        LiftArm.targetPos = targetPos;
-    }
+//    public static void setTargetPos(int targetPos) {
+//        LiftArm.targetPos = targetPos;
+//    }
 
     /**
      * Informs if the arm is horizontal.
@@ -66,15 +66,16 @@ public class LiftArm {
      * @return - If the current arm's position is horizontal.
      */
     public static boolean isHorizontal() {
-        return getCurrentAngle() < ACCEPTED_HORIZONTAL_ANGLE;
+//        return getCurrentAngle() < ACCEPTED_HORIZONTAL_ANGLE;
+        return getCurrentPosition() < ACCEPTED_HORIZONTAL_ENCODER;
     }
     public static boolean isVertical() {
-        return getCurrentAngle() > ACCEPTED_VERTICAL_ANGLE;
+        return getCurrentPosition() > ACCEPTED_VERTICAL_ENCODER;
     }
-
-    public static int getTargetAngle() {
-        return targetAngle;
-    }
+//
+//    public static int getTargetAngle() {
+//        return targetAngle;
+//    }
 
     public static DcMotorEx getRightMotor() {
         return motors[RIGHT];
@@ -84,19 +85,36 @@ public class LiftArm {
         return motors[LEFT];
     }
 
+    public static int getCurrentPosition(){
+        return getRightMotor().getCurrentPosition();
+    }
+
     public static double getCurrentAngle() {
         return motors[RIGHT].getCurrentPosition() / RIGHT_MOTOR.getENCODERS_PER_DEGREE();
     }
 
+    public static int target = 0;
+
+    public static int RISE_VERTICAL_ENCODER = 900;
+    public static int MAINTAIN_VERTICAL_ENCODER = 700;
+    public static int HORIZONTAL_ENCODER = 0;
+    public static int ACCEPTED_HORIZONTAL_ENCODER = 500;
+    public static int ACCEPTED_VERTICAL_ENCODER = 600;
+
     public static void PID() {
         controller.setPID(p, i, d);
-        int armPos = motors[RIGHT].getCurrentPosition();
-        targetPos = RIGHT_MOTOR.getAngleToEncoder(targetAngle);
-        double pid = controller.calculate(armPos, targetPos);
-        double ff = Math.cos(Math.toRadians(targetPos / RIGHT_MOTOR.getENCODERS_PER_DEGREE())) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
+        int armPos = getCurrentPosition();
+        double pid = controller.calculate(armPos, target);
+        double ff = Math.cos(Math.toRadians(target / RIGHT_MOTOR.getENCODERS_PER_DEGREE())) * f;
 
         double power = pid + ff;
 
+        if (target == HORIZONTAL_ENCODER && isHorizontal()) {
+            power = 0;
+        }
+        if (target == RISE_VERTICAL_ENCODER && isVertical()){
+            target = MAINTAIN_VERTICAL_ENCODER;
+        }
         motors[RIGHT].setPower(power);
         motors[LEFT].setPower(power);
 
@@ -132,10 +150,12 @@ public class LiftArm {
     public static void move(Angle angle) {
         switch (angle) {
             case VERTICAL:
-                targetAngle = VERTICAL_POS;
+//                targetAngle = VERTICAL_POS;
+                target = RISE_VERTICAL_ENCODER;
                 break;
             case HORIZONTAL:
-                targetAngle = HORIZONTAL_POS;
+//                targetAngle = HORIZONTAL_POS;
+                target = HORIZONTAL_ENCODER;
                 break;
         }
     }
@@ -144,9 +164,9 @@ public class LiftArm {
         VERTICAL, HORIZONTAL
     }
 
-    public static boolean isArmInPos() {
-        return getCurrentAngle() <= targetAngle + 10 && getCurrentAngle() >= targetAngle - 10;
-    }
+//    public static boolean isArmInPos() {
+//        return getCurrentAngle() <= targetAngle + 10 && getCurrentAngle() >= targetAngle - 10;
+//    }
 
 
     /**
