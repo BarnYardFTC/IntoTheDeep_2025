@@ -19,8 +19,8 @@ public class LiftArm {
     private static final int LEFT = 1; // Left's motor index.
     private static final MotorProps LEFT_MOTOR = new MotorProps(1425.1, 1); // Left's motor props.
 
-    private static final int VERTICAL_POS = 135; // Angle for moving the lift arm to a vertical position.
-    private static final int HORIZONTAL_POS = 5;
+    private static final int VERTICAL_ANGLE = 135; // Angle for moving the lift arm to a vertical position.
+    private static final int HORIZONTAL_ANGLE = 5;
     private static final double MIN_LIFT_LENGTH = 30;
 
     private static final int ACCEPTED_VERTICAL_ANGLE = 130;
@@ -84,8 +84,12 @@ public class LiftArm {
         return motors[LEFT];
     }
 
+    public static int getCurrentPosition(){
+        return motors[RIGHT].getCurrentPosition();
+    }
+
     public static double getCurrentAngle() {
-        return motors[RIGHT].getCurrentPosition() / RIGHT_MOTOR.getENCODERS_PER_DEGREE();
+        return getCurrentPosition() / RIGHT_MOTOR.getENCODERS_PER_DEGREE();
     }
 
     public static void PID() {
@@ -99,7 +103,7 @@ public class LiftArm {
         double pid = controller.calculate(currentPos, targetPos);
         double ff;
         double power;
-        if (targetAngle == VERTICAL_POS) {
+        if (targetAngle == VERTICAL_ANGLE) {
             if (Lift.getTargetPosCm() == Lift.HIGH_BASKET_POS) {
                 ff = Math.cos(Math.toRadians(15)) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
                 power = pid + ff;
@@ -122,10 +126,10 @@ public class LiftArm {
     public static void move(Angle angle) {
         switch (angle) {
             case VERTICAL:
-                targetAngle = VERTICAL_POS;
+                targetAngle = VERTICAL_ANGLE;
                 break;
             case HORIZONTAL:
-                targetAngle = HORIZONTAL_POS;
+                targetAngle = HORIZONTAL_ANGLE;
                 break;
         }
     }

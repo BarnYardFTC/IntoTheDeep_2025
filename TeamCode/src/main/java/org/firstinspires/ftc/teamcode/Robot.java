@@ -205,8 +205,7 @@ public class Robot {
     }
     public static Action scoreSpecimen() {
         return new SequentialAction(
-                // ToDo: move the lift to scoring position
-                // ToDo: move LiftArm/Differential so that the specimen gets scored
+                Lift.moveLift(Lift.Pos.SPECIMEN_SCORE),
                 Claw.openClaw()
         );
     }

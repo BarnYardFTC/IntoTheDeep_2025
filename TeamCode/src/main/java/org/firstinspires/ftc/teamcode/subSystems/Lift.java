@@ -109,7 +109,7 @@ public class Lift {
             case HIGH_CHAMBER:
                 targetPosCm = HIGH_CHAMBER_POS;
                 break;
-            case POST_SCORE_HIGH_CHAMBER:
+            case SPECIMEN_SCORE:
                 targetPosCm = POST_SCORE_HIGH_CHAMBER_POS;
                 break;
             case LOW_CHAMBER:
@@ -136,24 +136,24 @@ public class Lift {
     public static boolean isMoveable(double direction) {
         return (LiftArm.isHorizontal() &&
                 targetPosCm + LIFT_SPEED * direction <= HORIZONTAL_LIMIT
-//                &&  targetPosCm + LIFT_SPEED * direction >= 0
+                &&  targetPosCm + LIFT_SPEED * direction >= 0
         ) ||
                 (LiftArm.isVertical() &&
                         targetPosCm + LIFT_SPEED * direction <= VERTICAL_LIMIT
-//                        && targetPosCm + LIFT_SPEED * direction >= 0
+                        && targetPosCm + LIFT_SPEED * direction >= 0
                 );
     }
 
     public enum Pos {
-        HIGH_CHAMBER, POST_SCORE_HIGH_CHAMBER, LOW_CHAMBER, HIGH_BASKET, LOW_BASKET, RESET, SAMPLE_COLLECTION
+        HIGH_CHAMBER, SPECIMEN_SCORE, LOW_CHAMBER, HIGH_BASKET, LOW_BASKET, RESET, SAMPLE_COLLECTION
     }
 
-//    public static boolean arrivedTargetPos() {
-//        if (targetPos == HIGH_BASKET_POS)
-//            return arrivedHighBasket();
-//        else
-//            return getCurrentLength() <= targetPosCm + LIFT_SPEED && getCurrentLength() >= targetPosCm - LIFT_SPEED;
-//    }
+    public static boolean arrivedTargetPos() {
+        if (targetPos == HIGH_BASKET_POS)
+            return arrivedHighBasket();
+        else
+            return getCurrentLength() <= targetPosCm + LIFT_SPEED && getCurrentLength() >= targetPosCm - LIFT_SPEED;
+    }
 
     public static boolean arrivedHighBasket() {
         return getCurrentLength() > ARRIVED_HIGH_BASKET_POS && LiftArm.isVertical();
@@ -175,67 +175,67 @@ public class Lift {
         return new LiftPID();
     }
 
-//    public static class LiftHighChamber implements Action {
-//        @Override
-//        public boolean run(@NonNull TelemetryPacket packet) {
-//            move(Pos.HIGH_CHAMBER);
-//            return !arrivedTargetPos();
-//        }
-//    }
-//    public static class LiftHighBasket implements Action {
-//        @Override
-//        public boolean run(@NonNull TelemetryPacket packet) {
-//            move(Lift.Pos.HIGH_BASKET);
-//            return !arrivedTargetPos();
-//        }
-//    }
-//    public static class LiftLowBasket implements Action {
-//        @Override
-//        public boolean run(@NonNull TelemetryPacket packet) {
-//            move(Pos.LOW_BASKET);
-//            return !arrivedTargetPos();
-//        }
-//    }
-//    public static class LiftSampleCollection implements Action {
-//        @Override
-//        public boolean run(@NonNull TelemetryPacket packet) {
-//            move(Lift.Pos.LOW_BASKET);
-//            return !arrivedTargetPos();
-//        }
-//    }
-//    public static class LiftPostScoreHighChamber implements Action {
-//        @Override
-//        public boolean run(@NonNull TelemetryPacket packet) {
-//            move(Pos.POST_SCORE_HIGH_CHAMBER);
-//            return !arrivedTargetPos();
-//        }
-//    }
-//    public static class LiftReset implements Action {
-//        @Override
-//        public boolean run(@NonNull TelemetryPacket packet) {
-//            move(Pos.RESET);
-//            return !arrivedTargetPos();
-//        }
-//    }
-//    public static Action moveLift(Lift.Pos pos){
-//        if (pos == Pos.HIGH_CHAMBER){
-//            return new LiftHighChamber();
-//        }
-//        else if (pos == Pos.POST_SCORE_HIGH_CHAMBER){
-//            return new LiftPostScoreHighChamber();
-//        }
-//        else if (pos == Pos.RESET){
-//            return new LiftReset();
-//        }
-//        else if (pos == Pos.LOW_BASKET){
-//            return new LiftLowBasket();
-//        }
-//        else if (pos == Pos.HIGH_BASKET){
-//            return new LiftHighBasket();
-//        }
-//        else if (pos == Pos.SAMPLE_COLLECTION){
-//            return new LiftSampleCollection();
-//        }
-//        return new LiftReset();
-//    }
+    public static class LiftHighChamber implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            move(Pos.HIGH_CHAMBER);
+            return !arrivedTargetPos();
+        }
+    }
+    public static class LiftHighBasket implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            move(Lift.Pos.HIGH_BASKET);
+            return !arrivedTargetPos();
+        }
+    }
+    public static class LiftLowBasket implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            move(Pos.LOW_BASKET);
+            return !arrivedTargetPos();
+        }
+    }
+    public static class LiftSampleCollection implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            move(Lift.Pos.LOW_BASKET);
+            return !arrivedTargetPos();
+        }
+    }
+    public static class LiftPostScoreHighChamber implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            move(Pos.SPECIMEN_SCORE);
+            return !arrivedTargetPos();
+        }
+    }
+    public static class LiftReset implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            move(Pos.RESET);
+            return !arrivedTargetPos();
+        }
+    }
+    public static Action moveLift(Lift.Pos pos){
+        if (pos == Pos.HIGH_CHAMBER){
+            return new LiftHighChamber();
+        }
+        else if (pos == Pos.SPECIMEN_SCORE){
+            return new LiftPostScoreHighChamber();
+        }
+        else if (pos == Pos.RESET){
+            return new LiftReset();
+        }
+        else if (pos == Pos.LOW_BASKET){
+            return new LiftLowBasket();
+        }
+        else if (pos == Pos.HIGH_BASKET){
+            return new LiftHighBasket();
+        }
+        else if (pos == Pos.SAMPLE_COLLECTION){
+            return new LiftSampleCollection();
+        }
+        return new LiftReset();
+    }
 }

@@ -28,8 +28,12 @@ public class ArmPIDTuning extends LinearOpMode {
         // Main Loop
         while (opModeIsActive()) {
 //            test(gamepad1);
-
-            LiftArm.PID();
+            if (gamepad1.a){
+                test(gamepad1);
+            }
+            else {
+                LiftArm.PID();
+            }
 
             telemetry.addData("target pos", LiftArm.getTargetPos());
             telemetry.addData("current pos", LiftArm.getRightMotor().getCurrentPosition());
