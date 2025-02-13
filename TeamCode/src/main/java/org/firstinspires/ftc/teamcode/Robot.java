@@ -163,7 +163,7 @@ public class Robot {
      */
     public static void teleopSetup(){
         Differential.reset();
-        Claw.open();
+        Claw.close();
     }
     /**
      * Move all the systems of the robot to where they should be at the beginning of the autonomous
@@ -384,11 +384,11 @@ public class Robot {
         public boolean run(@NonNull TelemetryPacket packet) {
             opMode.telemetry.addData("lift moveable +: ", Lift.isMoveable(1));
             opMode.telemetry.addData("lift moveable -: ", Lift.isMoveable(-1));
-            opMode.telemetry.addData("lift arm vertical: ", LiftArm.isVertical());
-            opMode.telemetry.addData("lift arm horizontal: ", LiftArm.isHorizontal());
             opMode.telemetry.addData("Lift target pos", Lift.targetPosCm);
             opMode.telemetry.addData("is high basket", Lift.getTargetPosCm() == Lift.HIGH_BASKET_POS);
-            opMode.telemetry.addData("current liftArm position", LiftArm.getCurrentPosition());
+            opMode.telemetry.addData("current angle: ", LiftArm.getCurrentAngle());
+            opMode.telemetry.addData("armPower: ", LiftArm.getRightMotor().getPower());
+            opMode.telemetry.addData("LiftPower: ", Lift.getRightMotor().getPower());
             opMode.telemetry.update();
             return true;
         }

@@ -20,10 +20,10 @@ public class LiftArm {
     private static final MotorProps LEFT_MOTOR = new MotorProps(1425.1, 1); // Left's motor props.
 
     private static final int VERTICAL_ANGLE = 135; // Angle for moving the lift arm to a vertical position.
-    private static final int HORIZONTAL_ANGLE = 5;
+    private static final int HORIZONTAL_ANGLE = 15;
     private static final double MIN_LIFT_LENGTH = 30;
 
-    private static final int ACCEPTED_VERTICAL_ANGLE = 130;
+    private static final int ACCEPTED_VERTICAL_ANGLE = 100;
     private static final int ACCEPTED_HORIZONTAL_ANGLE = 20;
 
     //ToDo: set correct values.
@@ -60,6 +60,12 @@ public class LiftArm {
         LiftArm.targetPos = targetPos;
     }
 
+    public static int getVerticalAngle() {
+        return VERTICAL_ANGLE;
+    }
+    public static int getHorizontalAngle() {
+        return HORIZONTAL_ANGLE;
+    }
     /**
      * Informs if the arm is horizontal.
      *
@@ -119,8 +125,14 @@ public class LiftArm {
         }
 
         // Giving power to motors.
-        motors[RIGHT].setPower(power);
-        motors[LEFT].setPower(power);
+        if (getTargetAngle() == getHorizontalAngle() && isHorizontal()){
+            motors[RIGHT].setPower(0);
+            motors[LEFT].setPower(0);
+        }
+        else {
+            motors[RIGHT].setPower(power);
+            motors[LEFT].setPower(power);
+        }
     }
 
     public static void move(Angle angle) {

@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.teamcode.R;
 import org.firstinspires.ftc.teamcode.modules.LiftProps;
 
 @Config
@@ -31,9 +32,10 @@ public class Lift {
 
     // Lift limits
     private static final double HORIZONTAL_LIMIT = 44;
-    private static final double VERTICAL_LIMIT = 71.5;
-    public static final double HIGH_BASKET_POS = 66;
+    private static final double VERTICAL_LIMIT = 64;
+    public static final double HIGH_BASKET_POS = 64;
     public static final double ARRIVED_HIGH_BASKET_POS = 40;
+
     //ToDo: set correct values.
     public static double p = 0.0085;
     public static double i = 0;
@@ -88,8 +90,14 @@ public class Lift {
         double power = controller.calculate(currentPos, targetPos);
 
         // Giving power to motors.
-        motors[RIGHT].setPower(power);
-        motors[LEFT].setPower(power);
+        if ((LiftArm.getTargetAngle() == LiftArm.getVerticalAngle() && !LiftArm.isVertical())){
+            motors[RIGHT].setPower(0);
+            motors[LEFT].setPower(0);
+        }
+        else{
+            motors[RIGHT].setPower(power);
+            motors[LEFT].setPower(power);
+        }
     }
 
     public static DcMotorEx getRightMotor() {
