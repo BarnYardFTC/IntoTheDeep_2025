@@ -8,7 +8,7 @@ public class TimerHelper {
 
     public boolean hasElapsed(int durationMilliseconds){
         if (!isRunning) {
-            timer.reset();  // Start the timer
+            reset();  // Start the timer
             isRunning = true;
             return false;
         }
@@ -17,5 +17,9 @@ public class TimerHelper {
             return true;
         }
         return false;
+    }
+
+    public void reset(){
+        timer.reset();
     }
 }

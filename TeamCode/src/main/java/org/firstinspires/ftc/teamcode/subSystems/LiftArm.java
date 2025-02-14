@@ -26,6 +26,8 @@ public class LiftArm {
     private static final int ACCEPTED_VERTICAL_ANGLE = 100;
     private static final int ACCEPTED_HORIZONTAL_ANGLE = 20;
 
+    public static int LIFT_ARM_SETTLE_TIME = 400;
+
     //ToDo: set correct values.
     public static double p = 0.02;
     public static double i = 0;
@@ -174,6 +176,7 @@ public class LiftArm {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             move(LiftArm.Angle.HORIZONTAL);
+            Differential.reset();
             return !isHorizontal();
         }
     }

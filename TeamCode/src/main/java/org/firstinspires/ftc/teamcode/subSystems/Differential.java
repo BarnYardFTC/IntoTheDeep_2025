@@ -10,6 +10,7 @@ import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.ServoProps;
 
 @Config
@@ -23,7 +24,9 @@ public class Differential {
     private static final int PITCH_ANGLE_SAMPLE = 0;
     private static final int PITCH_ANGLE_SPECIMEN = 35;
     private static final int PITCH_ANGLE_RESET = 175;
-    public static int PITCH_ANGLE_SCORE_SPECIMEN = 150;
+    public static final int PITCH_ANGLE_SCORE_SPECIMEN = 140;
+
+    public static final int SPECIMEN_SCORE_DURATION = 300;
 
     public static int currentRollAngle;
     public static int currentPitchAngle;
@@ -97,7 +100,7 @@ public class Differential {
      * Autonomous Actions - Actions which can be used in the autonomous programs.
      */
 
-    public static class DifferentialCollectSpecimen implements Action {
+    private static class DifferentialCollectSpecimen implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             Differential.collectSpecimen();
@@ -108,7 +111,7 @@ public class Differential {
         return new DifferentialCollectSpecimen();
     }
 
-    public static class DifferentialCollectSample implements Action {
+    private static class DifferentialCollectSample implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             Differential.collectSample();
@@ -119,7 +122,7 @@ public class Differential {
         return new DifferentialCollectSample();
     }
 
-    public static class DifferentialReset implements Action {
+    private static class DifferentialReset implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             Differential.reset();
@@ -129,4 +132,34 @@ public class Differential {
     public static Action differentialReset(){
         return new DifferentialReset();
     }
+
+
+    private static class DifferentialScoreSpecimen implements Action {
+
+        private final TimerHelper timer = new TimerHelper(); // No need for a constructor
+        private boolean hasStarted = false;
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            if (!hasStarted) {
+                timer.reset(); // Start the timer on first execution
+                hasStarted = true;
+            }
+
+            Differential.scoreSpecimen();
+
+            boolean keepRunning = !timer.hasElapsed(SPECIMEN_SCORE_DURATION);
+
+            if (!keepRunning) {
+                hasStarted = false; // Reset flag for future use
+            }
+
+            return keepRunning;
+        }
+    }
+
+    public static Action differentialScoreSpecimen(){
+        return new DifferentialScoreSpecimen();
+    }
+
 }

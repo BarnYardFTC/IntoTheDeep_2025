@@ -93,8 +93,6 @@ public class Robot {
     private static boolean is_high_basket_automating;
     private static boolean is_specimen_automating;
     private static boolean is_claw_automating;
-    //Time Tracking
-    private static TimerHelper timer;
 
     /*
     ========INITIALIZATION METHODS========
@@ -113,16 +111,16 @@ public class Robot {
         Drivetrain.initialize(opMode);
         Differential.initialize(opMode);
         Claw.initialize(opMode);
-        Robot.opMode = opMode;
+        initializeOpMode(opMode);
 
         // reset flags
         is_reset_automating = false;
         is_high_basket_automating = false;
         is_specimen_automating = false;
         is_claw_automating = false;
-
-        // Create a timer
-        timer = new TimerHelper();
+    }
+    public static void initializeOpMode(OpMode opMode){
+        Robot.opMode = opMode;
     }
     /**
      * Assign the GamepadEx variables using the gamepads provided as an input.
@@ -208,7 +206,7 @@ public class Robot {
     }
     public static Action scoreSpecimen() {
         return new SequentialAction(
-                Lift.moveLift(Lift.Pos.SPECIMEN_SCORE),
+                Differential.differentialScoreSpecimen(),
                 Claw.openClaw()
         );
     }
@@ -371,6 +369,7 @@ public class Robot {
 
                     // If the left bumper was just pressed, move the LiftArm to the horizontal position
                 } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+                    Differential.reset();
                     LiftArm.move(LiftArm.Angle.HORIZONTAL);
                 }
             }
@@ -426,6 +425,7 @@ public class Robot {
         }
     }
     private static class HasElapsed implements Action {
+        private final TimerHelper timer = new TimerHelper();
         private final int durationMilliseconds;
 
         // Constructor to set the duration
