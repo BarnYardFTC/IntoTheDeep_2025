@@ -15,8 +15,11 @@ import org.firstinspires.ftc.teamcode.modules.ServoProps;
 @Config
 public class Claw {
     // Servo positions.
-    public static double OPENED_POSITION = 0; // Opened claw position.
+    public static double OPENED_POSITION = 0.1; // Opened claw position.
     public static double CLOSED_POSITION = 0.6; // Closed claw position.
+
+    public static double LOOSENED_GRIP_POSITION = 0.3;
+    public static int LOOSEN_GRIP_DURATION = 300;
 
     private static Servo claw; // Servo (starting position: claw: 0).
 
@@ -42,6 +45,10 @@ public class Claw {
         claw.setPosition(CLOSED_POSITION);
     }
 
+    public static void loosenGrip(){
+        claw.setPosition(LOOSENED_GRIP_POSITION);
+    }
+
     /**
      * Checks if the claw is in the opened position.
      *
@@ -59,6 +66,11 @@ public class Claw {
     public static boolean isClose() {
         return ServoProps.isServoInPosition(claw, CLOSED_POSITION);
     }
+
+    public static boolean isLoosened() {
+        return ServoProps.isServoInPosition(claw, LOOSENED_GRIP_POSITION);
+    }
+
 
     public static double getPosition() {
         return claw.getPosition();
@@ -89,5 +101,16 @@ public class Claw {
     }
     public static Action closeClaw(){
         return new CloseClaw();
+    }
+
+    public static class LoosenClawGrip implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            loosenGrip();
+            return !isLoosened();
+        }
+    }
+    public static Action loosenClawGrip(){
+        return new LoosenClawGrip();
     }
 }

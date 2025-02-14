@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.subSystems;
 
 import androidx.annotation.NonNull;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -11,6 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.modules.ServoProps;
 
+@Config
 public class Differential {
     public static final Servo[] servos = new Servo[2]; // Servos array.
     private static final ServoProps RIGHT_SERVO = new ServoProps((double) 175 / 355); // Right's servo props.
@@ -19,8 +21,9 @@ public class Differential {
     private static final int LEFT = 1; // Left's servo index.
     // Angles for moving the differential.
     private static final int PITCH_ANGLE_SAMPLE = 0;
-    private static final int PITCH_ANGLE_SPECIMEN = 30;
+    private static final int PITCH_ANGLE_SPECIMEN = 35;
     private static final int PITCH_ANGLE_RESET = 175;
+    public static int PITCH_ANGLE_SCORE_SPECIMEN = 150;
 
     public static int currentRollAngle;
     public static int currentPitchAngle;
@@ -69,6 +72,11 @@ public class Differential {
     public static void collectSpecimen() {
         move(0, PITCH_ANGLE_SPECIMEN);
         currentPitchAngle = PITCH_ANGLE_SPECIMEN;
+    }
+
+    public static void scoreSpecimen(){
+        move(currentRollAngle, PITCH_ANGLE_SCORE_SPECIMEN);
+        currentPitchAngle = PITCH_ANGLE_SCORE_SPECIMEN;
     }
 
     /**

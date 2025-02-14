@@ -4,9 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.ftc.Actions;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.TriggerReader;
@@ -94,6 +92,7 @@ public class Robot {
     private static boolean is_reset_automating;
     private static boolean is_high_basket_automating;
     private static boolean is_specimen_automating;
+    private static boolean is_claw_automating;
     //Time Tracking
     private static TimerHelper timer;
 
@@ -120,6 +119,7 @@ public class Robot {
         is_reset_automating = false;
         is_high_basket_automating = false;
         is_specimen_automating = false;
+        is_claw_automating = false;
 
         // Create a timer
         timer = new TimerHelper();
@@ -186,6 +186,9 @@ public class Robot {
     public static boolean isDifferentialAutomating(){
         return is_reset_automating;
     }
+    public static boolean isClawAutomating(){
+        return is_claw_automating;
+    }
 
     /*
     ==========Automations==========
@@ -215,6 +218,13 @@ public class Robot {
                 reset()
         );
     }
+    public static Action loosenClawGrip(){
+        return new SequentialAction(
+                Claw.loosenClawGrip(),
+                hasElapsed(Claw.LOOSEN_GRIP_DURATION),
+                Claw.closeClaw()
+        );
+    }
 
 
     /*
@@ -233,15 +243,31 @@ public class Robot {
         }
     }
     private static class ActivateClaw implements Action {
+        private Action currentAutomation = null;
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             // Check if the Y button was just pressed
-            if (gamepadEx1.wasJustPressed(GamepadKeys.Button.Y)) {
-                // Toggle the claw open or closed
-                if (Claw.isOpen()) {
-                    Claw.close();
-                } else {
-                    Claw.open();
+            if (!isClawAutomating()){
+                if (gamepadEx1.wasJustPressed(GamepadKeys.Button.RIGHT_STICK_BUTTON)){
+                    currentAutomation = loosenClawGrip();
+                    is_claw_automating = true;
+                }
+                if (gamepadEx1.wasJustPressed(GamepadKeys.Button.Y)) {
+                    // Toggle the claw open or closed
+                    if (Claw.isOpen()) {
+                        Claw.close();
+                    } else {
+                        Claw.open();
+                    }
+                }
+            }
+
+            if (currentAutomation != null){
+                if (!currentAutomation.run(packet)){
+                    if (is_claw_automating){
+                        is_claw_automating = false;
+                    }
+                    currentAutomation = null;
                 }
             }
 
@@ -265,7 +291,15 @@ public class Robot {
                     } else {
                         Differential.reset();
                     }
-                } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT) && Differential.currentRollAngle + 60 <= 180) {
+                } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
+                    if (Differential.isReset()){
+                        Differential.scoreSpecimen();
+                    }
+                    else {
+                        Differential.reset();
+                    }
+                }
+                else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT) && Differential.currentRollAngle + 60 <= 180) {
                     Differential.move(Differential.currentRollAngle + 60, Differential.currentPitchAngle);
                     Differential.currentRollAngle += 60;
                 } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_LEFT) && Differential.currentRollAngle - 60 >= 0) {
@@ -295,9 +329,7 @@ public class Robot {
                     is_specimen_automating = true; // Mark specimen deposit as active
                 }
 
-                else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN) && LiftArm.isVertical()) {
-                    Lift.move(Lift.Pos.LOW_BASKET);
-                } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_UP) && LiftArm.isVertical()) {
+                else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_UP) && LiftArm.isVertical()) {
                     Lift.move(Lift.Pos.HIGH_BASKET);
                 } else if (RIGHT_TRIGGER.isDown() && Lift.isMoveable(1)) {
                     Lift.move(1);

@@ -12,7 +12,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.teamcode.R;
 import org.firstinspires.ftc.teamcode.modules.LiftProps;
 
 @Config
@@ -27,15 +26,14 @@ public class Lift {
     private static final double ROBOT_LIFT_HEIGHT = 50;
     public static final double HIGH_CHAMBER_POS = 66 - ROBOT_LIFT_HEIGHT;
     public static final double LOW_BASKET_POS = 67.4 - ROBOT_LIFT_HEIGHT;
-    public static final double POST_SCORE_HIGH_CHAMBER_POS = 77 - ROBOT_LIFT_HEIGHT;
+    public static final double SPECIMEN_SCORE_POS = 66 - ROBOT_LIFT_HEIGHT;
     public static final double SAMPLE_COLLECTION_POS = 6; // ToDo: Find value for autonomous
 
     // Lift limits
     private static final double HORIZONTAL_LIMIT = 44;
-    private static final double VERTICAL_LIMIT = 64;
-    public static final double HIGH_BASKET_POS = 64;
+    private static final double VERTICAL_LIMIT = 71.5;
+    public static final double HIGH_BASKET_POS = 66;
     public static final double ARRIVED_HIGH_BASKET_POS = 40;
-
     //ToDo: set correct values.
     public static double p = 0.0085;
     public static double i = 0;
@@ -90,14 +88,8 @@ public class Lift {
         double power = controller.calculate(currentPos, targetPos);
 
         // Giving power to motors.
-        if ((LiftArm.getTargetAngle() == LiftArm.getVerticalAngle() && !LiftArm.isVertical())){
-            motors[RIGHT].setPower(0);
-            motors[LEFT].setPower(0);
-        }
-        else{
-            motors[RIGHT].setPower(power);
-            motors[LEFT].setPower(power);
-        }
+        motors[RIGHT].setPower(power);
+        motors[LEFT].setPower(power);
     }
 
     public static DcMotorEx getRightMotor() {
@@ -118,7 +110,7 @@ public class Lift {
                 targetPosCm = HIGH_CHAMBER_POS;
                 break;
             case SPECIMEN_SCORE:
-                targetPosCm = POST_SCORE_HIGH_CHAMBER_POS;
+                targetPosCm = SPECIMEN_SCORE_POS;
                 break;
             case LOW_CHAMBER:
                 targetPosCm = LOW_CHAMBER_POS;
@@ -211,7 +203,7 @@ public class Lift {
             return !arrivedTargetPos();
         }
     }
-    public static class LiftPostScoreHighChamber implements Action {
+    public static class LiftSpecimenScore implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             move(Pos.SPECIMEN_SCORE);
@@ -230,7 +222,7 @@ public class Lift {
             return new LiftHighChamber();
         }
         else if (pos == Pos.SPECIMEN_SCORE){
-            return new LiftPostScoreHighChamber();
+            return new LiftSpecimenScore();
         }
         else if (pos == Pos.RESET){
             return new LiftReset();
