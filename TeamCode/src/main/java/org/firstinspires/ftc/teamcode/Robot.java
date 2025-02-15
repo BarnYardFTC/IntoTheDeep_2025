@@ -204,9 +204,16 @@ public class Robot {
                 LiftArm.liftArmHorizontal()
         );
     }
+    public static Action fullyScoreSpecimen(){
+        return new SequentialAction(
+                loosenClawGrip(),
+                Lift.moveLift(Lift.Pos.SPECIMEN_SCORE),
+                scoreSpecimen()
+        );
+    }
     public static Action scoreSpecimen() {
         return new SequentialAction(
-                Differential.differentialScoreSpecimen(),
+                Differential.differentialScore(),
                 Claw.openClaw()
         );
     }
@@ -278,20 +285,25 @@ public class Robot {
             // Only allow manual control if no automation is running
             if (!isDifferentialAutomating()) {
                 if (gamepadEx1.wasJustPressed(GamepadKeys.Button.A)) {
-                    if (Differential.isReset()) {
+                    if (Differential.isCollectSample()){
+                        Differential.score();
+                    }
+                    else if (Differential.isReset() && LiftArm.isVertical()){
+                        Differential.score();
+                    }
+                    else {
                         Differential.collectSample();
-                    } else {
-                        Differential.reset();
                     }
                 } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.X)) {
-                    if (Differential.isReset()) {
-                        Differential.collectSpecimen();
-                    } else {
+                    if (Differential.isCollectSpecimen()){
                         Differential.reset();
+                    }
+                    else {
+                        Differential.collectSpecimen();
                     }
                 } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
                     if (Differential.isReset()){
-                        Differential.scoreSpecimen();
+                        Differential.score();
                     }
                     else {
                         Differential.reset();
@@ -418,6 +430,9 @@ public class Robot {
             opMode.telemetry.addData("Lift target pos", Lift.targetPosCm);
             opMode.telemetry.addData("is high basket", Lift.getTargetPosCm() == Lift.HIGH_BASKET_POS);
             opMode.telemetry.addData("current angle: ", LiftArm.getCurrentAngle());
+            opMode.telemetry.addData("isVertical: ", LiftArm.isVertical());
+            opMode.telemetry.addData("isHorizontal: ", LiftArm.isHorizontal());
+            opMode.telemetry.addData("Differential Pitch Angle: ", Differential.currentPitchAngle);
             opMode.telemetry.addData("armPower: ", LiftArm.getRightMotor().getPower());
             opMode.telemetry.addData("LiftPower: ", Lift.getRightMotor().getPower());
             opMode.telemetry.update();

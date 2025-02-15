@@ -84,7 +84,7 @@ public class BlueSpecimen4Park extends LinearOpMode {
                                         scorePreLoad,
                                         LiftArm.liftArmVertical()
                                 ),
-                                Robot.scoreSpecimen(),
+                                Robot.fullyScoreSpecimen(),
 
                                 new ParallelAction(
                                         Robot.reset(),

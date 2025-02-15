@@ -10,7 +10,6 @@ import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.ServoProps;
 
 @Config
@@ -24,7 +23,7 @@ public class Differential {
     private static final int PITCH_ANGLE_SAMPLE = 0;
     private static final int PITCH_ANGLE_SPECIMEN = 35;
     private static final int PITCH_ANGLE_RESET = 175;
-    public static final int PITCH_ANGLE_SCORE_SPECIMEN = 140;
+    public static final int PITCH_ANGLE_SCORE = 140;
 
     public static final int SPECIMEN_SCORE_DURATION = 300;
 
@@ -77,9 +76,9 @@ public class Differential {
         currentPitchAngle = PITCH_ANGLE_SPECIMEN;
     }
 
-    public static void scoreSpecimen(){
-        move(currentRollAngle, PITCH_ANGLE_SCORE_SPECIMEN);
-        currentPitchAngle = PITCH_ANGLE_SCORE_SPECIMEN;
+    public static void score(){
+        move(currentRollAngle, PITCH_ANGLE_SCORE);
+        currentPitchAngle = PITCH_ANGLE_SCORE;
     }
 
     /**
@@ -90,9 +89,14 @@ public class Differential {
     public static boolean isReset() {
         return currentPitchAngle == PITCH_ANGLE_RESET;
     }
-
-    public static boolean isCollectSamplePos() {
-        return servos[RIGHT].getPosition() == 0;
+    public static boolean isScore(){
+        return currentPitchAngle == PITCH_ANGLE_SCORE;
+    }
+    public static boolean isCollectSpecimen(){
+        return currentPitchAngle == PITCH_ANGLE_SPECIMEN;
+    }
+    public static boolean isCollectSample() {
+        return currentPitchAngle == PITCH_ANGLE_SAMPLE;
     }
 
 
@@ -134,7 +138,7 @@ public class Differential {
     }
 
 
-    private static class DifferentialScoreSpecimen implements Action {
+    private static class DifferentialScore implements Action {
 
         private final TimerHelper timer = new TimerHelper(); // No need for a constructor
         private boolean hasStarted = false;
@@ -146,7 +150,7 @@ public class Differential {
                 hasStarted = true;
             }
 
-            Differential.scoreSpecimen();
+            Differential.score();
 
             boolean keepRunning = !timer.hasElapsed(SPECIMEN_SCORE_DURATION);
 
@@ -158,8 +162,8 @@ public class Differential {
         }
     }
 
-    public static Action differentialScoreSpecimen(){
-        return new DifferentialScoreSpecimen();
+    public static Action differentialScore(){
+        return new DifferentialScore();
     }
 
 }

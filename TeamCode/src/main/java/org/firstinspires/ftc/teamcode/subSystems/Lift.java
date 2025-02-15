@@ -26,8 +26,8 @@ public class Lift {
     private static final double ROBOT_LIFT_HEIGHT = 50;
     public static final double HIGH_CHAMBER_POS = 66 - ROBOT_LIFT_HEIGHT;
     public static final double LOW_BASKET_POS = 67.4 - ROBOT_LIFT_HEIGHT;
-    public static final double SPECIMEN_SCORE_POS = 66 - ROBOT_LIFT_HEIGHT;
-    public static final double SAMPLE_COLLECTION_POS = 6; // ToDo: Find value for autonomous
+    public static double SPECIMEN_SCORE_POS = 66 - ROBOT_LIFT_HEIGHT;
+    public static double SAMPLE_COLLECTION_POS = 6; // ToDo: Find value for autonomous
 
     // Lift limits
     private static final double HORIZONTAL_LIMIT = 44;

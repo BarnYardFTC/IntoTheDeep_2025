@@ -24,7 +24,9 @@ public class LiftArm {
     private static final double MIN_LIFT_LENGTH = 30;
 
     private static final int ACCEPTED_VERTICAL_ANGLE = 100;
-    private static final int ACCEPTED_HORIZONTAL_ANGLE = 20;
+    private static final int ACCEPTED_HORIZONTAL_ANGLE = 30;
+
+    private static final int POWER_OFF_HORIZONTAL_ANGLE = 100;
 
     public static int LIFT_ARM_SETTLE_TIME = 400;
 
@@ -79,6 +81,9 @@ public class LiftArm {
     public static boolean isVertical() {
         return getCurrentAngle() > ACCEPTED_VERTICAL_ANGLE;
     }
+    public static boolean isPowerRequired() {
+        return !(getCurrentAngle() < POWER_OFF_HORIZONTAL_ANGLE && getTargetAngle() == HORIZONTAL_ANGLE);
+    }
 
     public static int getTargetAngle() {
         return targetAngle;
@@ -127,13 +132,13 @@ public class LiftArm {
         }
 
         // Giving power to motors.
-        if (getTargetAngle() == getHorizontalAngle() && isHorizontal()){
-            motors[RIGHT].setPower(0);
-            motors[LEFT].setPower(0);
-        }
-        else {
+        if (isPowerRequired()){
             motors[RIGHT].setPower(power);
             motors[LEFT].setPower(power);
+        }
+        else {
+            motors[RIGHT].setPower(0);
+            motors[LEFT].setPower(0);
         }
     }
 
