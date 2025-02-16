@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.content.ActivityNotFoundException;
+import android.graphics.Path;
+
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -202,7 +205,10 @@ public class Robot {
                         LiftArm.liftArmVertical(),
                         Differential.differentialScore()
                 ),
-                Lift.moveLift(Lift.Pos.HIGH_BASKET)
+                new SequentialAction(
+                        Lift.liftHighBasketGoal(),
+                        Lift.liftHighBasket()
+                )
         );
     }
     public static Action reset() {
@@ -337,10 +343,8 @@ public class Robot {
 
                 else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT) && Differential.currentRollAngle + 60 <= 180) {
                     Differential.move(Differential.currentRollAngle + 60, Differential.currentPitchAngle);
-                    Differential.currentRollAngle += 60;
                 } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_LEFT) && Differential.currentRollAngle - 60 >= 0) {
                     Differential.move(Differential.currentRollAngle - 60, Differential.currentPitchAngle);
-                    Differential.currentRollAngle -= 60;
                 }
             }
 
@@ -403,7 +407,10 @@ public class Robot {
                 }
             }
 
-            Lift.PID(); // Ensure Lift PID control runs continuously
+            if (!is_reset_automating && !is_high_basket_automating && !is_specimen_automating){
+                currentAutomation = null;
+            }
+
             return true; // Keep this action running during TeleOp
         }
     }
@@ -414,25 +421,29 @@ public class Robot {
         public boolean run(@NonNull TelemetryPacket packet) {
             // Check if the LiftArm is currently automating
             // If it is, we don't want to interfere with its movement
-            if (!isLiftArmAutomating()) {
 
-                // If the right bumper was just pressed, move the LiftArm to the vertical position
-                if (gamepadEx1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-                    LiftArm.move(LiftArm.Angle.VERTICAL);
+            // If the right bumper was just pressed, move the LiftArm to the vertical position
+            if (gamepadEx1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
 
-                    // If the left bumper was just pressed, move the LiftArm to the horizontal position
-                } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER) && Lift.isReseted()) {
-                    if (Differential.isCollectSample()){
-                        Differential.score();
-                    }
-                    else if (Differential.isCollectSpecimen()){
-                        Differential.reset();
-                    }
-                    LiftArm.move(LiftArm.Angle.HORIZONTAL);
+                is_reset_automating = false;
+                is_high_basket_automating = false;
+                LiftArm.move(LiftArm.Angle.VERTICAL);
+
+                // If the left bumper was just pressed, move the LiftArm to the horizontal position
+            } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+
+                is_reset_automating = false;
+                is_high_basket_automating = false;
+
+                if (Differential.isCollectSample()){
+                    Differential.score();
                 }
+                else if (Differential.isCollectSpecimen()){
+                    Differential.reset();
+                }
+                LiftArm.move(LiftArm.Angle.HORIZONTAL);
             }
 
-            LiftArm.PID(); // Activate the Lift Arm
 
             // Return true so this action keeps running throughout the TeleOp period,
             // allowing continuous input response
@@ -451,17 +462,13 @@ public class Robot {
             }
             // Check if the lift arm is horizontal and lift is not reset, or if the lift arm is vertical
             // or if the X button is pressed and the drivetrain is not slowed
-            else if ((LiftArm.isHorizontal() && !Lift.isReseted()) || LiftArm.isVertical() || Differential.isDown() ||
-                    (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN) && !Drivetrain.isSlowed())) {
-                Drivetrain.slowMode();
-            }
-            // If the X button is pressed and the drivetrain is already slowed, revert to regular mode
-            else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN) && Drivetrain.isSlowed()) {
-                Drivetrain.regularMode();
-            }
-            // Default case: Set drivetrain to regular mode
-            else {
-                Drivetrain.regularMode();
+            else if (((gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN) || gamepadEx2.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)))) {
+                if (Drivetrain.isSlowed()){
+                    Drivetrain.regularMode();
+                }
+                else {
+                    Drivetrain.slowMode();
+                }
             }
 
             // Return true to indicate that the action should continue running and check conditions again
@@ -493,12 +500,15 @@ public class Robot {
             opMode.telemetry.addData("armPower: ", LiftArm.getRightMotor().getPower());
             opMode.telemetry.addData("LiftPower: ", Lift.getRightMotor().getPower());
 
-            opMode.telemetry.addData("isDifferentialAutomating: ", isDifferentialAutomating());
-            opMode.telemetry.addData("isClawAutomating: ", isClawAutomating());
-            opMode.telemetry.addData("isLiftAutomating: ", isLiftAutomating());
-            opMode.telemetry.addData("isLiftArmAutomating: ", isLiftArmAutomating());
+            opMode.telemetry.addData("isReset", is_reset_automating);
+            opMode.telemetry.addData("isLiftReset", Lift.isReseted());
+            opMode.telemetry.addData("isHighBasket", is_high_basket_automating);
 
-            opMode.telemetry.addData("isSlowMode: ", Drivetrain.isSlowed());
+            opMode.telemetry.addData("rollAngle: ", Differential.currentRollAngle);
+            opMode.telemetry.addData("pitchAngle: ", Differential.currentPitchAngle);
+
+            opMode.telemetry.addData("liftArmTarget", LiftArm.targetAngle);
+            opMode.telemetry.addData("lifeCurrentAngle", LiftArm.getCurrentAngle());
             opMode.telemetry.update();
             return true;
         }

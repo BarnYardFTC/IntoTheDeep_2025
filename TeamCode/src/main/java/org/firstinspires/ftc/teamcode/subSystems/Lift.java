@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.LiftProps;
 
 @Config
@@ -29,15 +30,17 @@ public class Lift {
     public static final double LOW_BASKET_POS = 67.4 - ROBOT_LIFT_HEIGHT;
     public static final double SPECIMEN_SCORE_POS = 66 - ROBOT_LIFT_HEIGHT;
     public static double SAMPLE_COLLECTION_POS = 6; // ToDo: Find value for autonomous
-    public static final double ACCEPTED_RESETED_POSITION = 4;
+    public static final double ACCEPTED_RESETED_POSITION = 3;
+
+    public static int LIFT_MOVEMENT_DURATION = 2000;
 
     // Lift limits
     private static final double HORIZONTAL_LIMIT = 44;
     private static final double VERTICAL_LIMIT = 71.5;
 
-    public static double HIGH_BASKET_GOAL_POS = 58;
-    public static double HIGH_BASKET_POS = 48;
-    public static double HIGH_BASKET_ACCEPTED_POS = 50;
+    public static double HIGH_BASKET_GOAL_POS = 65;
+    public static double HIGH_BASKET_POS = 52;
+    public static double HIGH_BASKET_ACCEPTED_POS = 52;
 
     public static double p = 0.005;
     public static double i = 0;
@@ -130,6 +133,9 @@ public class Lift {
                 break;
             case HIGH_BASKET:
                 targetPosCm = HIGH_BASKET_POS;
+                break;
+            case HIGH_BASKET_GOAL:
+                targetPosCm = HIGH_BASKET_GOAL_POS;
                 break;
             case LOW_BASKET:
                 targetPosCm = LOW_BASKET_POS;
@@ -230,10 +236,11 @@ public class Lift {
         }
     }
     public static class LiftReset implements Action {
+        private final TimerHelper timer = new TimerHelper();
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             move(Pos.RESET);
-            return !isReseted();
+            return !isReseted() && !timer.hasElapsed(LIFT_MOVEMENT_DURATION);
         }
     }
     public static Action moveLift(Lift.Pos pos){

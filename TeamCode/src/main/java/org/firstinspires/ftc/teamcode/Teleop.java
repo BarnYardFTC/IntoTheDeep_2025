@@ -27,6 +27,8 @@ public class Teleop extends LinearOpMode {
         if (isStopRequested()) return;
         Actions.runBlocking(
                 new ParallelAction(
+                        Lift.liftPID(),
+                        LiftArm.liftArmPID(),
                         Robot.displayTelemetry(),
                         Robot.activateDrivetrain(),
                         Robot.activateLiftArm(),
