@@ -15,16 +15,16 @@ import org.firstinspires.ftc.teamcode.modules.ServoProps;
 @Config
 public class Claw {
     // Servo positions.
-    public static double OPENED_POSITION = 0; // Opened claw position.
-    public static double CLOSED_POSITION = 0.27; // Closed claw position.
+    public static final double OPENED_POSITION = 0; // Opened claw position.
+    public static final double CLOSED_POSITION = 0.27; // Closed claw position.
 
-    public static double LOOSENED_GRIP_POSITION = 0.2;
-    public static int LOOSEN_GRIP_DURATION = 300;
+    public static final double LOOSENED_GRIP_POSITION = 0.2;
+    public static final int LOOSEN_GRIP_DURATION = 300;
 
     private static Servo claw; // Servo (starting position: claw: 0).
 
     // Time it takes for the claw to close/open (Milliseconds)
-    public static final int CLAW_MOVEMENT_DURATION = 200;
+    public static int CLAW_MOVEMENT_DURATION = 200;
 
 
     public static void initialize(OpMode opMode) {

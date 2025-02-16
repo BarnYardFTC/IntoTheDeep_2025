@@ -26,15 +26,15 @@ public class Lift {
     private static final double ROBOT_LIFT_HEIGHT = 50;
     public static final double HIGH_CHAMBER_POS = 66 - ROBOT_LIFT_HEIGHT;
     public static final double LOW_BASKET_POS = 67.4 - ROBOT_LIFT_HEIGHT;
-    public static double SPECIMEN_SCORE_POS = 66 - ROBOT_LIFT_HEIGHT;
+    public static final double SPECIMEN_SCORE_POS = 66 - ROBOT_LIFT_HEIGHT;
     public static double SAMPLE_COLLECTION_POS = 6; // ToDo: Find value for autonomous
+    public static final double ACCEPTED_RESETED_POSITION = 4;
 
     // Lift limits
     private static final double HORIZONTAL_LIMIT = 44;
     private static final double VERTICAL_LIMIT = 71.5;
-    public static final double HIGH_BASKET_POS = 66;
-    public static final double ARRIVED_HIGH_BASKET_POS = 40;
-    //ToDo: set correct values.
+    public static double HIGH_BASKET_POS = 63;
+
     public static double p = 0.0085;
     public static double i = 0;
     public static double d = 0;
@@ -74,7 +74,7 @@ public class Lift {
     }
 
     public static boolean isReseted() {
-        return (motors[RIGHT].getCurrentPosition() / RIGHT_MOTOR.getENCODERS_PER_CM()) < 4;
+        return getCurrentLength() < ACCEPTED_RESETED_POSITION;
     }
 
     public static void PID() {
@@ -149,14 +149,7 @@ public class Lift {
     }
 
     public static boolean arrivedTargetPos() {
-        if (targetPos == HIGH_BASKET_POS)
-            return arrivedHighBasket();
-        else
-            return getCurrentLength() <= targetPosCm + LIFT_SPEED && getCurrentLength() >= targetPosCm - LIFT_SPEED;
-    }
-
-    public static boolean arrivedHighBasket() {
-        return getCurrentLength() > ARRIVED_HIGH_BASKET_POS && LiftArm.isVertical();
+        return getCurrentLength() <= targetPosCm + LIFT_SPEED && getCurrentLength() >= targetPosCm - LIFT_SPEED;
     }
 
 
@@ -214,7 +207,7 @@ public class Lift {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             move(Pos.RESET);
-            return !arrivedTargetPos();
+            return !isReseted();
         }
     }
     public static Action moveLift(Lift.Pos pos){

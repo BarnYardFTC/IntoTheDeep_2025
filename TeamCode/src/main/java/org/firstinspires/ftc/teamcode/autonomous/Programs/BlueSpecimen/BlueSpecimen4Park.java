@@ -84,7 +84,7 @@ public class BlueSpecimen4Park extends LinearOpMode {
                                         scorePreLoad,
                                         LiftArm.liftArmVertical()
                                 ),
-                                Robot.fullyScoreSpecimen(),
+                                //Robot.fullyScoreSpecimen(),
 
                                 new ParallelAction(
                                         Robot.reset(),
@@ -102,7 +102,7 @@ public class BlueSpecimen4Park extends LinearOpMode {
                                         Differential.differentialReset(),
                                         LiftArm.liftArmVertical()
                                 ),
-                                Robot.scoreSpecimen(),
+//                                Robot.scoreSpecimen(),
 
                                 new ParallelAction(
                                         Robot.reset(),
@@ -116,7 +116,7 @@ public class BlueSpecimen4Park extends LinearOpMode {
                                         LiftArm.liftArmVertical()
 
                                 ),
-                                Robot.scoreSpecimen(),
+//                                Robot.scoreSpecimen(),
 
                                 new ParallelAction(
                                         Robot.reset(),
@@ -129,7 +129,7 @@ public class BlueSpecimen4Park extends LinearOpMode {
                                         Differential.differentialReset(),
                                         LiftArm.liftArmVertical()
                                 ),
-                                Robot.scoreSpecimen(),
+//                                Robot.scoreSpecimen(),
 
                                 new ParallelAction(
                                         Robot.reset(),

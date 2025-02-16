@@ -25,8 +25,6 @@ public class Differential {
     private static final int PITCH_ANGLE_RESET = 175;
     public static final int PITCH_ANGLE_SCORE = 140;
 
-    public static final int SPECIMEN_SCORE_DURATION = 300;
-
     public static int currentRollAngle;
     public static int currentPitchAngle;
 
@@ -77,7 +75,7 @@ public class Differential {
     }
 
     public static void score(){
-        move(currentRollAngle, PITCH_ANGLE_SCORE);
+        move(0, PITCH_ANGLE_SCORE);
         currentPitchAngle = PITCH_ANGLE_SCORE;
     }
 
@@ -97,6 +95,12 @@ public class Differential {
     }
     public static boolean isCollectSample() {
         return currentPitchAngle == PITCH_ANGLE_SAMPLE;
+    }
+    public static boolean isDown(){
+        return isCollectSample() || isCollectSpecimen();
+    }
+    public static boolean isUp(){
+        return isScore() || isReset();
     }
 
 
@@ -140,25 +144,10 @@ public class Differential {
 
     private static class DifferentialScore implements Action {
 
-        private final TimerHelper timer = new TimerHelper(); // No need for a constructor
-        private boolean hasStarted = false;
-
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            if (!hasStarted) {
-                timer.reset(); // Start the timer on first execution
-                hasStarted = true;
-            }
-
             Differential.score();
-
-            boolean keepRunning = !timer.hasElapsed(SPECIMEN_SCORE_DURATION);
-
-            if (!keepRunning) {
-                hasStarted = false; // Reset flag for future use
-            }
-
-            return keepRunning;
+            return !Differential.isReset();
         }
     }
 
