@@ -19,14 +19,14 @@ public class LiftArm {
     private static final int LEFT = 1; // Left's motor index.
     private static final MotorProps LEFT_MOTOR = new MotorProps(1425.1, 1); // Left's motor props.
 
-    private static final int VERTICAL_ANGLE = 135; // Angle for moving the lift arm to a vertical position.
-    private static final int HORIZONTAL_ANGLE = 15;
+    private static final int VERTICAL_ANGLE = 110; // Angle for moving the lift arm to a vertical position.
+    private static final int HORIZONTAL_ANGLE = 10;
     private static final double MIN_LIFT_LENGTH = 30;
 
-    private static final int ACCEPTED_VERTICAL_ANGLE = 100;
+    private static final int ACCEPTED_VERTICAL_ANGLE = 80;
     private static final int ACCEPTED_HORIZONTAL_ANGLE = 30;
 
-    private static final int POWER_OFF_HORIZONTAL_ANGLE = 100;
+    private static final int POWER_OFF_HORIZONTAL_ANGLE = 80;
 
     public static int LIFT_ARM_SETTLE_TIME = 400;
 
@@ -34,7 +34,7 @@ public class LiftArm {
     public static double p = 0.02;
     public static double i = 0;
     public static double d = 0;
-    public static double f = 0.55;
+    public static double f = 0.12;
     public static int targetAngle; // Target angle of the arm.
     private static PIDController controller; // PID controller.
     private static int targetPos; // Target position of the right motor.
@@ -105,6 +105,13 @@ public class LiftArm {
         return getCurrentPosition() / RIGHT_MOTOR.getENCODERS_PER_DEGREE();
     }
 
+//    public static boolean manual_power_requested = false;
+//    public static double manual_power = 0.4;
+//
+//    public static double LIFT_ARM_UP_POWER = 0.4;
+//    public static double lift_arm_maintain = 0.4/55;
+
+
     public static void PID() {
         controller.setPID(p, i, d);
 
@@ -116,25 +123,21 @@ public class LiftArm {
         double pid = controller.calculate(currentPos, targetPos);
         double ff;
         double power;
-        if (targetAngle == VERTICAL_ANGLE) {
-            if (Lift.getTargetPosCm() == Lift.HIGH_BASKET_POS) {
-                ff = Math.cos(Math.toRadians(15)) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
-                power = pid + ff;
-            }
-            else {
-                ff = Math.cos(Math.toRadians(80)) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
-                power = pid + ff;
-            }
-        }
-        else {
-            ff = Math.cos(Math.toRadians(targetAngle)) * f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
-            power = pid + ff;
-        }
+        ff = f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
+        power = pid + ff;
+
+//        lift_arm_maintain *= Lift.getTargetPosCm();
 
         // Giving power to motors.
         if (isPowerRequired()){
-            motors[RIGHT].setPower(power);
-            motors[LEFT].setPower(power);
+//            if (manual_power_requested){
+//                motors[RIGHT].setPower(manual_power);
+//                motors[LEFT].setPower(manual_power);
+//            }
+//            else {
+                motors[RIGHT].setPower(power);
+                motors[LEFT].setPower(power);
+//            }
         }
         else {
             motors[RIGHT].setPower(0);

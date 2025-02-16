@@ -44,6 +44,8 @@ public class Differential {
     public static void move(int angleRoll, int anglePitch) {
         servos[RIGHT].setPosition(RIGHT_SERVO.getTargetPosition(angleRoll - anglePitch));
         servos[LEFT].setPosition(LEFT_SERVO.getTargetPosition(angleRoll + anglePitch));
+        currentPitchAngle = anglePitch;
+        currentRollAngle = angleRoll;
     }
 
     /**
@@ -52,8 +54,6 @@ public class Differential {
      */
     public static void reset() {
         move(0, PITCH_ANGLE_RESET);
-        currentRollAngle = 0;
-        currentPitchAngle = PITCH_ANGLE_RESET;
         servos[RIGHT].setDirection(Servo.Direction.FORWARD);
         servos[LEFT].setDirection(Servo.Direction.FORWARD);
     }
@@ -63,7 +63,6 @@ public class Differential {
      */
     public static void collectSample() {
         move(currentRollAngle, PITCH_ANGLE_SAMPLE);
-        currentPitchAngle = PITCH_ANGLE_SAMPLE;
     }
 
     /**
@@ -71,12 +70,10 @@ public class Differential {
      */
     public static void collectSpecimen() {
         move(0, PITCH_ANGLE_SPECIMEN);
-        currentPitchAngle = PITCH_ANGLE_SPECIMEN;
     }
 
     public static void score(){
         move(0, PITCH_ANGLE_SCORE);
-        currentPitchAngle = PITCH_ANGLE_SCORE;
     }
 
     /**
@@ -112,7 +109,7 @@ public class Differential {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             Differential.collectSpecimen();
-            return Differential.isReset();
+            return !Differential.isCollectSpecimen();
         }
     }
     public static Action differentialCollectSpecimen(){
@@ -123,7 +120,7 @@ public class Differential {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             Differential.collectSample();
-            return Differential.isReset();
+            return !isCollectSample();
         }
     }
     public static Action differentialCollectSample(){
@@ -147,7 +144,7 @@ public class Differential {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             Differential.score();
-            return !Differential.isReset();
+            return !Differential.isScore();
         }
     }
 

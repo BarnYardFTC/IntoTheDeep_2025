@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.SequentialAction;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -33,9 +34,12 @@ public class Lift {
     // Lift limits
     private static final double HORIZONTAL_LIMIT = 44;
     private static final double VERTICAL_LIMIT = 71.5;
-    public static double HIGH_BASKET_POS = 63;
 
-    public static double p = 0.0085;
+    public static double HIGH_BASKET_GOAL_POS = 58;
+    public static double HIGH_BASKET_POS = 48;
+    public static double HIGH_BASKET_ACCEPTED_POS = 50;
+
+    public static double p = 0.005;
     public static double i = 0;
     public static double d = 0;
     public static double targetPosCm; // Target position of the lift in cm.
@@ -77,6 +81,8 @@ public class Lift {
         return getCurrentLength() < ACCEPTED_RESETED_POSITION;
     }
 
+//    public static boolean manual_power_requested = false;
+//    public static double manual_power = 0.05;
     public static void PID() {
         controller.setPID(p, i, d);
 
@@ -88,8 +94,15 @@ public class Lift {
         double power = controller.calculate(currentPos, targetPos);
 
         // Giving power to motors.
-        motors[RIGHT].setPower(power);
-        motors[LEFT].setPower(power);
+//        if (manual_power_requested){
+//            motors[RIGHT].setPower(manual_power);
+//            motors[LEFT].setPower(manual_power);
+//        }
+//        else{
+            motors[RIGHT].setPower(power);
+            motors[LEFT].setPower(power);
+//        }
+
     }
 
     public static DcMotorEx getRightMotor() {
@@ -145,7 +158,7 @@ public class Lift {
     }
 
     public enum Pos {
-        HIGH_CHAMBER, SPECIMEN_SCORE, LOW_CHAMBER, HIGH_BASKET, LOW_BASKET, RESET, SAMPLE_COLLECTION
+        HIGH_CHAMBER, SPECIMEN_SCORE, LOW_CHAMBER, HIGH_BASKET, HIGH_BASKET_GOAL, LOW_BASKET, RESET, SAMPLE_COLLECTION
     }
 
     public static boolean arrivedTargetPos() {
@@ -175,12 +188,25 @@ public class Lift {
             return !arrivedTargetPos();
         }
     }
+    public static class LiftHighBasketGoal implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            move(Pos.HIGH_BASKET_GOAL);
+            return !(getCurrentLength() > HIGH_BASKET_ACCEPTED_POS);
+        }
+    }
+    public static Action liftHighBasketGoal(){
+        return new LiftHighBasketGoal();
+    }
     public static class LiftHighBasket implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            move(Lift.Pos.HIGH_BASKET);
-            return !arrivedTargetPos();
+            move(Pos.HIGH_BASKET);
+            return false;
         }
+    }
+    public static Action liftHighBasket(){
+        return new LiftHighBasket();
     }
     public static class LiftLowBasket implements Action {
         @Override
@@ -224,7 +250,10 @@ public class Lift {
             return new LiftLowBasket();
         }
         else if (pos == Pos.HIGH_BASKET){
-            return new LiftHighBasket();
+            return new SequentialAction(
+                    liftHighBasketGoal(),
+                    liftHighBasket()
+            );
         }
         else if (pos == Pos.SAMPLE_COLLECTION){
             return new LiftSampleCollection();

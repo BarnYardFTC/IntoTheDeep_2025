@@ -33,7 +33,7 @@ public class Drivetrain {
 
     private static int speed_adjustment = 1;
 
-    private static final int SLOW_MODE_DIVIDER = 3;
+    public static final int SLOW_MODE_DIVIDER = 3;
 
     public static void initialize(OpMode opMode) {
         motors[LF] = opMode.hardwareMap.get(DcMotorEx.class, "leftFront");
@@ -74,7 +74,7 @@ public class Drivetrain {
         return speed_adjustment;
     }
     public static boolean isSlowed() {
-        return speed_adjustment == 3;
+        return speed_adjustment == SLOW_MODE_DIVIDER;
     }
 
     /**
