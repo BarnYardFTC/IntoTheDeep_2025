@@ -49,6 +49,8 @@ public class Lift {
     public static int targetPos; // Target position of the right motor.
     private static PIDController controller; // PID controller.
 
+    private static boolean pid_on = true;
+
     public static void initialize(OpMode opMode) {
         motors[RIGHT] = opMode.hardwareMap.get(DcMotorEx.class, "rightLift");
         motors[LEFT] = opMode.hardwareMap.get(DcMotorEx.class, "leftLift");
@@ -62,6 +64,14 @@ public class Lift {
 
         controller = new PIDController(p, i, d);
         move(Pos.RESET);
+
+        pid_on = true;
+    }
+    public static void resetEncoders(){
+        for (DcMotorEx motor : motors) {
+            motor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+            motor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        }
     }
 
     public static double getTargetPosCm() {
@@ -86,11 +96,13 @@ public class Lift {
 
 //    public static boolean manual_power_requested = false;
 //    public static double manual_power = 0.05;
+
+    public static double currentPos = 0;
     public static void PID() {
         controller.setPID(p, i, d);
 
         // Sets the current and target position of the motor.
-        int currentPos = motors[RIGHT].getCurrentPosition();
+        currentPos = motors[RIGHT].getCurrentPosition();
         targetPos = (int) RIGHT_MOTOR.getCmToEncoders(targetPosCm);
 
         // Calculate motor power.
@@ -179,7 +191,9 @@ public class Lift {
     private static class LiftPID implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            PID();
+            if (pid_on){
+                PID();
+            }
             return true;
         }
     }
@@ -236,11 +250,16 @@ public class Lift {
         }
     }
     public static class LiftReset implements Action {
-        private final TimerHelper timer = new TimerHelper();
+        private final TimerHelper moveTimer = new TimerHelper();
+
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             move(Pos.RESET);
-            return !isReseted() && !timer.hasElapsed(LIFT_MOVEMENT_DURATION);
+            boolean keep_running = !isReseted() && !moveTimer.hasElapsed(LIFT_MOVEMENT_DURATION);
+            if (!keep_running){
+                resetEncoders();
+            }
+            return keep_running; // Keep running the action
         }
     }
     public static Action moveLift(Lift.Pos pos){
@@ -265,6 +284,19 @@ public class Lift {
         else if (pos == Pos.SAMPLE_COLLECTION){
             return new LiftSampleCollection();
         }
-        return new LiftReset();
+        else {
+            return new LiftPID();
+        }
+    }
+
+    private static class LiftResetEncoders implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            resetEncoders();
+            return false;
+        }
+    }
+    public static Action liftResetEncoders(){
+        return new LiftResetEncoders();
     }
 }

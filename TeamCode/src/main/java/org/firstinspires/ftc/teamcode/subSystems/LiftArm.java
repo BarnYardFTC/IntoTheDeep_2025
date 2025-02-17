@@ -26,7 +26,7 @@ public class LiftArm {
     private static final int ACCEPTED_VERTICAL_ANGLE = 80;
     private static final int ACCEPTED_HORIZONTAL_ANGLE = 30;
 
-    private static final int POWER_OFF_HORIZONTAL_ANGLE = 80;
+    private static final int POWER_OFF_HORIZONTAL_ANGLE = 20;
 
     public static int LIFT_ARM_SETTLE_TIME = 400;
 

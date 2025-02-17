@@ -214,10 +214,12 @@ public class Robot {
     public static Action reset() {
         return new SequentialAction(
                 new ParallelAction(
-                        Differential.differentialReset(),
+                        Differential.differentialUp(),
                         Lift.moveLift(Lift.Pos.RESET)
                 ),
-                LiftArm.liftArmHorizontal()
+                LiftArm.liftArmHorizontal(),
+                hasElapsed(2000),
+                Lift.liftResetEncoders()
         );
     }
 //    public static Action fullyScoreSpecimen(){
@@ -435,12 +437,7 @@ public class Robot {
                 is_reset_automating = false;
                 is_high_basket_automating = false;
 
-                if (Differential.isCollectSample()){
-                    Differential.score();
-                }
-                else if (Differential.isCollectSpecimen()){
-                    Differential.reset();
-                }
+                Differential.up();
                 LiftArm.move(LiftArm.Angle.HORIZONTAL);
             }
 
@@ -497,6 +494,8 @@ public class Robot {
             opMode.telemetry.addData("lift moveable -: ", Lift.isMoveable(-1));
             opMode.telemetry.addData("Lift target pos", Lift.targetPosCm);
             opMode.telemetry.addData("lift current length", Lift.getCurrentLength());
+            opMode.telemetry.addData("Lift PID current pos", Lift.currentPos);
+            opMode.telemetry.addData("Lift PID target pos", Lift.targetPos);
             opMode.telemetry.addData("armPower: ", LiftArm.getRightMotor().getPower());
             opMode.telemetry.addData("LiftPower: ", Lift.getRightMotor().getPower());
 
@@ -508,7 +507,7 @@ public class Robot {
             opMode.telemetry.addData("pitchAngle: ", Differential.currentPitchAngle);
 
             opMode.telemetry.addData("liftArmTarget", LiftArm.targetAngle);
-            opMode.telemetry.addData("lifeCurrentAngle", LiftArm.getCurrentAngle());
+            opMode.telemetry.addData("liftArmCurrentAngle", LiftArm.getCurrentAngle());
             opMode.telemetry.update();
             return true;
         }

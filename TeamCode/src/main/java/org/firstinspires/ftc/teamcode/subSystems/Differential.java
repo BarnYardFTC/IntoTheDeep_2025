@@ -75,6 +75,22 @@ public class Differential {
     public static void score(){
         move(0, PITCH_ANGLE_SCORE);
     }
+    public static void up(){
+        if (isCollectSpecimen()){
+            Differential.reset();
+        }
+        else if (isCollectSample()){
+            Differential.score();
+        }
+    }
+    public static void down(){
+        if (isReset()){
+            collectSpecimen();
+        }
+        else if (isScore()){
+            collectSample();
+        }
+    }
 
     /**
      * Checks if the differential is in the reseted position.
@@ -150,6 +166,32 @@ public class Differential {
 
     public static Action differentialScore(){
         return new DifferentialScore();
+    }
+
+    private static class DifferentialUp implements Action {
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            Differential.up();
+            return !Differential.isUp();
+        }
+    }
+
+    public static Action differentialUp(){
+        return new DifferentialUp();
+    }
+
+    private static class DifferentialDown implements Action {
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            Differential.down();
+            return !Differential.isDown();
+        }
+    }
+
+    public static Action differentialDown(){
+        return new DifferentialDown();
     }
 
 }
