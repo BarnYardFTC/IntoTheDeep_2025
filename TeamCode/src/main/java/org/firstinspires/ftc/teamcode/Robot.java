@@ -200,9 +200,8 @@ public class Robot {
         return new SequentialAction(
                 new ParallelAction(
                         LiftArm.liftArmVertical(),
-                        Differential.differentialScore()
+                        Differential.moveDifferential90()
                 ),
-                hasElapsed(LiftArm.LIFT_ARM_SETTLE_TIME),
                 new SequentialAction(
                         Lift.liftHighBasketGoal(),
                         Lift.liftHighBasket()

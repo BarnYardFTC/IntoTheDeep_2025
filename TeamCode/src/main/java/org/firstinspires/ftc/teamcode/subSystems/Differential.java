@@ -73,7 +73,7 @@ public class Differential {
     }
 
     public static void score(){
-        move(90, PITCH_ANGLE_SCORE);
+        move(currentRollAngle, PITCH_ANGLE_SCORE);
     }
     public static void up(){
         if (isCollectSpecimen()){
@@ -114,6 +114,9 @@ public class Differential {
     }
     public static boolean isUp(){
         return isScore() || isReset();
+    }
+    public static boolean is90(){
+        return currentRollAngle == 90;
     }
 
 
@@ -192,6 +195,18 @@ public class Differential {
 
     public static Action differentialDown(){
         return new DifferentialDown();
+    }
+
+    private static class moveDifferential90 implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            Differential.move(90, currentPitchAngle);
+            return !is90();
+        }
+    }
+
+    public static Action moveDifferential90(){
+        return new moveDifferential90();
     }
 
 }

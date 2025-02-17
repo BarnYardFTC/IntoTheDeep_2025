@@ -28,8 +28,6 @@ public class LiftArm {
 
     private static final int POWER_OFF_HORIZONTAL_ANGLE = 20;
 
-    public static int LIFT_ARM_SETTLE_TIME = 600;
-
     //ToDo: set correct values.
     public static double p = 0.02;
     public static double i = 0;
