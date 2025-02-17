@@ -23,7 +23,7 @@ public class LiftArm {
     private static final int HORIZONTAL_ANGLE = 0;
     private static final double MIN_LIFT_LENGTH = 30;
 
-    private static final int ACCEPTED_VERTICAL_ANGLE = 90;
+    private static final int ACCEPTED_VERTICAL_ANGLE = 100;
     private static final int ACCEPTED_HORIZONTAL_ANGLE = 30;
 
     private static final int POWER_OFF_HORIZONTAL_ANGLE = 20;
@@ -122,8 +122,8 @@ public class LiftArm {
         pid = controller.calculate(currentPos, targetPos);
         double power;
         ff = f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
-        if (Lift.getTargetPosCm() == Lift.HIGH_BASKET_POS) {
-            power = pid + 0.4;
+        if (Lift.getTargetPosCm() >= 13) {
+            power = pid + 0.45;
         }
         else {
             power = pid + ff;

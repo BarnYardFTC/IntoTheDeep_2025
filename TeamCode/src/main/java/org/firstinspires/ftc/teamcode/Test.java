@@ -31,7 +31,7 @@ public class Test extends LinearOpMode {
                     Robot.displayTelemetry(),
                     new SequentialAction(
                             LiftArm.liftArmVertical(),
-                            Robot.hasElapsed(LiftArm.LIFT_ARM_SETTLE_TIME),
+//                            Robot.hasElapsed(LiftArm.LIFT_ARM_SETTLE_TIME),
                             Robot.loosenClawGrip(),
                             Lift.moveLift(Lift.Pos.SPECIMEN_SCORE),
                             Differential.differentialScore(),

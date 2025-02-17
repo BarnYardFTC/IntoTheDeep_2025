@@ -97,6 +97,8 @@ public class Robot {
     private static boolean is_sample_collection_automating;
     private static boolean is_specimen_collection_automating;
 
+    private static boolean is_manual_regular_mode;
+
     /*
     ========INITIALIZATION METHODS========
      */
@@ -123,6 +125,8 @@ public class Robot {
         is_grip_loosening_automating = false;
         is_sample_collection_automating = false;
         is_specimen_collection_automating = false;
+
+        is_manual_regular_mode = false;
     }
     public static void initializeOpMode(OpMode opMode){
         Robot.opMode = opMode;
@@ -210,11 +214,11 @@ public class Robot {
     }
     public static Action reset() {
         return new SequentialAction(
+                Lift.moveLift(Lift.Pos.RESET),
                 new ParallelAction(
-                        Differential.differentialUp(),
-                        Lift.moveLift(Lift.Pos.RESET)
+                        LiftArm.liftArmHorizontal(),
+                        Differential.differentialUp()
                 ),
-                LiftArm.liftArmHorizontal(),
                 properlyResetLift()
         );
     }
@@ -361,7 +365,13 @@ public class Robot {
                 } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_LEFT) && Differential.currentRollAngle - 60 >= 0) {
                     Differential.move(Differential.currentRollAngle - 60, Differential.currentPitchAngle);
                 }
+
+                else if (LiftArm.isVertical() && Lift.isHighBasket() && Claw.isOpen()){
+                    Differential.collectSample();
+                }
             }
+
+
 
             return true; // Keep this action running during TeleOp
         }
@@ -459,6 +469,7 @@ public class Robot {
             return true;
         }
     }
+
     private static class ActivateDrivetrain implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
@@ -471,13 +482,21 @@ public class Robot {
             }
             // Check if the lift arm is horizontal and lift is not reset, or if the lift arm is vertical
             // or if the X button is pressed and the drivetrain is not slowed
-            else if (((gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN) || gamepadEx2.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)))) {
+            if ((gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN) || gamepadEx2.wasJustPressed(GamepadKeys.Button.DPAD_DOWN))) {
                 if (Drivetrain.isSlowed()){
                     Drivetrain.regularMode();
+                    is_manual_regular_mode = true;
                 }
                 else {
                     Drivetrain.slowMode();
+                    is_manual_regular_mode = false;
                 }
+            }
+            else if ((!Lift.isReseted() || Differential.isDown() || LiftArm.isVertical()) && !is_manual_regular_mode){
+                Drivetrain.slowMode();
+            }
+            else {
+                Drivetrain.regularMode();
             }
 
             // Return true to indicate that the action should continue running and check conditions again

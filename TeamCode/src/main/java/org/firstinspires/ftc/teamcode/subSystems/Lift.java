@@ -30,7 +30,8 @@ public class Lift {
     public static final double LOW_BASKET_POS = 67.4 - ROBOT_LIFT_HEIGHT;
     public static final double SPECIMEN_SCORE_POS = 66 - ROBOT_LIFT_HEIGHT;
     public static double SAMPLE_COLLECTION_POS = 10; // ToDo: Find value for autonomous
-    public static final double ACCEPTED_RESETED_POSITION = 3;
+
+    public static final double ACCEPTED_RESETED_POSITION = 5;
 
     public static int LIFT_MOVEMENT_DURATION = 2000;
     public static int LIFT_RESET_TIME_INTERVALS = 700;
@@ -42,6 +43,8 @@ public class Lift {
     public static double HIGH_BASKET_GOAL_POS = 68;
     public static double HIGH_BASKET_POS = 56;
     public static double HIGH_BASKET_ACCEPTED_POS = 56;
+
+    public static double HIGH_BASKET_CURRENT_LENGTH_MIN = 48;
 
     public static double p = 0.0065;
     public static double i = 0;
@@ -93,6 +96,10 @@ public class Lift {
 
     public static boolean isReseted() {
         return getCurrentLength() < ACCEPTED_RESETED_POSITION;
+    }
+
+    public static boolean isHighBasket() {
+        return getCurrentLength() > HIGH_BASKET_CURRENT_LENGTH_MIN;
     }
 
 //    public static boolean manual_power_requested = false;
