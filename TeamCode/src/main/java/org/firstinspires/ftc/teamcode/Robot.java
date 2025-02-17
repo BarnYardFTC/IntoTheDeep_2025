@@ -1,8 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.content.ActivityNotFoundException;
-import android.graphics.Path;
-
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -205,6 +202,7 @@ public class Robot {
                         LiftArm.liftArmVertical(),
                         Differential.differentialScore()
                 ),
+                hasElapsed(LiftArm.LIFT_ARM_SETTLE_TIME),
                 new SequentialAction(
                         Lift.liftHighBasketGoal(),
                         Lift.liftHighBasket()
@@ -218,7 +216,23 @@ public class Robot {
                         Lift.moveLift(Lift.Pos.RESET)
                 ),
                 LiftArm.liftArmHorizontal(),
-                hasElapsed(2000),
+                properlyResetLift()
+        );
+    }
+    public static Action properlyResetLift() {
+        return new SequentialAction(
+                Lift.liftResetEncoders(),
+                hasElapsed(Lift.LIFT_RESET_TIME_INTERVALS),
+                Lift.liftResetEncoders(),
+                hasElapsed(Lift.LIFT_RESET_TIME_INTERVALS),
+                Lift.liftResetEncoders(),
+                hasElapsed(Lift.LIFT_RESET_TIME_INTERVALS),
+                Lift.liftResetEncoders(),
+                hasElapsed(Lift.LIFT_RESET_TIME_INTERVALS),
+                Lift.liftResetEncoders(),
+                hasElapsed(Lift.LIFT_RESET_TIME_INTERVALS),
+                Lift.liftResetEncoders(),
+                hasElapsed(Lift.LIFT_RESET_TIME_INTERVALS),
                 Lift.liftResetEncoders()
         );
     }
@@ -384,8 +398,7 @@ public class Robot {
 //        }
 
             // If a manual input is received, cancel all automations
-            if (RIGHT_TRIGGER.isDown() && Lift.isMoveable(1)
-                    || LEFT_TRIGGER.isDown() && Lift.isMoveable(-1)) {
+            if (RIGHT_TRIGGER.isDown() || LEFT_TRIGGER.isDown() || gamepadEx1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER) || gamepadEx1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
                 if (RIGHT_TRIGGER.isDown() && Lift.isMoveable(1)) {
                     Lift.move(1);
                 } else if (LEFT_TRIGGER.isDown() && Lift.isMoveable(-1)) {

@@ -33,6 +33,7 @@ public class Lift {
     public static final double ACCEPTED_RESETED_POSITION = 3;
 
     public static int LIFT_MOVEMENT_DURATION = 2000;
+    public static int LIFT_RESET_TIME_INTERVALS = 700;
 
     // Lift limits
     private static final double HORIZONTAL_LIMIT = 44;
