@@ -27,11 +27,11 @@ public class BlueSample4Park extends LinearOpMode {
 
         Action scorePreLoad = ignitionSystem.actionBuilder(BlueSampleCoordinates.getStart())
                 .setTangent(BlueSampleCoordinates.getScoreTangent())
-                .splineToLinearHeading(BlueSampleCoordinates.getScore(), BlueSampleCoordinates.getIntake2HeadingChange())
+                .splineToLinearHeading(BlueSampleCoordinates.getScore0(), BlueSampleCoordinates.getIntake2HeadingChange())
 
                 .build();
 
-        Action intake2 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore())
+        Action intake2 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore0())
                 .splineToLinearHeading(BlueSampleCoordinates.getIntake2(), BlueSampleCoordinates.getIntake2HeadingChange())
 
                 .build();
@@ -83,7 +83,8 @@ public class BlueSample4Park extends LinearOpMode {
                                 intake2,
                                 new SequentialAction(
                                         Robot.hasElapsed(Robot.POST_SCORE_DELAY),
-                                        Robot.reset()
+                                        Robot.reset(),
+                                        Lift.liftSampleCollection()
                                 )
                         ),
                         Claw.closeClaw(),
@@ -100,7 +101,8 @@ public class BlueSample4Park extends LinearOpMode {
                                 intake3,
                                 new SequentialAction(
                                         Robot.hasElapsed(Robot.POST_SCORE_DELAY),
-                                        Robot.reset()
+                                        Robot.reset(),
+                                        Lift.liftSampleCollection()
                                 )
                         ),
                         Claw.closeClaw(),
@@ -118,7 +120,8 @@ public class BlueSample4Park extends LinearOpMode {
                                 intake4,
                                 new SequentialAction(
                                         Robot.hasElapsed(Robot.POST_SCORE_DELAY),
-                                        Robot.reset()
+                                        Robot.reset(),
+                                        Lift.liftSampleCollection()
                                 )
                         ),
                         Claw.closeClaw(),

@@ -29,7 +29,7 @@ public class Lift {
     public static final double HIGH_CHAMBER_POS = 66 - ROBOT_LIFT_HEIGHT;
     public static final double LOW_BASKET_POS = 67.4 - ROBOT_LIFT_HEIGHT;
     public static final double SPECIMEN_SCORE_POS = 66 - ROBOT_LIFT_HEIGHT;
-    public static double SAMPLE_COLLECTION_POS = 6; // ToDo: Find value for autonomous
+    public static double SAMPLE_COLLECTION_POS = 10; // ToDo: Find value for autonomous
     public static final double ACCEPTED_RESETED_POSITION = 3;
 
     public static int LIFT_MOVEMENT_DURATION = 2000;
@@ -39,9 +39,9 @@ public class Lift {
     private static final double HORIZONTAL_LIMIT = 44;
     private static final double VERTICAL_LIMIT = 71.5;
 
-    public static double HIGH_BASKET_GOAL_POS = 65;
-    public static double HIGH_BASKET_POS = 54;
-    public static double HIGH_BASKET_ACCEPTED_POS = 54;
+    public static double HIGH_BASKET_GOAL_POS = 68;
+    public static double HIGH_BASKET_POS = 56;
+    public static double HIGH_BASKET_ACCEPTED_POS = 56;
 
     public static double p = 0.0065;
     public static double i = 0;
@@ -229,10 +229,13 @@ public class Lift {
             return !arrivedTargetPos();
         }
     }
+    public static Action liftSampleCollection(){
+        return new LiftSampleCollection();
+    }
     public static class LiftSampleCollection implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            move(Lift.Pos.LOW_BASKET);
+            move(Pos.SAMPLE_COLLECTION);
             return !arrivedTargetPos();
         }
     }
