@@ -34,7 +34,7 @@ public class LiftArm {
     public static double p = 0.02;
     public static double i = 0;
     public static double d = 0;
-    public static double f = 0.12;
+    public static double f = 0.14;
     public static int targetAngle; // Target angle of the arm.
     private static PIDController controller; // PID controller.
     private static int targetPos; // Target position of the right motor.
@@ -124,7 +124,12 @@ public class LiftArm {
         pid = controller.calculate(currentPos, targetPos);
         double power;
         ff = f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
-        power = pid + ff;
+        if (Lift.getTargetPosCm() == Lift.HIGH_BASKET_POS) {
+            power = pid + 0.4;
+        }
+        else {
+            power = pid + ff;
+        }
 
 //        lift_arm_maintain *= Lift.getTargetPosCm();
 

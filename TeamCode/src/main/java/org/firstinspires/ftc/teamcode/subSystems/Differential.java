@@ -73,7 +73,7 @@ public class Differential {
     }
 
     public static void score(){
-        move(0, PITCH_ANGLE_SCORE);
+        move(90, PITCH_ANGLE_SCORE);
     }
     public static void up(){
         if (isCollectSpecimen()){

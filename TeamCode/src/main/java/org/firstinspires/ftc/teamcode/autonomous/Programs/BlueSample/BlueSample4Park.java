@@ -69,70 +69,79 @@ public class BlueSample4Park extends LinearOpMode {
         if (isStopRequested()) return;
 
         Actions.runBlocking(
-            new SequentialAction(
-                    new ParallelAction(
-                            scorePreLoad,
-                            Robot.highBasketDeposit()
-                    ),
-                    Claw.openClaw(),
-                    Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
+            new ParallelAction(
+                new SequentialAction(
+                        new ParallelAction(
+                                Robot.highBasketDeposit(),
+                                scorePreLoad
+                        ),
+                        Robot.hasElapsed(1000),
+                        Claw.openClaw(),
+                        Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
 
-                    new ParallelAction(
-                            intake2,
-                            new SequentialAction(
-                                    Robot.hasElapsed(Robot.POST_SCORE_DELAY),
-                                    Robot.reset()
-                            )
-                    ),
-                    Claw.closeClaw(),
-                    Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
-                    new ParallelAction(
-                            score2,
-                            Robot.highBasketDeposit()
-                    ),
-                    Claw.openClaw(),
-                    Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
+                        new ParallelAction(
+                                intake2,
+                                new SequentialAction(
+                                        Robot.hasElapsed(Robot.POST_SCORE_DELAY),
+                                        Robot.reset()
+                                )
+                        ),
+                        Claw.closeClaw(),
+                        Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
+                        new ParallelAction(
+                                score2,
+                                Robot.highBasketDeposit()
+                        ),
+                        Robot.hasElapsed(1000),
+                        Claw.openClaw(),
+                        Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
 
-                    new ParallelAction(
-                            intake3,
-                            new SequentialAction(
-                                    Robot.hasElapsed(Robot.POST_SCORE_DELAY),
-                                    Robot.reset()
-                            )
-                    ),
-                    Claw.closeClaw(),
-                    Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
-                    new ParallelAction(
-                            score2,
-                            Robot.highBasketDeposit()
-                    ),
-                    Claw.openClaw(),
-                    Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
+                        new ParallelAction(
+                                intake3,
+                                new SequentialAction(
+                                        Robot.hasElapsed(Robot.POST_SCORE_DELAY),
+                                        Robot.reset()
+                                )
+                        ),
+                        Claw.closeClaw(),
+                        Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
+                        new ParallelAction(
+                                score2,
+                                Robot.highBasketDeposit()
+                        ),
+                        Robot.hasElapsed(1000),
+                        Claw.openClaw(),
 
-                    new ParallelAction(
-                            intake4,
-                            new SequentialAction(
-                                    Robot.hasElapsed(Robot.POST_SCORE_DELAY),
-                                    Robot.reset()
-                            )
-                    ),
-                    Claw.closeClaw(),
-                    Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
-                    new ParallelAction(
-                            score4,
-                            Robot.highBasketDeposit()
-                    ),
-                    Claw.openClaw(),
-                    Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
+                        Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
 
-                    new ParallelAction(
-                            park,
-                            new SequentialAction(
-                                    Robot.hasElapsed(Robot.POST_SCORE_DELAY),
-                                    Robot.reset()
-                            )
-                    ),
-                    LiftArm.liftArmHorizontal()
+                        new ParallelAction(
+                                intake4,
+                                new SequentialAction(
+                                        Robot.hasElapsed(Robot.POST_SCORE_DELAY),
+                                        Robot.reset()
+                                )
+                        ),
+                        Claw.closeClaw(),
+                        Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
+                        new ParallelAction(
+                                score4,
+                                Robot.highBasketDeposit()
+                        ),
+                        Robot.hasElapsed(1000),
+                        Claw.openClaw(),
+                        Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
+
+                        new ParallelAction(
+                                park,
+                                new SequentialAction(
+                                        Robot.hasElapsed(Robot.POST_SCORE_DELAY),
+                                        Robot.reset()
+                                )
+                        ),
+                        LiftArm.liftArmHorizontal()
+                ),
+                LiftArm.liftArmPID(),
+                Lift.liftPID()
             )
         );
     }

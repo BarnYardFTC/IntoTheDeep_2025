@@ -40,10 +40,10 @@ public class Lift {
     private static final double VERTICAL_LIMIT = 71.5;
 
     public static double HIGH_BASKET_GOAL_POS = 65;
-    public static double HIGH_BASKET_POS = 52;
-    public static double HIGH_BASKET_ACCEPTED_POS = 52;
+    public static double HIGH_BASKET_POS = 54;
+    public static double HIGH_BASKET_ACCEPTED_POS = 54;
 
-    public static double p = 0.005;
+    public static double p = 0.0065;
     public static double i = 0;
     public static double d = 0;
     public static double targetPosCm; // Target position of the lift in cm.
@@ -109,15 +109,8 @@ public class Lift {
         // Calculate motor power.
         double power = controller.calculate(currentPos, targetPos);
 
-        // Giving power to motors.
-//        if (manual_power_requested){
-//            motors[RIGHT].setPower(manual_power);
-//            motors[LEFT].setPower(manual_power);
-//        }
-//        else{
             motors[RIGHT].setPower(power);
             motors[LEFT].setPower(power);
-//        }
 
     }
 
