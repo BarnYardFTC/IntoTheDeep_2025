@@ -28,6 +28,8 @@ public class LiftArm {
 
     private static final int POWER_OFF_HORIZONTAL_ANGLE = 20;
 
+    public static int lengthOfLiftForPIEDChang = 40;
+
     //ToDo: set correct values.
     public static double p = 0.02;
     public static double i = 0;
@@ -122,8 +124,8 @@ public class LiftArm {
         pid = controller.calculate(currentPos, targetPos);
         double power;
         ff = f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
-        if (Lift.getTargetPosCm() >= 13) {
-            power = pid + 0.45;
+        if (!isHorizontal()) {
+            power = pid + 0.48;
         }
         else {
             power = pid + ff;

@@ -14,13 +14,19 @@ import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.autonomous.Coordinates.BlueSampleCoordinates;
 import org.firstinspires.ftc.teamcode.roadRunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subSystems.Claw;
+import org.firstinspires.ftc.teamcode.subSystems.Differential;
 import org.firstinspires.ftc.teamcode.subSystems.Lift;
 import org.firstinspires.ftc.teamcode.subSystems.LiftArm;
 
 @Config
 @Autonomous(name = "Blue_Sample_4_Park", group = "Autonomous")
 
-public class BlueSample4Park extends LinearOpMode {
+public class Blue4Park extends LinearOpMode {
+
+    public static int HIGH_BASKET_SETTLE_TIME = 1000;
+    public static int HORIZONTAL_LIFT_SETTLE_TIME = 500;
+    public static int POST_SCORE_DELAY = 700;
+
     @Override
     public void runOpMode() {
         MecanumDrive ignitionSystem = new MecanumDrive(hardwareMap, BlueSampleCoordinates.getStart());
@@ -75,34 +81,39 @@ public class BlueSample4Park extends LinearOpMode {
                                 Robot.highBasketDeposit(),
                                 scorePreLoad
                         ),
-                        Robot.hasElapsed(1000),
+                        Robot.hasElapsed(HIGH_BASKET_SETTLE_TIME),
                         Claw.openClaw(),
                         Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
-
                         new ParallelAction(
                                 intake2,
+                                Differential.differentialDown(),
                                 new SequentialAction(
-                                        Robot.hasElapsed(Robot.POST_SCORE_DELAY),
+                                        Robot.hasElapsed(POST_SCORE_DELAY),
                                         Robot.reset(),
-                                        Lift.liftSampleCollection()
+                                        Lift.liftSampleCollection(),
+                                        Robot.hasElapsed(HORIZONTAL_LIFT_SETTLE_TIME),
+                                        Claw.closeClaw(),
+                                        Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION)
                                 )
                         ),
-                        Claw.closeClaw(),
-                        Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
                         new ParallelAction(
                                 score2,
                                 Robot.highBasketDeposit()
                         ),
-                        Robot.hasElapsed(1000),
+                        Robot.hasElapsed(HIGH_BASKET_SETTLE_TIME),
                         Claw.openClaw(),
                         Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
 
                         new ParallelAction(
                                 intake3,
+                                Differential.differentialDown(),
                                 new SequentialAction(
-                                        Robot.hasElapsed(Robot.POST_SCORE_DELAY),
+                                        Robot.hasElapsed(POST_SCORE_DELAY),
                                         Robot.reset(),
-                                        Lift.liftSampleCollection()
+                                        Lift.liftSampleCollection(),
+                                        Robot.hasElapsed(HORIZONTAL_LIFT_SETTLE_TIME),
+                                        Claw.closeClaw(),
+                                        Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION)
                                 )
                         ),
                         Claw.closeClaw(),
@@ -111,17 +122,22 @@ public class BlueSample4Park extends LinearOpMode {
                                 score2,
                                 Robot.highBasketDeposit()
                         ),
-                        Robot.hasElapsed(1000),
+                        Robot.hasElapsed(HIGH_BASKET_SETTLE_TIME),
                         Claw.openClaw(),
 
                         Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
 
                         new ParallelAction(
                                 intake4,
+                                Differential.differentialDown(),
                                 new SequentialAction(
-                                        Robot.hasElapsed(Robot.POST_SCORE_DELAY),
+                                        Robot.hasElapsed(POST_SCORE_DELAY),
                                         Robot.reset(),
-                                        Lift.liftSampleCollection()
+                                        Lift.liftSampleCollection(),
+                                        Differential.moveDifferential90(),
+                                        Robot.hasElapsed(HORIZONTAL_LIFT_SETTLE_TIME),
+                                        Claw.closeClaw(),
+                                        Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION)
                                 )
                         ),
                         Claw.closeClaw(),
@@ -130,14 +146,14 @@ public class BlueSample4Park extends LinearOpMode {
                                 score4,
                                 Robot.highBasketDeposit()
                         ),
-                        Robot.hasElapsed(1000),
+                        Robot.hasElapsed(HIGH_BASKET_SETTLE_TIME),
                         Claw.openClaw(),
                         Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
 
                         new ParallelAction(
                                 park,
                                 new SequentialAction(
-                                        Robot.hasElapsed(Robot.POST_SCORE_DELAY),
+                                        Robot.hasElapsed(POST_SCORE_DELAY),
                                         Robot.reset()
                                 )
                         ),

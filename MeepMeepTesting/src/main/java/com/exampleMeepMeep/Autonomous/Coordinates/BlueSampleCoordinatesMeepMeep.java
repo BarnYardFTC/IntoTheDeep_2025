@@ -5,8 +5,10 @@ import com.acmerobotics.roadrunner.Pose2d;
 public class BlueSampleCoordinatesMeepMeep {
     private static final double startX = 40.5;
     private static final double startY = 63.75;
-    private static final double scoreX = 57;
-    private static final double scoreY = 57;
+    private static final double scoreX0 = 56;
+    private static final double scoreY0 = 53;
+    private static final double scoreX = 55;
+    private static final double scoreY = 54;
     private static final double intake2X = 49;
     private static final double intake2Y = 40;
     private static final double intake3X = 60;
@@ -24,6 +26,7 @@ public class BlueSampleCoordinatesMeepMeep {
     private static final double intake2HeadingChange = Math.toRadians(45);
     private static final double intake4HeadingChange = Math.toRadians(90);
     private static final Pose2d start = new Pose2d(startX, startY, startPoseHeading);
+    private static final Pose2d score0 = new Pose2d(scoreX0, scoreY0, scorePoseHeading);
     private static final Pose2d score = new Pose2d(scoreX, scoreY, scorePoseHeading);
     private static final Pose2d intake2 = new Pose2d(intake2X, intake2Y, intake2PoseHeading);
     private static final Pose2d intake3 = new Pose2d(intake3X, intake2Y, intake2PoseHeading);
@@ -37,6 +40,9 @@ public class BlueSampleCoordinatesMeepMeep {
 
     public static Pose2d getScore() {
         return score;
+    }
+    public static Pose2d getScore0() {
+        return score0;
     }
 
     public static Pose2d getIntake2() {

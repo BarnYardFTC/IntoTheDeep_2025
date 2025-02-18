@@ -67,7 +67,6 @@ public class Robot {
     // When the trigger value exceeds this value, the trigger is considered active
     private static final double TRIGGERS_THRESHOLD = 0.1;
     // The time it takes between when a sample is closed and the robot moved away from the basket
-    public static final int POST_SCORE_DELAY = 500;
 
     /*
     The only variable the class requires as an input.
@@ -539,6 +538,8 @@ public class Robot {
 
             opMode.telemetry.addData("liftArmTarget", LiftArm.targetAngle);
             opMode.telemetry.addData("liftArmCurrentAngle", LiftArm.getCurrentAngle());
+
+            opMode.telemetry.addData("isHorizontal", LiftArm.isHorizontal());
             opMode.telemetry.update();
             return true;
         }

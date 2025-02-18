@@ -1,22 +1,24 @@
 package org.firstinspires.ftc.teamcode.autonomous.Coordinates;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 
+@Config
 public class BlueSampleCoordinates {
-    private static final double startX = 40.5;
-    private static final double startY = 63.75;
-    private static final double scoreX0 = 56;
-    private static final double scoreY0 = 53;
-    private static final double scoreX = 55;
-    private static final double scoreY = 54;
-    private static final double intake2X = 49;
-    private static final double intake2Y = 40;
-    private static final double intake3X = 60;
-    private static final double intake4X = 57;
-    private static final double intake4Y = 37;
-    private static final double park1X = 36;
-    private static final double park2X = 26;
-    private static final double parkY = 10;
+    public static double startX = 40.5;
+    public static double startY = 63.75;
+    public static double scoreX0 = 56;
+    public static double scoreY0 = 53;
+    public static double scoreX = 55;
+    public static double scoreY = 54;
+    public static double intake2X = 49;
+    public static double intake2Y = 40;
+    public static double intake3X = 60;
+    public static double intake4X = 57;
+    public static double intake4Y = 37;
+    public static double park1X = 36;
+    public static double park2X = 26;
+    public static double parkY = 7;
     private static final double startPoseHeading = Math.toRadians(180);
     private static final double scorePoseHeading = Math.toRadians(225);
     private static final double intake2PoseHeading = Math.toRadians(270);

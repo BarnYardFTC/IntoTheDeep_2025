@@ -77,10 +77,10 @@ public class Differential {
     }
     public static void up(){
         if (isCollectSpecimen()){
-            Differential.reset();
+            reset();
         }
         else if (isCollectSample()){
-            Differential.score();
+            score();
         }
     }
     public static void down(){
