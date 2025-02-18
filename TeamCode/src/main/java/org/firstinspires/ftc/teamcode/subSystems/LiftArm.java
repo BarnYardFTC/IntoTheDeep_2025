@@ -19,14 +19,16 @@ public class LiftArm {
     private static final int LEFT = 1; // Left's motor index.
     private static final MotorProps LEFT_MOTOR = new MotorProps(1425.1, 1); // Left's motor props.
 
-    private static final int VERTICAL_ANGLE = 110; // Angle for moving the lift arm to a vertical position.
+    private static final int VERTICAL_ANGLE = 130; // Angle for moving the lift arm to a vertical position.
     private static final int HORIZONTAL_ANGLE = 0;
     private static final double MIN_LIFT_LENGTH = 30;
 
-    private static final int ACCEPTED_VERTICAL_ANGLE = 100;
+    private static final int ACCEPTED_VERTICAL_ANGLE = 110;
     private static final int ACCEPTED_HORIZONTAL_ANGLE = 30;
 
     private static final int POWER_OFF_HORIZONTAL_ANGLE = 20;
+
+    public static int LIFT_ARM_SETTLE_TIME = 500;
 
     public static int lengthOfLiftForPIEDChang = 40;
 
@@ -54,6 +56,13 @@ public class LiftArm {
         controller = new PIDController(p, i, d);
 
         move(Angle.HORIZONTAL);
+    }
+
+    public static void resetEncoders(){
+        for (DcMotorEx motor : motors) {
+            motor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+            motor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        }
     }
 
     public static int getTargetPos() {
@@ -206,5 +215,16 @@ public class LiftArm {
     }
     public static Action liftArmPID(){
         return new LiftArmPID();
+    }
+
+    public static class LiftArmResetEncoders implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            resetEncoders();
+            return false;
+        }
+    }
+    public static Action liftArmResetEncoders(){
+        return new LiftArmResetEncoders();
     }
 }

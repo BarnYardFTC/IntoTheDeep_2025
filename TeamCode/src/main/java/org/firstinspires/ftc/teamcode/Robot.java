@@ -19,6 +19,8 @@ import org.firstinspires.ftc.teamcode.subSystems.Lift;
 import org.firstinspires.ftc.teamcode.subSystems.LiftArm;
 import org.firstinspires.ftc.teamcode.subSystems.TimerHelper;
 
+import java.util.Objects;
+
 /**
  * ========General Description=======
  * This class connects between the different classes of the project in order
@@ -89,12 +91,14 @@ public class Robot {
     =========FLAGS=========
      */
     // Booleans
-    private static boolean is_reset_automating;
-    private static boolean is_high_basket_automating;
-    private static boolean is_specimen_automating;
-    private static boolean is_grip_loosening_automating;
-    private static boolean is_sample_collection_automating;
-    private static boolean is_specimen_collection_automating;
+    public static boolean is_reset_automating;
+    public static boolean is_high_basket_automating;
+    public static boolean is_specimen_automating;
+    public static boolean is_grip_loosening_automating;
+    public static boolean is_sample_collection_automating;
+    public static boolean is_specimen_collection_automating;
+
+    public static boolean is_resetting_from_high_basket;
 
     private static boolean is_manual_regular_mode;
 
@@ -124,6 +128,8 @@ public class Robot {
         is_grip_loosening_automating = false;
         is_sample_collection_automating = false;
         is_specimen_collection_automating = false;
+
+        is_resetting_from_high_basket = false;
 
         is_manual_regular_mode = false;
     }
@@ -205,6 +211,7 @@ public class Robot {
                         LiftArm.liftArmVertical(),
                         Differential.moveDifferential90()
                 ),
+                Robot.hasElapsed(LiftArm.LIFT_ARM_SETTLE_TIME),
                 new SequentialAction(
                         Lift.liftHighBasketGoal(),
                         Lift.liftHighBasket()
@@ -212,17 +219,31 @@ public class Robot {
         );
     }
     public static Action reset() {
-        return new SequentialAction(
-                Lift.moveLift(Lift.Pos.RESET),
-                new ParallelAction(
-                        LiftArm.liftArmHorizontal(),
-                        Differential.differentialUp()
-                ),
-                properlyResetLift()
-        );
+        if (is_resetting_from_high_basket){
+            return new SequentialAction(
+                    Lift.moveLift(Lift.Pos.RESET),
+                    new ParallelAction(
+                            LiftArm.liftArmHorizontal(),
+                            Differential.differentialUp()
+                    ),
+                    Robot.hasElapsed(LiftArm.LIFT_ARM_SETTLE_TIME+300),
+                    properlyResetLift()
+            );
+        }
+        else {
+            return new SequentialAction(
+                    Lift.moveLift(Lift.Pos.RESET),
+                    new ParallelAction(
+                            LiftArm.liftArmHorizontal(),
+                            Differential.differentialUp()
+                    ),
+                    properlyResetLift()
+            );
+        }
     }
     public static Action properlyResetLift() {
         return new SequentialAction(
+                Lift.liftArabicReset(),
                 Lift.liftResetEncoders(),
                 hasElapsed(Lift.LIFT_RESET_TIME_INTERVALS),
                 Lift.liftResetEncoders(),
@@ -236,6 +257,17 @@ public class Robot {
                 Lift.liftResetEncoders(),
                 hasElapsed(Lift.LIFT_RESET_TIME_INTERVALS),
                 Lift.liftResetEncoders()
+        );
+    }
+    public static Action properlyResetLiftArm() {
+        return new SequentialAction(
+                LiftArm.liftArmResetEncoders(),
+                hasElapsed(Lift.LIFT_RESET_TIME_INTERVALS),
+                LiftArm.liftArmResetEncoders(),
+                hasElapsed(Lift.LIFT_RESET_TIME_INTERVALS),
+                LiftArm.liftArmResetEncoders(),
+                hasElapsed(Lift.LIFT_RESET_TIME_INTERVALS),
+                LiftArm.liftArmResetEncoders()
         );
     }
 //    public static Action fullyScoreSpecimen(){
@@ -364,10 +396,6 @@ public class Robot {
                 } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_LEFT) && Differential.currentRollAngle - 60 >= 0) {
                     Differential.move(Differential.currentRollAngle - 60, Differential.currentPitchAngle);
                 }
-
-                else if (LiftArm.isVertical() && Lift.isHighBasket() && Claw.isOpen()){
-                    Differential.collectSample();
-                }
             }
 
 
@@ -383,6 +411,9 @@ public class Robot {
             // Check if a new automation is requested
             if (gamepadEx2.wasJustPressed(GamepadKeys.Button.A)) {
                 currentAutomation = reset();
+                if (!LiftArm.isHorizontal()){
+                    is_resetting_from_high_basket = true;
+                }
                 is_reset_automating = true;
                 is_high_basket_automating = false;
                 is_specimen_automating = false;
@@ -407,16 +438,20 @@ public class Robot {
 
             // If a manual input is received, cancel all automations
             if (RIGHT_TRIGGER.isDown() || LEFT_TRIGGER.isDown() || gamepadEx1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER) || gamepadEx1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+                if (!Lift.pid_on){
+                    Lift.pid_on = true;
+                }
                 if (RIGHT_TRIGGER.isDown() && Lift.isMoveable(1)) {
                     Lift.move(1);
                 } else if (LEFT_TRIGGER.isDown() && Lift.isMoveable(-1)) {
                     Lift.move(-1);
                 }
-
-                currentAutomation = null;
-                is_reset_automating = false;
-                is_high_basket_automating = false;
-                is_specimen_automating = false;
+                if (!(Objects.equals(currentAutomation, reset()) && LiftArm.isHorizontal() && Lift.isReseted())){
+                    currentAutomation = null;
+                    is_reset_automating = false;
+                    is_resetting_from_high_basket = false;
+                    is_specimen_automating = false;
+                }
             }
 
             // If an automation is running, execute it until completion
@@ -432,6 +467,9 @@ public class Robot {
 
             if (!is_reset_automating && !is_high_basket_automating && !is_specimen_automating){
                 currentAutomation = null;
+            }
+            if (!is_reset_automating){
+                is_resetting_from_high_basket = false;
             }
 
             return true; // Keep this action running during TeleOp
@@ -450,6 +488,7 @@ public class Robot {
 
                 is_reset_automating = false;
                 is_high_basket_automating = false;
+                is_specimen_automating = false;
                 LiftArm.move(LiftArm.Angle.VERTICAL);
 
                 // If the left bumper was just pressed, move the LiftArm to the horizontal position
@@ -457,6 +496,7 @@ public class Robot {
 
                 is_reset_automating = false;
                 is_high_basket_automating = false;
+                is_specimen_automating = false;
 
                 Differential.up();
                 LiftArm.move(LiftArm.Angle.HORIZONTAL);

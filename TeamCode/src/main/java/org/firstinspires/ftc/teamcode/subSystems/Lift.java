@@ -46,6 +46,9 @@ public class Lift {
 
     public static double HIGH_BASKET_CURRENT_LENGTH_MIN = 48;
 
+    public static double LIFT_ARABIC_RESET_POWER = -0.8;
+    public static int LIFT_ARABIC_RESET_DURATION = 500;
+
     public static double p = 0.0065;
     public static double i = 0;
     public static double d = 0;
@@ -53,7 +56,7 @@ public class Lift {
     public static int targetPos; // Target position of the right motor.
     private static PIDController controller; // PID controller.
 
-    private static boolean pid_on = true;
+    public static boolean pid_on;
 
     public static void initialize(OpMode opMode) {
         motors[RIGHT] = opMode.hardwareMap.get(DcMotorEx.class, "rightLift");
@@ -116,8 +119,11 @@ public class Lift {
         // Calculate motor power.
         double power = controller.calculate(currentPos, targetPos);
 
+        if (pid_on){
             motors[RIGHT].setPower(power);
             motors[LEFT].setPower(power);
+        }
+
 
     }
 
@@ -200,6 +206,42 @@ public class Lift {
     }
     public static Action liftPID(){
         return new LiftPID();
+    }
+
+    public static class LiftArabicReset implements Action {
+        private final TimerHelper timerHelper = new TimerHelper();
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            Lift.getRightMotor().setPower(LIFT_ARABIC_RESET_POWER);
+            Lift.getLeftMotor().setPower(LIFT_ARABIC_RESET_POWER);
+            if (timerHelper.hasElapsed(LIFT_ARABIC_RESET_DURATION) || pid_on) {
+                Lift.getRightMotor().setPower(0);
+                Lift.getLeftMotor().setPower(0);
+                pid_on = true;
+                return false;
+            }
+            return true;
+        }
+    }
+    public static class PidOff implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            pid_on = false;
+            return false;
+        }
+    }
+    private static class PidOn implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            pid_on = true;
+            return false;
+        }
+    }
+    public static Action liftArabicReset(){
+        return new SequentialAction(
+                new PidOff(),
+                new LiftArabicReset()
+        );
     }
 
     public static class LiftHighChamber implements Action {
