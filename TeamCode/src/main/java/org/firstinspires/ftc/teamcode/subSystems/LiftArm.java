@@ -9,6 +9,7 @@ import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
+import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.MotorProps;
 
 @Config
@@ -24,7 +25,7 @@ public class LiftArm {
     private static final double MIN_LIFT_LENGTH = 30;
 
     private static final int ACCEPTED_VERTICAL_ANGLE = 110;
-    private static final int ACCEPTED_HORIZONTAL_ANGLE = 30;
+    private static final int ACCEPTED_HORIZONTAL_ANGLE = 20;
 
     private static final int POWER_OFF_HORIZONTAL_ANGLE = 20;
 
@@ -91,7 +92,7 @@ public class LiftArm {
         return getCurrentAngle() > ACCEPTED_VERTICAL_ANGLE;
     }
     public static boolean isPowerRequired() {
-        return !(getCurrentAngle() < POWER_OFF_HORIZONTAL_ANGLE && getTargetAngle() == HORIZONTAL_ANGLE);
+        return !(getCurrentAngle() < POWER_OFF_HORIZONTAL_ANGLE && getTargetAngle() == HORIZONTAL_ANGLE) || Robot.is_reset_automating;
     }
 
     public static int getTargetAngle() {

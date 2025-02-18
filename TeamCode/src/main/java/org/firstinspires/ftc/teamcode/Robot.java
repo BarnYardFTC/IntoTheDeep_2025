@@ -209,6 +209,7 @@ public class Robot {
         return new SequentialAction(
                 new ParallelAction(
                         LiftArm.liftArmVertical(),
+                        Differential.differentialScore(),
                         Differential.moveDifferential90()
                 ),
                 Robot.hasElapsed(LiftArm.LIFT_ARM_SETTLE_TIME),
@@ -410,10 +411,10 @@ public class Robot {
         public boolean run(@NonNull TelemetryPacket packet) {
             // Check if a new automation is requested
             if (gamepadEx2.wasJustPressed(GamepadKeys.Button.A)) {
-                currentAutomation = reset();
                 if (!LiftArm.isHorizontal()){
                     is_resetting_from_high_basket = true;
                 }
+                currentAutomation = reset();
                 is_reset_automating = true;
                 is_high_basket_automating = false;
                 is_specimen_automating = false;
@@ -560,26 +561,6 @@ public class Robot {
     private static class DisplayTelemetry implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            opMode.telemetry.addData("lift moveable +: ", Lift.isMoveable(1));
-            opMode.telemetry.addData("lift moveable -: ", Lift.isMoveable(-1));
-            opMode.telemetry.addData("Lift target pos", Lift.targetPosCm);
-            opMode.telemetry.addData("lift current length", Lift.getCurrentLength());
-            opMode.telemetry.addData("Lift PID current pos", Lift.currentPos);
-            opMode.telemetry.addData("Lift PID target pos", Lift.targetPos);
-            opMode.telemetry.addData("armPower: ", LiftArm.getRightMotor().getPower());
-            opMode.telemetry.addData("LiftPower: ", Lift.getRightMotor().getPower());
-
-            opMode.telemetry.addData("isReset", is_reset_automating);
-            opMode.telemetry.addData("isLiftReset", Lift.isReseted());
-            opMode.telemetry.addData("isHighBasket", is_high_basket_automating);
-
-            opMode.telemetry.addData("rollAngle: ", Differential.currentRollAngle);
-            opMode.telemetry.addData("pitchAngle: ", Differential.currentPitchAngle);
-
-            opMode.telemetry.addData("liftArmTarget", LiftArm.targetAngle);
-            opMode.telemetry.addData("liftArmCurrentAngle", LiftArm.getCurrentAngle());
-
-            opMode.telemetry.addData("isHorizontal", LiftArm.isHorizontal());
             opMode.telemetry.update();
             return true;
         }

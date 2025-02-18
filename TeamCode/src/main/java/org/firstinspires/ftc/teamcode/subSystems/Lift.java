@@ -41,8 +41,8 @@ public class Lift {
     private static final double VERTICAL_LIMIT = 71.5;
 
     public static double HIGH_BASKET_GOAL_POS = 68;
-    public static double HIGH_BASKET_POS = 56;
-    public static double HIGH_BASKET_ACCEPTED_POS = 56;
+    public static double HIGH_BASKET_POS = 58;
+    public static double HIGH_BASKET_ACCEPTED_POS = 58;
 
     public static double HIGH_BASKET_CURRENT_LENGTH_MIN = 48;
 

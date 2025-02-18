@@ -7,7 +7,7 @@ import com.acmerobotics.roadrunner.Pose2d;
 public class BlueSampleCoordinates {
     public static double startX = 40.5;
     public static double startY = 63.75;
-    public static double scoreX0 = 56;
+    public static double scoreX0 = 55;
     public static double scoreY0 = 53;
     public static double scoreX = 55;
     public static double scoreY = 54;
