@@ -49,7 +49,7 @@ public class Lift {
     public static double LIFT_ARABIC_RESET_POWER = -0.8;
     public static int LIFT_ARABIC_RESET_DURATION = 500;
 
-    public static double p = 0.0065;
+    public static double p = 0.0075;
     public static double i = 0;
     public static double d = 0;
     public static double targetPosCm; // Target position of the lift in cm.

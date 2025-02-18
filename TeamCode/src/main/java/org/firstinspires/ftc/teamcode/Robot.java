@@ -182,6 +182,7 @@ public class Robot {
      */
     public static void autonomousSetup(){
         Differential.reset();
+        is_resetting_from_high_basket = true;
         Claw.close();
     }
 
