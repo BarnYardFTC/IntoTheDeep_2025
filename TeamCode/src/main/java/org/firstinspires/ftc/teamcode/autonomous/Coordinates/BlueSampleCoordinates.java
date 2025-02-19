@@ -9,11 +9,11 @@ public class BlueSampleCoordinates {
     public static double startY = 63.75;
     public static double scoreX0 = 53;
     public static double scoreY0 = 53;
-    public static double scoreX = 55;
-    public static double scoreY = 54;
-    public static double intake2X = 49;
-    public static double intake2Y = 40;
-    public static double intake3X = 60;
+    public static double scoreX = 53;
+    public static double scoreY = 44;
+    public static double intake2X = 47;
+    public static double intake2Y = 36;
+    public static double intake3X = 50;
     public static double intake4X = 57;
     public static double intake4Y = 37;
     public static double park1X = 36;

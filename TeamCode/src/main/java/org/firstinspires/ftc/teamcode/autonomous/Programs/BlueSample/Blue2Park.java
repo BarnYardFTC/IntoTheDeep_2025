@@ -76,7 +76,6 @@ public class Blue2Park extends LinearOpMode {
                                                 Robot.hasElapsed(POST_SCORE_DELAY),
                                                 Robot.reset(),
                                                 Differential.differentialDown(),
-//                                                Lift.liftSampleCollection(),
                                                 Robot.hasElapsed(HORIZONTAL_LIFT_SETTLE_TIME),
                                                 Claw.closeClaw(),
                                                 Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION)
