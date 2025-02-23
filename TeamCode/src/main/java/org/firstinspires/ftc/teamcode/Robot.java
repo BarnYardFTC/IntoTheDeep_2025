@@ -36,13 +36,13 @@ import java.util.Objects;
 
  *  -Gamepad1-
  *  This gamepad is used by the main driver and it gives access to every system of the robot.
- * A: Move Differential down to collect-sample position
+ * A: Move Differential to collect-sample-position/score-position
  * B: Reset the IMU (used in case of electrical induction which disrupts proper driving)
  * Y: Close Claw, followed by an automation of the differential when sample/specimen is collected
- * X: Activate/Deactivate slow mode
+ * X: Move Differential to collect-specimen/specimen-pre-score-position
  * Joysticks: Drive the robot
  * Dpad-up: Move Lift to high-basket position
- * Dpad-down: Move Lift low-basket position
+ * Dpad-down: loosen grip automation
  * Dpad-right: Adjust Differential for sample intake
  * Dpad-left: Adjust Differential for sample intake
  * Right-Bumper: Move Arm to a vertical position
@@ -57,6 +57,7 @@ import java.util.Objects;
  * A: Reset the Lift and Arm (=close lift & bring Arm down if necessary)
  * Y: Bring the Lift and Arm to a high-basket-discharge position
  * B: Score a specimen on the high chamber
+ * Dpad-down: Slow mode
  */
 
 
@@ -90,7 +91,7 @@ public class Robot {
     /*
     =========FLAGS=========
      */
-    // Booleans
+    // Flags
     public static boolean is_reset_automating;
     public static boolean is_high_basket_automating;
     public static boolean is_specimen_automating;
