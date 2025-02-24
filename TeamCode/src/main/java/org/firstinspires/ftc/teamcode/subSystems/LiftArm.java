@@ -15,12 +15,12 @@ import org.firstinspires.ftc.teamcode.modules.MotorProps;
 @Config
 public class LiftArm {
     public static final DcMotorEx[] motors = new DcMotorEx[2]; // Motors array.
-    public static final MotorProps RIGHT_MOTOR = new MotorProps(1425.1, 1); // Right's motor props.
+    public static final MotorProps RIGHT_MOTOR = new MotorProps(1425.1, 1.4); // Right's motor props.
     private static final int RIGHT = 0; // Right's motor index.
     private static final int LEFT = 1; // Left's motor index.
-    private static final MotorProps LEFT_MOTOR = new MotorProps(1425.1, 1); // Left's motor props.
+    private static final MotorProps LEFT_MOTOR = new MotorProps(1425.1, 1.4); // Left's motor props.
 
-    private static final int VERTICAL_ANGLE = 130; // Angle for moving the lift arm to a vertical position.
+    private static final int VERTICAL_ANGLE = 120; // Angle for moving the lift arm to a vertical position.
     private static final int HORIZONTAL_ANGLE = 0;
     private static final double MIN_LIFT_LENGTH = 30;
 
@@ -31,13 +31,15 @@ public class LiftArm {
 
     public static int LIFT_ARM_SETTLE_TIME = 500;
 
+    public static boolean PIDOn = true;
+
     public static int lengthOfLiftForPIEDChang = 40;
 
     //ToDo: set correct values.
-    public static double p = 0.02;
+    public static double p = 0.027;
     public static double i = 0;
     public static double d = 0;
-    public static double f = 0.14;
+    public static double f = 0.16;
     public static int targetAngle; // Target angle of the arm.
     private static PIDController controller; // PID controller.
     private static int targetPos; // Target position of the right motor.
@@ -134,25 +136,12 @@ public class LiftArm {
         pid = controller.calculate(currentPos, targetPos);
         double power;
         ff = f * (MIN_LIFT_LENGTH + Lift.getTargetPosCm()) / (MIN_LIFT_LENGTH);
-        if (!isHorizontal()) {
-            power = pid + 0.48;
-        }
-        else {
-            power = pid + ff;
-        }
-
-//        lift_arm_maintain *= Lift.getTargetPosCm();
+        power = pid + Math.cos(Math.toRadians(targetAngle)) * ff;
 
         // Giving power to motors.
         if (isPowerRequired()){
-//            if (manual_power_requested){
-//                motors[RIGHT].setPower(manual_power);
-//                motors[LEFT].setPower(manual_power);
-//            }
-//            else {
-                motors[RIGHT].setPower(power);
-                motors[LEFT].setPower(power);
-//            }
+            motors[RIGHT].setPower(power);
+            motors[LEFT].setPower(power);
         }
         else {
             motors[RIGHT].setPower(0);
@@ -210,7 +199,9 @@ public class LiftArm {
     public static class LiftArmPID implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            LiftArm.PID();
+            if (LiftArm.PIDOn) {
+                LiftArm.PID();
+            }
             return true;
         }
     }

@@ -505,6 +505,22 @@ public class Robot {
                 LiftArm.move(LiftArm.Angle.HORIZONTAL);
             }
 
+            if (gamepadEx1.getButton(GamepadKeys.Button.DPAD_DOWN)){
+                LiftArm.PIDOn = false;
+                LiftArm.motors[0].setPower(-1);
+                LiftArm.motors[1].setPower(-1);
+            }
+            if (gamepadEx1.getButton(GamepadKeys.Button.DPAD_UP)){
+                LiftArm.PIDOn = false;
+                LiftArm.motors[0].setPower(1);
+                LiftArm.motors[1].setPower(1);
+            }
+            if (!gamepadEx1.getButton(GamepadKeys.Button.DPAD_DOWN) && !gamepadEx1.getButton(GamepadKeys.Button.DPAD_UP)){
+                LiftArm.PIDOn = true;
+                LiftArm.motors[0].setPower(0);
+                LiftArm.motors[1].setPower(0);
+            }
+
 
             // Return true so this action keeps running throughout the TeleOp period,
             // allowing continuous input response
@@ -563,6 +579,8 @@ public class Robot {
     private static class DisplayTelemetry implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
+            opMode.telemetry.addData("powerR", LiftArm.getRightMotor().getPower());
+            opMode.telemetry.addData("powerL", LiftArm.getLeftMotor().getPower());
             opMode.telemetry.update();
             return true;
         }
