@@ -25,8 +25,10 @@ public class Differential {
     private static final int PITCH_ANGLE_RESET = 175;
     public static final int PITCH_ANGLE_SCORE = 140;
 
-    public static int PRE_SCORE_SPECIMEN_PITCH = 150;
-    public static int POST_SCORE_SPECIMEN_PITCH = 160;
+    public static int PREPARE_SPECIMEN_PITCH = 130;
+    public static int SCORE_SPECIMEN_PITCH = 160;
+
+    public static int MOVEMENT_DURATION = 400;
 
     public static int currentRollAngle;
     public static int currentPitchAngle;
@@ -62,7 +64,11 @@ public class Differential {
     }
 
     public static void prepareSpecimen(){
-        move(180, PRE_SCORE_SPECIMEN_PITCH);
+        move(180, PREPARE_SPECIMEN_PITCH);
+    }
+
+    public static void scoreSpecimen(){
+        move(currentRollAngle, SCORE_SPECIMEN_PITCH);
     }
 
     /**
@@ -126,7 +132,10 @@ public class Differential {
         return currentRollAngle == 90;
     }
     public static boolean isSpecimenPrepared(){
-        return currentRollAngle == 180 && currentPitchAngle == PRE_SCORE_SPECIMEN_PITCH;
+        return currentPitchAngle == PREPARE_SPECIMEN_PITCH;
+    }
+    public static boolean isSpecimenScored(){
+        return currentPitchAngle == SCORE_SPECIMEN_PITCH;
     }
 
 
@@ -145,6 +154,16 @@ public class Differential {
         return new DifferentialPrepareSpecimen();
     }
 
+    private static class DifferentialScoreSpecimen implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            Differential.scoreSpecimen();
+            return !Differential.isSpecimenScored();
+        }
+    }
+    public static Action differentialScoreSpecimen(){
+        return new DifferentialScoreSpecimen();
+    }
 
     private static class DifferentialCollectSpecimen implements Action {
         @Override

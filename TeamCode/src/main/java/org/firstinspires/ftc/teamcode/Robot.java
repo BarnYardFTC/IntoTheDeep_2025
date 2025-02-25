@@ -94,14 +94,9 @@ public class Robot {
     // Flags
     public static boolean is_reset_automating;
     public static boolean is_high_basket_automating;
-    public static boolean is_specimen_automating;
-    public static boolean is_grip_loosening_automating;
     public static boolean is_sample_collection_automating;
-    public static boolean is_specimen_collection_automating;
-
-    public static boolean is_resetting_from_high_basket;
-
-    private static boolean is_manual_regular_mode;
+    public static boolean is_specimen_preparation_automating;
+    public static boolean is_specimen_score_automating;
 
     /*
     ========INITIALIZATION METHODS========
@@ -125,14 +120,10 @@ public class Robot {
         // reset flags
         is_reset_automating = false;
         is_high_basket_automating = false;
-        is_specimen_automating = false;
-        is_grip_loosening_automating = false;
         is_sample_collection_automating = false;
-        is_specimen_collection_automating = false;
+        is_specimen_preparation_automating = false;
+        is_specimen_score_automating = false;
 
-        is_resetting_from_high_basket = false;
-
-        is_manual_regular_mode = false;
     }
     public static void initializeOpMode(OpMode opMode){
         Robot.opMode = opMode;
@@ -183,7 +174,6 @@ public class Robot {
      */
     public static void autonomousSetup(){
         Differential.reset();
-        is_resetting_from_high_basket = true;
         Claw.close();
     }
 
@@ -192,22 +182,25 @@ public class Robot {
     */
     // ToDo: Add is_specimen_automating when method is made
     public static boolean isLiftAutomating(){
-        return is_reset_automating || is_high_basket_automating;
+        return is_reset_automating || is_high_basket_automating || is_specimen_score_automating || is_specimen_preparation_automating;
     }
     public static boolean isLiftArmAutomating(){
-        return is_reset_automating || is_high_basket_automating;
+        return is_reset_automating || is_high_basket_automating || is_specimen_score_automating || is_specimen_preparation_automating;
     }
     public static boolean isDifferentialAutomating(){
-        return is_reset_automating || is_sample_collection_automating || is_specimen_collection_automating || is_high_basket_automating;
+        return is_reset_automating || is_sample_collection_automating || is_specimen_preparation_automating|| is_specimen_score_automating || is_high_basket_automating;
     }
     public static boolean isClawAutomating(){
-        return is_grip_loosening_automating || is_sample_collection_automating || is_specimen_collection_automating;
+        return is_sample_collection_automating || is_specimen_score_automating;
     }
 
     /*
     ==========Automations==========
     */
     public static Action highBasketDeposit() {
+        is_specimen_preparation_automating = false;
+        is_reset_automating = false;
+        is_high_basket_automating = true;
         return new SequentialAction(
                 new ParallelAction(
                         LiftArm.liftArmVertical(),
@@ -224,7 +217,7 @@ public class Robot {
                 Lift.moveLift(Lift.Pos.RESET),
                 new ParallelAction(
                         LiftArm.liftArmHorizontal(),
-                        Differential.differentialUp()
+                        Differential.differentialReset()
                 ),
                 Robot.hasElapsed(LiftArm.LIFT_ARM_HORIZONTAL_SETTLE_TIME),
                 Lift.hardReset()
@@ -235,17 +228,20 @@ public class Robot {
                 Lift.moveLift(Lift.Pos.RESET),
                 new ParallelAction(
                         LiftArm.liftArmHorizontal(),
-                        Differential.differentialUp()
+                        Differential.differentialReset()
                 ),
                 Lift.hardReset()
         );
     }
     public static Action reset() {
-        if (LiftArm.isVertical()){
-            return resetFromHighBasket();
+        is_high_basket_automating = false;
+        is_specimen_preparation_automating = false;
+        is_reset_automating = true;
+        if (LiftArm.isHorizontal()){
+            return regularReset();
         }
         else {
-            return regularReset();
+            return resetFromHighBasket();
         }
     }
 
@@ -263,21 +259,34 @@ public class Robot {
                 Differential.differentialScore()
         );
     }
-    public static Action collectSpecimen(){
-        return new SequentialAction(
-                Claw.closeClaw(),
-                hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
-                Differential.differentialReset()
-        );
-    }
 
     public static Action prepareSpecimen(){
+        is_reset_automating = false;
+        is_high_basket_automating = false;
+        is_specimen_preparation_automating = true;
         return new SequentialAction(
                 new ParallelAction(
                         LiftArm.liftArmVertical(),
                         Differential.differentialPrepareSpecimen()
                 ),
-                Robot.hasElapsed(LiftArm.LIFT_ARM_VERTICAL_SETTLE_TIME)
+                Robot.hasElapsed(LiftArm.LIFT_ARM_VERTICAL_SETTLE_TIME),
+                Lift.hardReset(),
+                Lift.moveLift(Lift.Pos.PREPARE_SPECIMEN)
+        );
+    }
+
+    public static Action scoreSpecimen(){
+        return new SequentialAction(
+                Differential.differentialScoreSpecimen(),
+                Robot.hasElapsed(Differential.MOVEMENT_DURATION),
+                new ParallelAction(
+                    LiftArm.liftArmHorizontal(),
+                    new SequentialAction(
+                            Robot.hasElapsed(LiftArm.SPECIMEN_SCORE_TIME),
+                            Claw.openClaw()
+                    )
+                ),
+                reset()
         );
     }
 
@@ -303,10 +312,6 @@ public class Robot {
         public boolean run(@NonNull TelemetryPacket packet) {
             // Check if the Y button was just pressed
             if (!isClawAutomating()){
-//                if (gamepadEx1.wasJustPressed(GamepadKeys.Button.RIGHT_STICK_BUTTON)){
-//                    currentAutomation = loosenClawGrip();
-//                    is_claw_automating = true;
-//                }
                 if (gamepadEx1.wasJustPressed(GamepadKeys.Button.Y)) {
                     // Toggle the claw open or closed
                     if (Claw.isOpen()) {
@@ -314,10 +319,6 @@ public class Robot {
                         if (Differential.isCollectSample()){
                             currentAutomation = collectSample();
                             is_sample_collection_automating = true;
-                        }
-                        else if (Differential.isCollectSpecimen()){
-                            currentAutomation = collectSpecimen();
-                            is_specimen_collection_automating = true;
                         }
                     } else {
                         Claw.open();
@@ -327,9 +328,7 @@ public class Robot {
 
             if (currentAutomation != null){
                 if (!currentAutomation.run(packet)){
-                    is_grip_loosening_automating = false;
                     is_sample_collection_automating = false;
-                    is_specimen_collection_automating = false;
                     currentAutomation = null;
                 }
             }
@@ -346,19 +345,12 @@ public class Robot {
                     if (Differential.isCollectSample()){
                         Differential.score();
                     }
-                    else if (Differential.isReset() && LiftArm.isVertical()){
-                        Differential.score();
-                    }
                     else {
                         Differential.collectSample();
                     }
-                } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.X)) {
-                    if (Differential.isCollectSpecimen()){
-                        Differential.reset();
-                    }
-                    else {
-                        Differential.collectSpecimen();
-                    }
+                }
+                else if (gamepadEx2.wasJustPressed(GamepadKeys.Button.DPAD_UP)){
+                    Differential.reset();
                 }
 
                 else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT) && Differential.currentRollAngle + 60 <= 180) {
@@ -380,31 +372,19 @@ public class Robot {
         public boolean run(@NonNull TelemetryPacket packet) {
             // Check if a new automation is requested
             if (gamepadEx2.wasJustPressed(GamepadKeys.Button.A)) {
-                if (!LiftArm.isHorizontal()){
-                    is_resetting_from_high_basket = true;
-                }
                 currentAutomation = reset();
-                is_reset_automating = true;
-                is_high_basket_automating = false;
-                is_specimen_automating = false;
             } else if (gamepadEx2.wasJustPressed(GamepadKeys.Button.Y)) {
                 currentAutomation = highBasketDeposit();
-                is_high_basket_automating = true;
-                is_reset_automating = false;
-                is_specimen_automating = false;
+            }
+            else if (gamepadEx2.wasJustPressed(GamepadKeys.Button.B)) {
+                currentAutomation = prepareSpecimen();
+            }
+            else if (gamepadEx2.wasJustPressed(GamepadKeys.Button.X)) {
+                currentAutomation = scoreSpecimen();
             }
             else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_UP) && LiftArm.isVertical()) {
                 currentAutomation = highBasketDeposit();
-                is_high_basket_automating = true;
-                is_reset_automating = false;
-                is_specimen_automating = false;
             }
-//        else if (gamepadEx2.wasJustPressed(GamepadKeys.Button.B)){
-//            currentAutomation = scoreSpecimenAndReset();
-//            is_specimen_automating = true;
-//            is_reset_automating = false;
-//            is_high_basket_automating = false;
-//        }
 
             // If a manual input is received, cancel all automations
             if (RIGHT_TRIGGER.isDown() || LEFT_TRIGGER.isDown() || gamepadEx1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER) || gamepadEx1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
@@ -416,30 +396,27 @@ public class Robot {
                 } else if (LEFT_TRIGGER.isDown() && Lift.isMoveable(-1)) {
                     Lift.move(-1);
                 }
-                if (!(Objects.equals(currentAutomation, reset()) && LiftArm.isHorizontal() && Lift.isReseted())){
-                    currentAutomation = null;
-                    is_reset_automating = false;
-                    is_resetting_from_high_basket = false;
-                    is_specimen_automating = false;
-                }
+
+                is_reset_automating = false;
+                is_specimen_preparation_automating = false;
+                is_specimen_score_automating = false;
+                is_high_basket_automating = false;
             }
 
             // If an automation is running, execute it until completion
             if (currentAutomation != null) {
                 if (!currentAutomation.run(packet)) {
                     // Mark respective automation as inactive when finished
+                    is_specimen_preparation_automating = false;
+                    is_specimen_score_automating = false;
                     is_reset_automating = false;
                     is_high_basket_automating = false;
-                    is_specimen_automating = false;
                     currentAutomation = null; // Reset currentAutomation
                 }
             }
 
-            if (!is_reset_automating && !is_high_basket_automating && !is_specimen_automating){
+            if (!is_reset_automating && !is_high_basket_automating && !is_specimen_score_automating && !is_specimen_preparation_automating){
                 currentAutomation = null;
-            }
-            if (!is_reset_automating){
-                is_resetting_from_high_basket = false;
             }
 
             return true; // Keep this action running during TeleOp
@@ -453,40 +430,42 @@ public class Robot {
             // Check if the LiftArm is currently automating
             // If it is, we don't want to interfere with its movement
 
-            // If the right bumper was just pressed, move the LiftArm to the vertical position
+//             If the right bumper was just pressed, move the LiftArm to the vertical position
             if (gamepadEx1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
 
+                is_specimen_preparation_automating = false;
+                is_specimen_score_automating = false;
                 is_reset_automating = false;
                 is_high_basket_automating = false;
-                is_specimen_automating = false;
                 LiftArm.move(LiftArm.Angle.VERTICAL);
 
                 // If the left bumper was just pressed, move the LiftArm to the horizontal position
             } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
 
+                is_specimen_preparation_automating = false;
+                is_specimen_score_automating = false;
                 is_reset_automating = false;
                 is_high_basket_automating = false;
-                is_specimen_automating = false;
 
                 Differential.up();
                 LiftArm.move(LiftArm.Angle.HORIZONTAL);
             }
 
-            if (gamepadEx1.getButton(GamepadKeys.Button.DPAD_DOWN)){
-                LiftArm.PID_on = false;
-                LiftArm.motors[0].setPower(-1);
-                LiftArm.motors[1].setPower(-1);
-            }
-            if (gamepadEx1.getButton(GamepadKeys.Button.DPAD_UP)){
-                LiftArm.PID_on = false;
-                LiftArm.motors[0].setPower(1);
-                LiftArm.motors[1].setPower(1);
-            }
-            if (!gamepadEx1.getButton(GamepadKeys.Button.DPAD_DOWN) && !gamepadEx1.getButton(GamepadKeys.Button.DPAD_UP)){
-                LiftArm.PID_on = true;
-                LiftArm.motors[0].setPower(0);
-                LiftArm.motors[1].setPower(0);
-            }
+//            if (gamepadEx1.isDown(GamepadKeys.Button.LEFT_BUMPER)){
+//                LiftArm.PID_on = false;
+//                LiftArm.motors[0].setPower(-1);
+//                LiftArm.motors[1].setPower(-1);
+//            }
+//            else if (gamepadEx1.isDown(GamepadKeys.Button.RIGHT_BUMPER)){
+//                LiftArm.PID_on = false;
+//                LiftArm.motors[0].setPower(1);
+//                LiftArm.motors[1].setPower(1);
+//            }
+//            else {
+//                LiftArm.PID_on = true;
+//                LiftArm.motors[0].setPower(0);
+//                LiftArm.motors[1].setPower(0);
+//            }
 
 
             // Return true so this action keeps running throughout the TeleOp period,
@@ -507,25 +486,23 @@ public class Robot {
             }
             // Check if the lift arm is horizontal and lift is not reset, or if the lift arm is vertical
             // or if the X button is pressed and the drivetrain is not slowed
-            if ((gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN) || gamepadEx2.wasJustPressed(GamepadKeys.Button.DPAD_DOWN))) {
-                if (Drivetrain.isSlowed()){
-                    Drivetrain.regularMode();
-                    is_manual_regular_mode = true;
-                }
-                else {
-                    Drivetrain.slowMode();
-                    is_manual_regular_mode = false;
-                }
-            }
-            else if ((!Lift.isReseted() || Differential.isDown() || LiftArm.isVertical()) && !is_manual_regular_mode){
-                Drivetrain.slowMode();
-            }
-            else {
-                Drivetrain.regularMode();
-            }
+           if (gamepadEx2.isDown(GamepadKeys.Button.DPAD_DOWN)){
+               if (LiftArm.isVertical()){
+                   Drivetrain.regularMode();
+               }
+               else {
+                   Drivetrain.slowMode();
+               }
+           }
+           else if (!Lift.isReseted() || Differential.isDown() || LiftArm.isVertical()){
+               Drivetrain.slowMode();
+           }
+           else {
+               Drivetrain.regularMode();
+           }
 
-            // Return true to indicate that the action should continue running and check conditions again
-            return true;
+           // Return true to indicate that the action should continue running and check conditions again
+           return true;
         }
     }
     private static class HasElapsed implements Action {
@@ -549,6 +526,9 @@ public class Robot {
         public boolean run(@NonNull TelemetryPacket packet) {
             opMode.telemetry.addData("powerR", LiftArm.getRightMotor().getPower());
             opMode.telemetry.addData("powerL", LiftArm.getLeftMotor().getPower());
+
+            opMode.telemetry.addData("is_reset_automating", is_reset_automating);
+            opMode.telemetry.addData("timer_finished_flag", Lift.timer_finished_flag);
             opMode.telemetry.update();
             return true;
         }

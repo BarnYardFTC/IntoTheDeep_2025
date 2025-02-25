@@ -32,6 +32,8 @@ public class LiftArm {
     public static int LIFT_ARM_VERTICAL_SETTLE_TIME = 500;
     public static int LIFT_ARM_HORIZONTAL_SETTLE_TIME = 800;
 
+    public static int SPECIMEN_SCORE_TIME = 1000;
+
     public static boolean PID_on = true;
 
     public static int lengthOfLiftForPIEDChang = 40;
@@ -140,7 +142,7 @@ public class LiftArm {
         power = pid + Math.cos(Math.toRadians(targetAngle)) * ff;
 
         // Giving power to motors.
-        if (isPowerRequired()){
+        if (isPowerRequired() && PID_on){
             motors[RIGHT].setPower(power);
             motors[LEFT].setPower(power);
         }
@@ -189,7 +191,7 @@ public class LiftArm {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             move(LiftArm.Angle.HORIZONTAL);
-            Differential.reset();
+            Differential.up();
             return !isHorizontal();
         }
     }

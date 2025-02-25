@@ -50,7 +50,10 @@ public class Lift {
     public static int LIFT_RESET_TIME_INTERVALS = 700;
 
 
-    public static int LIFT_PREPARE_SPECIMEN = 10;
+    public static int LIFT_PREPARE_SPECIMEN = 20;
+
+
+    public static boolean timer_finished_flag = false;
 
     public static double p = 0.0075;
     public static double i = 0;
@@ -209,13 +212,19 @@ public class Lift {
     }
 
     public static class LiftHardReset implements Action {
-        private final TimerHelper timerHelper = new TimerHelper();
+        private final TimerHelper timerHelper;
+
+        public LiftHardReset(){
+            this.timerHelper = new TimerHelper();
+        }
+
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             disablePID();
             Lift.getRightMotor().setPower(-LIFT_HARD_RESET_POWER);
             Lift.getLeftMotor().setPower(-LIFT_HARD_RESET_POWER);
             if (timerHelper.hasElapsed(LIFT_HARD_RESET_DURATION) || pid_on) {
+                timer_finished_flag = true;
                 Lift.getRightMotor().setPower(0);
                 Lift.getLeftMotor().setPower(0);
                 enablePID();
@@ -224,7 +233,7 @@ public class Lift {
             return true;
         }
     }
-    public static Action liftHardReset(){
+    private static Action liftHardReset(){
         return new LiftHardReset();
     }
     public static Action hardReset(){
@@ -234,11 +243,8 @@ public class Lift {
                 Robot.hasElapsed(LIFT_RESET_TIME_INTERVALS),
                 liftResetEncoders(),
                 Robot.hasElapsed(LIFT_RESET_TIME_INTERVALS),
-                liftResetEncoders(),
-                Robot.hasElapsed(LIFT_RESET_TIME_INTERVALS),
-                liftResetEncoders(),
-                Robot.hasElapsed(LIFT_RESET_TIME_INTERVALS),
                 liftResetEncoders()
+
         );
     }
 
