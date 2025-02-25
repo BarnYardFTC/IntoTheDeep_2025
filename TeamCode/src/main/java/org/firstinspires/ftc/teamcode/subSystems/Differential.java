@@ -25,6 +25,9 @@ public class Differential {
     private static final int PITCH_ANGLE_RESET = 175;
     public static final int PITCH_ANGLE_SCORE = 140;
 
+    public static int PRE_SCORE_SPECIMEN_PITCH = 150;
+    public static int POST_SCORE_SPECIMEN_PITCH = 160;
+
     public static int currentRollAngle;
     public static int currentPitchAngle;
 
@@ -56,6 +59,10 @@ public class Differential {
         move(0, PITCH_ANGLE_RESET);
         servos[RIGHT].setDirection(Servo.Direction.FORWARD);
         servos[LEFT].setDirection(Servo.Direction.FORWARD);
+    }
+
+    public static void prepareSpecimen(){
+        move(180, PRE_SCORE_SPECIMEN_PITCH);
     }
 
     /**
@@ -118,11 +125,26 @@ public class Differential {
     public static boolean is90(){
         return currentRollAngle == 90;
     }
+    public static boolean isSpecimenPrepared(){
+        return currentRollAngle == 180 && currentPitchAngle == PRE_SCORE_SPECIMEN_PITCH;
+    }
 
 
     /**
      * Autonomous Actions - Actions which can be used in the autonomous programs.
      */
+
+    private static class DifferentialPrepareSpecimen implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            Differential.prepareSpecimen();
+            return !Differential.isSpecimenPrepared();
+        }
+    }
+    public static Action differentialPrepareSpecimen(){
+        return new DifferentialPrepareSpecimen();
+    }
+
 
     private static class DifferentialCollectSpecimen implements Action {
         @Override

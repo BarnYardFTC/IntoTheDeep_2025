@@ -248,25 +248,7 @@ public class Robot {
             return regularReset();
         }
     }
-//    public static Action fullyScoreSpecimen(){
-//        return new SequentialAction(
-//                loosenClawGrip(),
-//                Lift.moveLift(Lift.Pos.SPECIMEN_SCORE),
-//                scoreSpecimen()
-//        );
-//    }
-//    public static Action scoreSpecimen() {
-//        return new SequentialAction(
-//                Differential.differentialScore(),
-//                Claw.openClaw()
-//        );
-//    }
-//    public static Action scoreSpecimenAndReset() {
-//        return new SequentialAction(
-//                scoreSpecimen(),
-//                reset()
-//        );
-//    }
+
     public static Action loosenClawGrip(){
         return new SequentialAction(
                 Claw.loosenClawGrip(),
@@ -286,6 +268,16 @@ public class Robot {
                 Claw.closeClaw(),
                 hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
                 Differential.differentialReset()
+        );
+    }
+
+    public static Action prepareSpecimen(){
+        return new SequentialAction(
+                new ParallelAction(
+                        LiftArm.liftArmVertical(),
+                        Differential.differentialPrepareSpecimen()
+                ),
+                Robot.hasElapsed(LiftArm.LIFT_ARM_VERTICAL_SETTLE_TIME)
         );
     }
 

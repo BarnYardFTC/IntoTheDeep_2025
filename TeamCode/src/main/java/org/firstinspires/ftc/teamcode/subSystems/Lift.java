@@ -28,7 +28,7 @@ public class Lift {
     private static final double ROBOT_LIFT_HEIGHT = 50;
     public static final double HIGH_CHAMBER_POS = 66 - ROBOT_LIFT_HEIGHT;
     public static final double LOW_BASKET_POS = 67.4 - ROBOT_LIFT_HEIGHT;
-    public static final double SPECIMEN_SCORE_POS = 66 - ROBOT_LIFT_HEIGHT;
+
     public static double SAMPLE_COLLECTION_POS = 10; // ToDo: Find value for autonomous
 
     public static final double ACCEPTED_RESETED_POSITION = 5;
@@ -48,6 +48,9 @@ public class Lift {
     public static double LIFT_HARD_RESET_POWER = 0.8;
     public static int LIFT_HARD_RESET_DURATION = 500;
     public static int LIFT_RESET_TIME_INTERVALS = 700;
+
+
+    public static int LIFT_PREPARE_SPECIMEN = 10;
 
     public static double p = 0.0075;
     public static double i = 0;
@@ -146,15 +149,6 @@ public class Lift {
 
     public static void move(Pos pos) {
         switch (pos) {
-            case HIGH_CHAMBER:
-                targetPosCm = HIGH_CHAMBER_POS;
-                break;
-            case SPECIMEN_SCORE:
-                targetPosCm = SPECIMEN_SCORE_POS;
-                break;
-            case LOW_CHAMBER:
-                targetPosCm = LOW_CHAMBER_POS;
-                break;
             case HIGH_BASKET:
                 targetPosCm = HIGH_BASKET_POS;
                 break;
@@ -168,6 +162,9 @@ public class Lift {
                 targetPosCm = SAMPLE_COLLECTION_POS;
             case RESET:
                 targetPosCm = 0;
+                break;
+            case PREPARE_SPECIMEN:
+                targetPosCm = LIFT_PREPARE_SPECIMEN;
                 break;
         }
     }
@@ -188,7 +185,7 @@ public class Lift {
     }
 
     public enum Pos {
-        HIGH_CHAMBER, SPECIMEN_SCORE, LOW_CHAMBER, HIGH_BASKET, HIGH_BASKET_GOAL, LOW_BASKET, RESET, SAMPLE_COLLECTION
+        PREPARE_SPECIMEN, HIGH_BASKET, HIGH_BASKET_GOAL, LOW_BASKET, RESET, SAMPLE_COLLECTION
     }
 
     public static boolean arrivedTargetPos() {
@@ -245,13 +242,7 @@ public class Lift {
         );
     }
 
-    public static class LiftHighChamber implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            move(Pos.HIGH_CHAMBER);
-            return !arrivedTargetPos();
-        }
-    }
+
     public static class LiftHighBasketGoal implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
@@ -289,11 +280,16 @@ public class Lift {
             return !arrivedTargetPos();
         }
     }
-    public static class LiftSpecimenScore implements Action {
+    public static class LiftPrepareSpecimen implements Action {
+        private final TimerHelper timerHelper;
+
+        public LiftPrepareSpecimen(){
+            timerHelper = new TimerHelper();
+        }
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            move(Pos.SPECIMEN_SCORE);
-            return !arrivedTargetPos();
+            move(Pos.PREPARE_SPECIMEN);
+            return !arrivedTargetPos() && !timerHelper.hasElapsed(LIFT_MOVEMENT_DURATION);
         }
     }
     public static class LiftReset implements Action {
@@ -312,11 +308,8 @@ public class Lift {
 
 
     public static Action moveLift(Lift.Pos pos){
-        if (pos == Pos.HIGH_CHAMBER){
-            return new LiftHighChamber();
-        }
-        else if (pos == Pos.SPECIMEN_SCORE){
-            return new LiftSpecimenScore();
+        if (pos == Pos.PREPARE_SPECIMEN){
+            return new LiftPrepareSpecimen();
         }
         else if (pos == Pos.RESET){
             return new LiftReset();
