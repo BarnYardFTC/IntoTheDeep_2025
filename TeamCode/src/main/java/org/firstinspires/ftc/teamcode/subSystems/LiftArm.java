@@ -29,7 +29,8 @@ public class LiftArm {
 
     private static final int POWER_OFF_HORIZONTAL_ANGLE = 20;
 
-    public static int LIFT_ARM_SETTLE_TIME = 500;
+    public static int LIFT_ARM_VERTICAL_SETTLE_TIME = 500;
+    public static int LIFT_ARM_HORIZONTAL_SETTLE_TIME = 800;
 
     public static boolean PIDOn = true;
 

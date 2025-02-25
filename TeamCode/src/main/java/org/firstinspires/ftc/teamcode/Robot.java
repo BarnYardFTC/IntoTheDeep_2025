@@ -214,11 +214,9 @@ public class Robot {
                         Differential.differentialScore(),
                         Differential.moveDifferential90()
                 ),
-                Robot.hasElapsed(LiftArm.LIFT_ARM_SETTLE_TIME),
-                new SequentialAction(
-                        Lift.liftHighBasketGoal(),
-                        Lift.liftHighBasket()
-                )
+                Robot.hasElapsed(LiftArm.LIFT_ARM_VERTICAL_SETTLE_TIME),
+                Lift.liftHighBasketGoal(),
+                Lift.liftHighBasket()
         );
     }
     public static Action reset() {
@@ -229,8 +227,8 @@ public class Robot {
                             LiftArm.liftArmHorizontal(),
                             Differential.differentialUp()
                     ),
-                    Robot.hasElapsed(LiftArm.LIFT_ARM_SETTLE_TIME+300),
-                    properlyResetLift()
+                    Robot.hasElapsed(LiftArm.LIFT_ARM_HORIZONTAL_SETTLE_TIME),
+                    hardResetLift()
             );
         }
         else {
@@ -240,13 +238,13 @@ public class Robot {
                             LiftArm.liftArmHorizontal(),
                             Differential.differentialUp()
                     ),
-                    properlyResetLift()
+                    hardResetLift()
             );
         }
     }
-    public static Action properlyResetLift() {
+    public static Action hardResetLift() {
         return new SequentialAction(
-                Lift.liftArabicReset(),
+                Lift.liftHardReset(),
                 Lift.liftResetEncoders(),
                 hasElapsed(Lift.LIFT_RESET_TIME_INTERVALS),
                 Lift.liftResetEncoders(),

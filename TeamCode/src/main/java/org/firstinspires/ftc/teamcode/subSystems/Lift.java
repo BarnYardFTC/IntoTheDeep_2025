@@ -13,7 +13,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.LiftProps;
 
 @Config
@@ -46,7 +45,7 @@ public class Lift {
 
     public static double HIGH_BASKET_CURRENT_LENGTH_MIN = 48;
 
-    public static double LIFT_ARABIC_RESET_POWER = -0.8;
+    public static double LIFT_ARABIC_RESET_POWER = 0.8;
     public static int LIFT_ARABIC_RESET_DURATION = 500;
 
     public static double p = 0.0075;
@@ -105,9 +104,6 @@ public class Lift {
         return getCurrentLength() > HIGH_BASKET_CURRENT_LENGTH_MIN;
     }
 
-//    public static boolean manual_power_requested = false;
-//    public static double manual_power = 0.05;
-
     public static double currentPos = 0;
     public static void PID() {
         controller.setPID(p, i, d);
@@ -123,8 +119,16 @@ public class Lift {
             motors[RIGHT].setPower(power);
             motors[LEFT].setPower(power);
         }
+    }
 
-
+    public static void disablePID(){
+        pid_on = false;
+    }
+    public static void enablePID(){
+        pid_on = true;
+    }
+    public static boolean isPIDEnabled(){
+        return pid_on;
     }
 
     public static DcMotorEx getRightMotor() {
@@ -198,9 +202,7 @@ public class Lift {
     private static class LiftPID implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            if (pid_on){
-                PID();
-            }
+            PID();
             return true;
         }
     }
@@ -208,40 +210,24 @@ public class Lift {
         return new LiftPID();
     }
 
-    public static class LiftArabicReset implements Action {
+    public static class LiftHardReset implements Action {
         private final TimerHelper timerHelper = new TimerHelper();
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            Lift.getRightMotor().setPower(LIFT_ARABIC_RESET_POWER);
-            Lift.getLeftMotor().setPower(LIFT_ARABIC_RESET_POWER);
+            disablePID();
+            Lift.getRightMotor().setPower(-LIFT_ARABIC_RESET_POWER);
+            Lift.getLeftMotor().setPower(-LIFT_ARABIC_RESET_POWER);
             if (timerHelper.hasElapsed(LIFT_ARABIC_RESET_DURATION) || pid_on) {
                 Lift.getRightMotor().setPower(0);
                 Lift.getLeftMotor().setPower(0);
-                pid_on = true;
+                enablePID();
                 return false;
             }
             return true;
         }
     }
-    public static class PidOff implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            pid_on = false;
-            return false;
-        }
-    }
-    private static class PidOn implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            pid_on = true;
-            return false;
-        }
-    }
-    public static Action liftArabicReset(){
-        return new SequentialAction(
-                new PidOff(),
-                new LiftArabicReset()
-        );
+    public static Action liftHardReset(){
+        return new LiftHardReset();
     }
 
     public static class LiftHighChamber implements Action {
@@ -308,6 +294,7 @@ public class Lift {
             return keep_running; // Keep running the action
         }
     }
+
     public static Action moveLift(Lift.Pos pos){
         if (pos == Pos.HIGH_CHAMBER){
             return new LiftHighChamber();
