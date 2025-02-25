@@ -219,57 +219,34 @@ public class Robot {
                 Lift.liftHighBasket()
         );
     }
+    public static Action resetFromHighBasket(){
+        return new SequentialAction(
+                Lift.moveLift(Lift.Pos.RESET),
+                new ParallelAction(
+                        LiftArm.liftArmHorizontal(),
+                        Differential.differentialUp()
+                ),
+                Robot.hasElapsed(LiftArm.LIFT_ARM_HORIZONTAL_SETTLE_TIME),
+                Lift.hardReset()
+        );
+    }
+    public static Action regularReset(){
+        return new SequentialAction(
+                Lift.moveLift(Lift.Pos.RESET),
+                new ParallelAction(
+                        LiftArm.liftArmHorizontal(),
+                        Differential.differentialUp()
+                ),
+                Lift.hardReset()
+        );
+    }
     public static Action reset() {
-        if (is_resetting_from_high_basket){
-            return new SequentialAction(
-                    Lift.moveLift(Lift.Pos.RESET),
-                    new ParallelAction(
-                            LiftArm.liftArmHorizontal(),
-                            Differential.differentialUp()
-                    ),
-                    Robot.hasElapsed(LiftArm.LIFT_ARM_HORIZONTAL_SETTLE_TIME),
-                    hardResetLift()
-            );
+        if (LiftArm.isVertical()){
+            return resetFromHighBasket();
         }
         else {
-            return new SequentialAction(
-                    Lift.moveLift(Lift.Pos.RESET),
-                    new ParallelAction(
-                            LiftArm.liftArmHorizontal(),
-                            Differential.differentialUp()
-                    ),
-                    hardResetLift()
-            );
+            return regularReset();
         }
-    }
-    public static Action hardResetLift() {
-        return new SequentialAction(
-                Lift.liftHardReset(),
-                Lift.liftResetEncoders(),
-                hasElapsed(Lift.LIFT_RESET_TIME_INTERVALS),
-                Lift.liftResetEncoders(),
-                hasElapsed(Lift.LIFT_RESET_TIME_INTERVALS),
-                Lift.liftResetEncoders(),
-                hasElapsed(Lift.LIFT_RESET_TIME_INTERVALS),
-                Lift.liftResetEncoders(),
-                hasElapsed(Lift.LIFT_RESET_TIME_INTERVALS),
-                Lift.liftResetEncoders(),
-                hasElapsed(Lift.LIFT_RESET_TIME_INTERVALS),
-                Lift.liftResetEncoders(),
-                hasElapsed(Lift.LIFT_RESET_TIME_INTERVALS),
-                Lift.liftResetEncoders()
-        );
-    }
-    public static Action properlyResetLiftArm() {
-        return new SequentialAction(
-                LiftArm.liftArmResetEncoders(),
-                hasElapsed(Lift.LIFT_RESET_TIME_INTERVALS),
-                LiftArm.liftArmResetEncoders(),
-                hasElapsed(Lift.LIFT_RESET_TIME_INTERVALS),
-                LiftArm.liftArmResetEncoders(),
-                hasElapsed(Lift.LIFT_RESET_TIME_INTERVALS),
-                LiftArm.liftArmResetEncoders()
-        );
     }
 //    public static Action fullyScoreSpecimen(){
 //        return new SequentialAction(
@@ -504,17 +481,17 @@ public class Robot {
             }
 
             if (gamepadEx1.getButton(GamepadKeys.Button.DPAD_DOWN)){
-                LiftArm.PIDOn = false;
+                LiftArm.PID_on = false;
                 LiftArm.motors[0].setPower(-1);
                 LiftArm.motors[1].setPower(-1);
             }
             if (gamepadEx1.getButton(GamepadKeys.Button.DPAD_UP)){
-                LiftArm.PIDOn = false;
+                LiftArm.PID_on = false;
                 LiftArm.motors[0].setPower(1);
                 LiftArm.motors[1].setPower(1);
             }
             if (!gamepadEx1.getButton(GamepadKeys.Button.DPAD_DOWN) && !gamepadEx1.getButton(GamepadKeys.Button.DPAD_UP)){
-                LiftArm.PIDOn = true;
+                LiftArm.PID_on = true;
                 LiftArm.motors[0].setPower(0);
                 LiftArm.motors[1].setPower(0);
             }
@@ -560,12 +537,13 @@ public class Robot {
         }
     }
     private static class HasElapsed implements Action {
-        private final TimerHelper timer = new TimerHelper();
+        private final TimerHelper timer;
         private final int durationMilliseconds;
 
         // Constructor to set the duration
         public HasElapsed(int durationMilliseconds) {
             this.durationMilliseconds = durationMilliseconds;
+            this.timer = new TimerHelper();
         }
 
         @Override

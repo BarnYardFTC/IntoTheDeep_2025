@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.LiftProps;
 
 @Config
@@ -33,7 +34,6 @@ public class Lift {
     public static final double ACCEPTED_RESETED_POSITION = 5;
 
     public static int LIFT_MOVEMENT_DURATION = 2000;
-    public static int LIFT_RESET_TIME_INTERVALS = 700;
 
     // Lift limits
     private static final double HORIZONTAL_LIMIT = 44;
@@ -45,8 +45,9 @@ public class Lift {
 
     public static double HIGH_BASKET_CURRENT_LENGTH_MIN = 48;
 
-    public static double LIFT_ARABIC_RESET_POWER = 0.8;
-    public static int LIFT_ARABIC_RESET_DURATION = 500;
+    public static double LIFT_HARD_RESET_POWER = 0.8;
+    public static int LIFT_HARD_RESET_DURATION = 500;
+    public static int LIFT_RESET_TIME_INTERVALS = 700;
 
     public static double p = 0.0075;
     public static double i = 0;
@@ -215,9 +216,9 @@ public class Lift {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             disablePID();
-            Lift.getRightMotor().setPower(-LIFT_ARABIC_RESET_POWER);
-            Lift.getLeftMotor().setPower(-LIFT_ARABIC_RESET_POWER);
-            if (timerHelper.hasElapsed(LIFT_ARABIC_RESET_DURATION) || pid_on) {
+            Lift.getRightMotor().setPower(-LIFT_HARD_RESET_POWER);
+            Lift.getLeftMotor().setPower(-LIFT_HARD_RESET_POWER);
+            if (timerHelper.hasElapsed(LIFT_HARD_RESET_DURATION) || pid_on) {
                 Lift.getRightMotor().setPower(0);
                 Lift.getLeftMotor().setPower(0);
                 enablePID();
@@ -228,6 +229,20 @@ public class Lift {
     }
     public static Action liftHardReset(){
         return new LiftHardReset();
+    }
+    public static Action hardReset(){
+        return new SequentialAction(
+                liftHardReset(),
+                liftResetEncoders(),
+                Robot.hasElapsed(LIFT_RESET_TIME_INTERVALS),
+                liftResetEncoders(),
+                Robot.hasElapsed(LIFT_RESET_TIME_INTERVALS),
+                liftResetEncoders(),
+                Robot.hasElapsed(LIFT_RESET_TIME_INTERVALS),
+                liftResetEncoders(),
+                Robot.hasElapsed(LIFT_RESET_TIME_INTERVALS),
+                liftResetEncoders()
+        );
     }
 
     public static class LiftHighChamber implements Action {
@@ -282,18 +297,19 @@ public class Lift {
         }
     }
     public static class LiftReset implements Action {
-        private final TimerHelper moveTimer = new TimerHelper();
+        private final TimerHelper moveTimer;
+
+        public LiftReset() {
+            moveTimer = new TimerHelper(); // Always create a new TimerHelper
+        }
 
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             move(Pos.RESET);
-            boolean keep_running = !isReseted() && !moveTimer.hasElapsed(LIFT_MOVEMENT_DURATION);
-            if (!keep_running){
-                resetEncoders();
-            }
-            return keep_running; // Keep running the action
+            return !isReseted() && !moveTimer.hasElapsed(LIFT_MOVEMENT_DURATION);
         }
     }
+
 
     public static Action moveLift(Lift.Pos pos){
         if (pos == Pos.HIGH_CHAMBER){

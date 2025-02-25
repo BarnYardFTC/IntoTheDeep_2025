@@ -32,7 +32,7 @@ public class LiftArm {
     public static int LIFT_ARM_VERTICAL_SETTLE_TIME = 500;
     public static int LIFT_ARM_HORIZONTAL_SETTLE_TIME = 800;
 
-    public static boolean PIDOn = true;
+    public static boolean PID_on = true;
 
     public static int lengthOfLiftForPIEDChang = 40;
 
@@ -200,7 +200,7 @@ public class LiftArm {
     public static class LiftArmPID implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            if (LiftArm.PIDOn) {
+            if (LiftArm.PID_on) {
                 LiftArm.PID();
             }
             return true;
