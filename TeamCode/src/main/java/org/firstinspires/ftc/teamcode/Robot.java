@@ -346,18 +346,6 @@ public class Robot {
                     Differential.moveToDefault();
                 }
 
-//                if (gamepadEx1.wasJustPressed(GamepadKeys.Button.A)) {
-//                    if (Differential.isCollectSample()){
-//                        Differential.scoreBasket();
-//                    }
-//                    else {
-//                        Differential.collectSample();
-//                    }
-//                }
-//                else if (gamepadEx2.wasJustPressed(GamepadKeys.Button.DPAD_UP)){
-//                    Differential.reset();
-//                }
-
                 else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT) && Differential.currentRollAngle + 60 <= 180) {
                     Differential.move(Differential.currentRollAngle + 60, Differential.currentPitchAngle);
                 } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_LEFT) && Differential.currentRollAngle - 60 >= 0) {
