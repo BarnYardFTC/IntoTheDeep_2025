@@ -120,7 +120,6 @@ public class Robot {
         is_sample_collection_automating = false;
         is_specimen_preparation_automating = false;
         is_specimen_score_automating = false;
-
     }
     public static void initializeOpMode(OpMode opMode){
         Robot.opMode = opMode;
@@ -336,7 +335,7 @@ public class Robot {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             // Only allow manual control if no automation is running
-            if (!isDifferentialAutomating()) {
+            if (!isDifferentialAutomating() && Lift.isDifferentialMoveable()) {
 
                 if (gamepadEx1.wasJustPressed(GamepadKeys.Button.A)){
                     Differential.collectSample();

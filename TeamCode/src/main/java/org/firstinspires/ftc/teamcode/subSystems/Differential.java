@@ -59,7 +59,7 @@ public class Differential {
      * The action set the servos position once in a loop until the reseted value is changed.
      */
     public static void reset() {
-        move(currentRollAngle, RESET_PITCH);
+        move(0, RESET_PITCH);
         servos[RIGHT].setDirection(Servo.Direction.FORWARD);
         servos[LEFT].setDirection(Servo.Direction.FORWARD);
     }
@@ -103,9 +103,6 @@ public class Differential {
     }
     public static boolean isCollectSample() {
         return currentPitchAngle == SAMPLE_PITCH;
-    }
-    public static boolean is90(){
-        return currentRollAngle == 90;
     }
     public static boolean isSpecimenPrepared(){
         return currentPitchAngle == PREPARE_SPECIMEN_PITCH;

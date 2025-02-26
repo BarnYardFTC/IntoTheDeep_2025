@@ -31,7 +31,7 @@ public class Lift {
 
     public static double SAMPLE_COLLECTION_POS = 10; // ToDo: Find value for autonomous
 
-    public static final double ACCEPTED_RESETED_POSITION = 5;
+    public static final double ACCEPTED_RESETED_POSITION = 3;
 
     public static int LIFT_MOVEMENT_DURATION = 2000;
 
@@ -51,9 +51,9 @@ public class Lift {
 
 
     public static int LIFT_PREPARE_SPECIMEN = 20;
-
-
     public static boolean timer_finished_flag = false;
+
+    public static int DIFFERENTIAL_MOVEABLE_POS = 7;
 
     public static double p = 0.0075;
     public static double i = 0;
@@ -105,6 +105,10 @@ public class Lift {
 
     public static boolean isReseted() {
         return getCurrentLength() < ACCEPTED_RESETED_POSITION;
+    }
+
+    public static boolean isDifferentialMoveable(){
+        return getCurrentLength() >= DIFFERENTIAL_MOVEABLE_POS;
     }
 
     public static boolean isHighBasket() {
@@ -177,6 +181,9 @@ public class Lift {
     }
 
     public static boolean isMoveable(double direction) {
+        if (!Differential.isDefault() && LiftArm.isHorizontal() && direction == -1 && !isDifferentialMoveable()){
+            return false;
+        }
         return (LiftArm.isHorizontal() &&
                 targetPosCm + LIFT_SPEED * direction <= HORIZONTAL_LIMIT
                 &&  targetPosCm + LIFT_SPEED * direction >= 0
