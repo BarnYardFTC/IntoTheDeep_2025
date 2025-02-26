@@ -77,7 +77,7 @@ public class Blue3Park extends LinearOpMode {
 
                                 new ParallelAction(
                                         intake2,
-                                        Differential.differentialDown(),
+//                                        Differential.differentialDown(),
                                         new SequentialAction(
                                                 Robot.hasElapsed(POST_SCORE_DELAY),
                                                 Robot.reset(),
@@ -99,7 +99,7 @@ public class Blue3Park extends LinearOpMode {
 
                                 new ParallelAction(
                                         intake3,
-                                        Differential.differentialDown(),
+//                                        Differential.differentialDown(),
                                         new SequentialAction(
                                                 Robot.hasElapsed(POST_SCORE_DELAY),
                                                 Robot.reset(),

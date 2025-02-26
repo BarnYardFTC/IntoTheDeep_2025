@@ -92,8 +92,9 @@ public class BlueSpecimen4Park extends LinearOpMode {
                                 ),
 
                                 new ParallelAction(
-                                        collectSecond,
-                                        Differential.differentialCollectSpecimen()
+//                                        collectSecond,
+
+//                                        Differential.differentialCollectSpecimen()
                                 ),
                                 Claw.closeClaw(),
                                 Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),

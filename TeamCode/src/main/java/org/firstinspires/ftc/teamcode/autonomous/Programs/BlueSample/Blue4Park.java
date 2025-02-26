@@ -86,7 +86,7 @@ public class Blue4Park extends LinearOpMode {
                         Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
                         new ParallelAction(
                                 intake2,
-                                Differential.differentialDown(),
+//                                Differential.differentialDown(),
                                 new SequentialAction(
                                         Robot.hasElapsed(POST_SCORE_DELAY),
                                         Robot.reset(),
@@ -106,7 +106,7 @@ public class Blue4Park extends LinearOpMode {
 
                         new ParallelAction(
                                 intake3,
-                                Differential.differentialDown(),
+//                                Differential.differentialDown(),
                                 new SequentialAction(
                                         Robot.hasElapsed(POST_SCORE_DELAY),
                                         Robot.reset(),
@@ -129,12 +129,12 @@ public class Blue4Park extends LinearOpMode {
 
                         new ParallelAction(
                                 intake4,
-                                Differential.differentialDown(),
+//                                Differential.differentialDown(),
                                 new SequentialAction(
                                         Robot.hasElapsed(POST_SCORE_DELAY),
                                         Robot.reset(),
                                         Lift.liftSampleCollection(),
-                                        Differential.moveDifferential90(),
+//                                        Differential.moveDifferential90(),
                                         Robot.hasElapsed(HORIZONTAL_LIFT_SETTLE_TIME),
                                         Claw.closeClaw(),
                                         Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION)

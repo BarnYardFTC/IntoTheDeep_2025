@@ -20,10 +20,11 @@ public class Differential {
     private static final int RIGHT = 0; // Right's servo index.
     private static final int LEFT = 1; // Left's servo index.
     // Angles for moving the differential.
-    private static final int PITCH_ANGLE_SAMPLE = 0;
-    private static final int PITCH_ANGLE_SPECIMEN = 35;
-    private static final int PITCH_ANGLE_RESET = 175;
-    public static final int PITCH_ANGLE_SCORE = 140;
+    private static final int SAMPLE_PITCH = 0;
+    private static final int RESET_PITCH = 175;
+    public static final int SCORE_BASKET_PITCH = 140;
+
+    public static int DEFAULT_PITCH = 90;
 
     public static int PREPARE_SPECIMEN_PITCH = 130;
     public static int SCORE_SPECIMEN_PITCH = 160;
@@ -58,7 +59,7 @@ public class Differential {
      * The action set the servos position once in a loop until the reseted value is changed.
      */
     public static void reset() {
-        move(0, PITCH_ANGLE_RESET);
+        move(currentRollAngle, RESET_PITCH);
         servos[RIGHT].setDirection(Servo.Direction.FORWARD);
         servos[LEFT].setDirection(Servo.Direction.FORWARD);
     }
@@ -75,34 +76,15 @@ public class Differential {
      * Moves differential to the sample intake position.
      */
     public static void collectSample() {
-        move(currentRollAngle, PITCH_ANGLE_SAMPLE);
+        move(currentRollAngle, SAMPLE_PITCH);
     }
 
-    /**
-     * Moves the differential to the specimen intake position.
-     */
-    public static void collectSpecimen() {
-        move(0, PITCH_ANGLE_SPECIMEN);
+    public static void moveToDefault(){
+        move(currentRollAngle, DEFAULT_PITCH);
     }
 
-    public static void score(){
-        move(currentRollAngle, PITCH_ANGLE_SCORE);
-    }
-    public static void up(){
-        if (isCollectSpecimen()){
-            reset();
-        }
-        else if (isCollectSample()){
-            score();
-        }
-    }
-    public static void down(){
-        if (isReset()){
-            collectSpecimen();
-        }
-        else if (isScore()){
-            collectSample();
-        }
+    public static void scoreBasket(){
+        move(90, SCORE_BASKET_PITCH);
     }
 
     /**
@@ -110,23 +92,17 @@ public class Differential {
      *
      * @return - If the differential is reseted.
      */
+    public static boolean isDefault(){
+        return currentPitchAngle == DEFAULT_PITCH;
+    }
     public static boolean isReset() {
-        return currentPitchAngle == PITCH_ANGLE_RESET;
+        return currentPitchAngle == RESET_PITCH;
     }
-    public static boolean isScore(){
-        return currentPitchAngle == PITCH_ANGLE_SCORE;
-    }
-    public static boolean isCollectSpecimen(){
-        return currentPitchAngle == PITCH_ANGLE_SPECIMEN;
+    public static boolean isScoreBasket(){
+        return currentPitchAngle == SCORE_BASKET_PITCH;
     }
     public static boolean isCollectSample() {
-        return currentPitchAngle == PITCH_ANGLE_SAMPLE;
-    }
-    public static boolean isDown(){
-        return isCollectSample() || isCollectSpecimen();
-    }
-    public static boolean isUp(){
-        return isScore() || isReset();
+        return currentPitchAngle == SAMPLE_PITCH;
     }
     public static boolean is90(){
         return currentRollAngle == 90;
@@ -142,6 +118,17 @@ public class Differential {
     /**
      * Autonomous Actions - Actions which can be used in the autonomous programs.
      */
+    private static class DifferentialMoveToDefault implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            Differential.moveToDefault();
+            return !Differential.isDefault();
+        }
+    }
+    public static Action differentialDefault(){
+        return new DifferentialMoveToDefault();
+    }
+
 
     private static class DifferentialPrepareSpecimen implements Action {
         @Override
@@ -164,18 +151,6 @@ public class Differential {
     public static Action differentialScoreSpecimen(){
         return new DifferentialScoreSpecimen();
     }
-
-    private static class DifferentialCollectSpecimen implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            Differential.collectSpecimen();
-            return !Differential.isCollectSpecimen();
-        }
-    }
-    public static Action differentialCollectSpecimen(){
-        return new DifferentialCollectSpecimen();
-    }
-
     private static class DifferentialCollectSample implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
@@ -199,55 +174,17 @@ public class Differential {
     }
 
 
-    private static class DifferentialScore implements Action {
+    private static class DifferentialScoreBasket implements Action {
 
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            Differential.score();
-            return !Differential.isScore();
+            Differential.scoreBasket();
+            return !Differential.isScoreBasket();
         }
     }
 
-    public static Action differentialScore(){
-        return new DifferentialScore();
-    }
-
-    private static class DifferentialUp implements Action {
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            Differential.up();
-            return !Differential.isUp();
-        }
-    }
-
-    public static Action differentialUp(){
-        return new DifferentialUp();
-    }
-
-    private static class DifferentialDown implements Action {
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            Differential.down();
-            return !Differential.isDown();
-        }
-    }
-
-    public static Action differentialDown(){
-        return new DifferentialDown();
-    }
-
-    private static class moveDifferential90 implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            Differential.move(90, currentPitchAngle);
-            return !is90();
-        }
-    }
-
-    public static Action moveDifferential90(){
-        return new moveDifferential90();
+    public static Action differentialScoreBasket(){
+        return new DifferentialScoreBasket();
     }
 
 }

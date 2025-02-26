@@ -19,8 +19,6 @@ import org.firstinspires.ftc.teamcode.subSystems.Lift;
 import org.firstinspires.ftc.teamcode.subSystems.LiftArm;
 import org.firstinspires.ftc.teamcode.subSystems.TimerHelper;
 
-import java.util.Objects;
-
 /**
  * ========General Description=======
  * This class connects between the different classes of the project in order
@@ -59,7 +57,6 @@ import java.util.Objects;
  * B: Score a specimen on the high chamber
  * Dpad-down: Slow mode
  */
-
 
 
 public class Robot {
@@ -166,14 +163,14 @@ public class Robot {
      * Move all the systems of the robot to where they should be at the beginning of the teleop
      */
     public static void teleopSetup(){
-        Differential.reset();
+        Differential.collectSample();
         Claw.close();
     }
     /**
      * Move all the systems of the robot to where they should be at the beginning of the autonomous
      */
     public static void autonomousSetup(){
-        Differential.reset();
+        Differential.collectSample();
         Claw.close();
     }
 
@@ -204,8 +201,7 @@ public class Robot {
         return new SequentialAction(
                 new ParallelAction(
                         LiftArm.liftArmVertical(),
-                        Differential.differentialScore(),
-                        Differential.moveDifferential90()
+                        Differential.differentialScoreBasket()
                 ),
                 Robot.hasElapsed(LiftArm.LIFT_ARM_VERTICAL_SETTLE_TIME),
                 Lift.liftHighBasketGoal(),
@@ -217,7 +213,7 @@ public class Robot {
                 Lift.moveLift(Lift.Pos.RESET),
                 new ParallelAction(
                         LiftArm.liftArmHorizontal(),
-                        Differential.differentialReset()
+                        Differential.differentialDefault()
                 ),
                 Robot.hasElapsed(LiftArm.LIFT_ARM_HORIZONTAL_SETTLE_TIME),
                 Lift.hardReset()
@@ -228,7 +224,7 @@ public class Robot {
                 Lift.moveLift(Lift.Pos.RESET),
                 new ParallelAction(
                         LiftArm.liftArmHorizontal(),
-                        Differential.differentialReset()
+                        Differential.differentialDefault()
                 ),
                 Lift.hardReset()
         );
@@ -256,7 +252,7 @@ public class Robot {
         return new SequentialAction(
                 Claw.closeClaw(),
                 hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
-                Differential.differentialScore()
+                Differential.differentialDefault()
         );
     }
 
@@ -286,7 +282,7 @@ public class Robot {
                             Claw.openClaw()
                     )
                 ),
-                reset()
+                regularReset()
         );
     }
 
@@ -341,17 +337,27 @@ public class Robot {
         public boolean run(@NonNull TelemetryPacket packet) {
             // Only allow manual control if no automation is running
             if (!isDifferentialAutomating()) {
-                if (gamepadEx1.wasJustPressed(GamepadKeys.Button.A)) {
-                    if (Differential.isCollectSample()){
-                        Differential.score();
-                    }
-                    else {
-                        Differential.collectSample();
-                    }
+
+                if (gamepadEx1.wasJustPressed(GamepadKeys.Button.A)){
+                    Differential.collectSample();
                 }
-                else if (gamepadEx2.wasJustPressed(GamepadKeys.Button.DPAD_UP)){
+                else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_UP)){
                     Differential.reset();
+                } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.X)) {
+                    Differential.moveToDefault();
                 }
+
+//                if (gamepadEx1.wasJustPressed(GamepadKeys.Button.A)) {
+//                    if (Differential.isCollectSample()){
+//                        Differential.scoreBasket();
+//                    }
+//                    else {
+//                        Differential.collectSample();
+//                    }
+//                }
+//                else if (gamepadEx2.wasJustPressed(GamepadKeys.Button.DPAD_UP)){
+//                    Differential.reset();
+//                }
 
                 else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT) && Differential.currentRollAngle + 60 <= 180) {
                     Differential.move(Differential.currentRollAngle + 60, Differential.currentPitchAngle);
@@ -381,9 +387,6 @@ public class Robot {
             }
             else if (gamepadEx2.wasJustPressed(GamepadKeys.Button.X)) {
                 currentAutomation = scoreSpecimen();
-            }
-            else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_UP) && LiftArm.isVertical()) {
-                currentAutomation = highBasketDeposit();
             }
 
             // If a manual input is received, cancel all automations
@@ -447,7 +450,6 @@ public class Robot {
                 is_reset_automating = false;
                 is_high_basket_automating = false;
 
-                Differential.up();
                 LiftArm.move(LiftArm.Angle.HORIZONTAL);
             }
 
@@ -494,7 +496,7 @@ public class Robot {
                    Drivetrain.slowMode();
                }
            }
-           else if (!Lift.isReseted() || Differential.isDown() || LiftArm.isVertical()){
+           else if (!Lift.isReseted() || LiftArm.isVertical()){
                Drivetrain.slowMode();
            }
            else {

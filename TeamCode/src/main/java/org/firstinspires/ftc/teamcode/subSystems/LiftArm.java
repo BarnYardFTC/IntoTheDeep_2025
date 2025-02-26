@@ -158,6 +158,9 @@ public class LiftArm {
                 targetAngle = VERTICAL_ANGLE;
                 break;
             case HORIZONTAL:
+                if (!Robot.isDifferentialAutomating()){
+                    Differential.moveToDefault();
+                }
                 targetAngle = HORIZONTAL_ANGLE;
                 break;
         }
@@ -191,7 +194,6 @@ public class LiftArm {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             move(LiftArm.Angle.HORIZONTAL);
-            Differential.up();
             return !isHorizontal();
         }
     }

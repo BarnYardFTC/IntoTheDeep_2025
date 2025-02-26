@@ -34,7 +34,7 @@ public class Test extends LinearOpMode {
 //                            Robot.hasElapsed(LiftArm.LIFT_ARM_SETTLE_TIME),
                             Robot.loosenClawGrip(),
 //                            Lift.moveLift(Lift.Pos.SPECIMEN_SCORE),
-                            Differential.differentialScore(),
+                            Differential.differentialScoreBasket(),
                             Claw.openClaw(),
                             Lift.moveLift(Lift.Pos.RESET),
                             LiftArm.liftArmHorizontal()
