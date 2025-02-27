@@ -20,8 +20,8 @@ public class Differential {
     private static final int RIGHT = 0; // Right's servo index.
     private static final int LEFT = 1; // Left's servo index.
     // Angles for moving the differential.
-    private static final int SAMPLE_PITCH = 0;
-    private static final int RESET_PITCH = 175;
+    public static final int SAMPLE_PITCH = 0;
+    public static int RESET_PITCH = 165;
     public static final int SCORE_BASKET_PITCH = 140;
 
     public static int DEFAULT_PITCH = 90;

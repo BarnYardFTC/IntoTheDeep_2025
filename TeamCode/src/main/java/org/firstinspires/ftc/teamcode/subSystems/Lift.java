@@ -29,7 +29,7 @@ public class Lift {
     public static final double HIGH_CHAMBER_POS = 66 - ROBOT_LIFT_HEIGHT;
     public static final double LOW_BASKET_POS = 67.4 - ROBOT_LIFT_HEIGHT;
 
-    public static double SAMPLE_COLLECTION_POS = 10; // ToDo: Find value for autonomous
+    public static double SAMPLE_COLLECTION_POS = 10;
 
     public static final double ACCEPTED_RESETED_POSITION = 3;
 
@@ -45,15 +45,15 @@ public class Lift {
 
     public static double HIGH_BASKET_CURRENT_LENGTH_MIN = 48;
 
-    public static double LIFT_HARD_RESET_POWER = 0.8;
-    public static int LIFT_HARD_RESET_DURATION = 500;
+    public static double LIFT_HARD_RESET_POWER = 1;
+    public static int LIFT_HARD_RESET_DURATION = 800;
     public static int LIFT_RESET_TIME_INTERVALS = 700;
-
 
     public static int LIFT_PREPARE_SPECIMEN = 20;
     public static boolean timer_finished_flag = false;
 
-    public static int DIFFERENTIAL_MOVEABLE_POS = 7;
+    public static int DIFFERENTIAL_MOVEABLE_POS = 5;
+    public static int DISABLE_DIFEERENTIAL_LIFT_POS = 10;
 
     public static double p = 0.0075;
     public static double i = 0;
@@ -110,6 +110,9 @@ public class Lift {
     public static boolean isDifferentialMoveable(){
         return getCurrentLength() >= DIFFERENTIAL_MOVEABLE_POS;
     }
+    public static boolean disableDifferentialLiftPos(){
+        return getCurrentLength() <= DISABLE_DIFEERENTIAL_LIFT_POS;
+    }
 
     public static boolean isHighBasket() {
         return getCurrentLength() > HIGH_BASKET_CURRENT_LENGTH_MIN;
@@ -134,6 +137,7 @@ public class Lift {
 
     public static void disablePID(){
         pid_on = false;
+        targetPosCm = 0;
     }
     public static void enablePID(){
         pid_on = true;
@@ -181,7 +185,7 @@ public class Lift {
     }
 
     public static boolean isMoveable(double direction) {
-        if (!Differential.isDefault() && LiftArm.isHorizontal() && direction == -1 && !isDifferentialMoveable()){
+        if (!Differential.isDefault() && LiftArm.isHorizontal() && direction < 0 && disableDifferentialLiftPos()){
             return false;
         }
         return (LiftArm.isHorizontal() &&
@@ -246,6 +250,8 @@ public class Lift {
     public static Action hardReset(){
         return new SequentialAction(
                 liftHardReset(),
+                liftResetEncoders(),
+                Robot.hasElapsed(LIFT_RESET_TIME_INTERVALS),
                 liftResetEncoders(),
                 Robot.hasElapsed(LIFT_RESET_TIME_INTERVALS),
                 liftResetEncoders(),
