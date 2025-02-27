@@ -37,6 +37,9 @@ public class Differential {
     public static void initialize(OpMode opMode) {
         servos[RIGHT] = opMode.hardwareMap.get(Servo.class, "rightDifferential");
         servos[LEFT] = opMode.hardwareMap.get(Servo.class, "leftDifferential");
+
+        currentRollAngle = 0;
+        currentPitchAngle = 0;
     }
 
     /**

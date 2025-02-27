@@ -266,6 +266,7 @@ public class Robot {
                 ),
                 Robot.hasElapsed(LiftArm.LIFT_ARM_VERTICAL_SETTLE_TIME),
                 Lift.hardReset(),
+                Robot.hasElapsed(1000),
                 Lift.moveLift(Lift.Pos.PREPARE_SPECIMEN)
         );
     }
