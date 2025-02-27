@@ -259,15 +259,13 @@ public class Robot {
         is_specimen_preparation_automating = true;
         is_specimen_score_automating = false;
         return new SequentialAction(
-//                new ParallelAction(
-//                        LiftArm.liftArmVertical(),
-//                        Differential.differentialPrepareSpecimen()
-//                ),
-//                Robot.hasElapsed(LiftArm.LIFT_ARM_VERTICAL_SETTLE_TIME),
-//                Lift.hardReset(),
-//                Robot.hasElapsed(1000),
-//                Lift.moveLift(Lift.Pos.PREPARE_SPECIMEN)
-                Lift.hardReset()
+                new ParallelAction(
+                        LiftArm.liftArmVertical(),
+                        Differential.differentialPrepareSpecimen()
+                ),
+                Robot.hasElapsed(LiftArm.LIFT_ARM_VERTICAL_SETTLE_TIME),
+                Lift.hardReset(),
+                Lift.moveLift(Lift.Pos.PREPARE_SPECIMEN)
         );
     }
 
@@ -402,6 +400,13 @@ public class Robot {
                     is_reset_automating = false;
                     is_high_basket_automating = false;
                     currentAutomation = null; // Reset currentAutomation
+                }
+            }
+
+            if (!is_reset_automating && !is_specimen_preparation_automating){
+                Lift.enablePID();
+                if (currentAutomation == reset()){
+                    currentAutomation = null;
                 }
             }
 
