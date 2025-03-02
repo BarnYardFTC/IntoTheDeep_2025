@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.subSystems;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.LLStatus;
@@ -8,10 +11,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 
 import java.util.List;
 
+@Config
 @TeleOp(name = "Limelight3A")
 public class LimeLight extends LinearOpMode{
     int corner1X;
@@ -25,27 +30,24 @@ public class LimeLight extends LinearOpMode{
 
     int angle;
 
-    private Limelight3A limelight;
-
     @Override
     public void runOpMode() throws InterruptedException {
-        limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        Limelight3A limelight = hardwareMap.get(Limelight3A.class, "limelight");
         Differential.initialize(this);
-
-        telemetry.setMsTransmissionInterval(11);
 
         limelight.pipelineSwitch(9);
 
-        limelight.start();
+        limelight.setPollRateHz(50);
 
-        telemetry.addData(">", "Robot Ready.  Press Play.");
-        telemetry.update();
+        limelight.start();
 
         waitForStart();
 
         while (opModeIsActive()) {
             LLResult result = limelight.getLatestResult();
+
             if (result != null) {
+
                 if (result.isValid()) {
                     // Access color results
                     List<LLResultTypes.ColorResult> colorResults = result.getColorResults();
@@ -61,14 +63,14 @@ public class LimeLight extends LinearOpMode{
                             corner4X = (int) (cr.getTargetCorners().get(3).get(0) - cr.getTargetCorners().get(3).get(0) % 1);
                             corner4Y = (int) (cr.getTargetCorners().get(3).get(1) - cr.getTargetCorners().get(3).get(1) % 1);
 
-                            if (corner1X <= corner4X - 10 && corner1X >= corner4X + 10) {
+                            if (corner4X >= corner2X - 3 && corner4X <= corner2X + 3) {
                                 angle = 0;
                             }
-                            else if (corner1Y <= corner4Y - 10 && corner1Y >= corner4Y + 10) {
+                            else if (corner4Y >= corner2Y - 3 && corner4Y <= corner2Y + 3) {
                                 angle = 90;
                             }
                             else {
-                                int newAngle = ((int) Math.toDegrees(Math.atan((double) (corner1Y - corner4Y) / (corner1X - corner4X))));
+                                int newAngle = ((int) Math.toDegrees(Math.atan((double) (corner4Y - corner2Y) / (corner4X - corner2X))));
                                 if (newAngle >= angle + 5 || newAngle <= angle - 5) {
                                     angle = newAngle;
                                     if (angle < 0) {
