@@ -49,53 +49,11 @@ public class LimeLight extends LinearOpMode{
             if (result != null) {
 
                 if (result.isValid()) {
-                    // Access color results
-                    List<LLResultTypes.ColorResult> colorResults = result.getColorResults();
-
-                    for (LLResultTypes.ColorResult cr : colorResults) {
-                        if (cr.getTargetCorners().size() == 4) {
-                            corner1X = (int) (cr.getTargetCorners().get(0).get(0) - cr.getTargetCorners().get(0).get(0) % 1);
-                            corner1Y = (int) (cr.getTargetCorners().get(0).get(1) - cr.getTargetCorners().get(0).get(1) % 1);
-                            corner2X = (int) (cr.getTargetCorners().get(1).get(0) - cr.getTargetCorners().get(1).get(0) % 1);
-                            corner2Y = (int) (cr.getTargetCorners().get(1).get(1) - cr.getTargetCorners().get(1).get(1) % 1);
-                            corner3X = (int) (cr.getTargetCorners().get(2).get(0) - cr.getTargetCorners().get(2).get(0) % 1);
-                            corner3Y = (int) (cr.getTargetCorners().get(2).get(1) - cr.getTargetCorners().get(2).get(1) % 1);
-                            corner4X = (int) (cr.getTargetCorners().get(3).get(0) - cr.getTargetCorners().get(3).get(0) % 1);
-                            corner4Y = (int) (cr.getTargetCorners().get(3).get(1) - cr.getTargetCorners().get(3).get(1) % 1);
-
-                            if (corner4X >= corner2X - 3 && corner4X <= corner2X + 3) {
-                                angle = 0;
-                            }
-                            else if (corner4Y >= corner2Y - 3 && corner4Y <= corner2Y + 3) {
-                                angle = 90;
-                            }
-                            else {
-                                int newAngle = ((int) Math.toDegrees(Math.atan((double) (corner4Y - corner2Y) / (corner4X - corner2X))));
-                                if (newAngle >= angle + 5 || newAngle <= angle - 5) {
-                                    angle = newAngle;
-                                    if (angle < 0) {
-                                        angle = 180 + angle;
-                                    }
-                                }
-                            }
-
-                            if (gamepad1.y) {
-                                if (angle - 90 < 0) {
-                                    Differential.move(angle + 90, 0);
-                                }
-                                else {
-                                    Differential.move(angle - 90, 0);
-                                }
-                            }
-                        }
-                        else {
-                            angle = 0;
-                        }
-
-                        telemetry.addData("angle", angle);
-                    }
+                    angle = (int) result.getPythonOutput()[5];
+                    telemetry.addData("angle", angle);
                 }
-            } else {
+            }
+            else {
                 telemetry.addData("Limelight", "No data available");
             }
 
