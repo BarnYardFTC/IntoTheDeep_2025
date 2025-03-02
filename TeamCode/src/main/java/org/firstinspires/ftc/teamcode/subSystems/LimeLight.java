@@ -19,15 +19,6 @@ import java.util.List;
 @Config
 @TeleOp(name = "Limelight3A")
 public class LimeLight extends LinearOpMode{
-    int corner1X;
-    int corner1Y;
-    int corner2X;
-    int corner2Y;
-    int corner3X;
-    int corner3Y;
-    int corner4X;
-    int corner4Y;
-
     int angle;
 
     @Override
@@ -37,7 +28,7 @@ public class LimeLight extends LinearOpMode{
 
         limelight.pipelineSwitch(9);
 
-        limelight.setPollRateHz(50);
+        telemetry.setMsTransmissionInterval(11);
 
         limelight.start();
 
@@ -47,7 +38,7 @@ public class LimeLight extends LinearOpMode{
             LLResult result = limelight.getLatestResult();
 
             if (result != null) {
-
+                telemetry.addData("PythonOutput", result.getPythonOutput()[5]);
                 if (result.isValid()) {
                     angle = (int) result.getPythonOutput()[5];
                     telemetry.addData("angle", angle);
