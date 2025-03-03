@@ -38,7 +38,6 @@ public class LimeLight extends LinearOpMode{
             LLResult result = limelight.getLatestResult();
 
             if (result != null) {
-                telemetry.addData("PythonOutput", result.getPythonOutput()[5]);
                 if (result.isValid()) {
                     angle = (int) result.getPythonOutput()[5];
                     telemetry.addData("angle", angle);
