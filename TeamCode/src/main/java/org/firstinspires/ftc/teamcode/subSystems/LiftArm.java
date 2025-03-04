@@ -43,7 +43,7 @@ public class LiftArm {
     public static double LIFT_ARM_MAXIMUM_MAINTAIN_POWER = 0.4;
 
     //ToDo: set correct values.
-    public static double p = 0.027;
+    public static double p = 0.02;
     public static double i = 0;
     public static double d = 0;
     public static double f = 0.16;
@@ -64,6 +64,8 @@ public class LiftArm {
         }
 
         controller = new PIDController(p, i, d);
+
+        move(Angle.HORIZONTAL);
     }
 
     public static void resetEncoders(){
