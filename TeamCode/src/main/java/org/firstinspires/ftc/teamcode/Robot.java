@@ -176,7 +176,6 @@ public class Robot {
     /*
     ===========Flag functions===========
     */
-    // ToDo: Add is_specimen_automating when method is made
     public static boolean isLiftAutomating(){
         return is_reset_automating || is_high_basket_automating || is_specimen_score_automating || is_specimen_preparation_automating;
     }
@@ -443,23 +442,8 @@ public class Robot {
                 is_high_basket_automating = false;
 
                 LiftArm.move(LiftArm.Angle.HORIZONTAL);
+                Differential.moveToDefault();
             }
-
-//            if (gamepadEx1.isDown(GamepadKeys.Button.LEFT_BUMPER)){
-//                LiftArm.PID_on = false;
-//                LiftArm.motors[0].setPower(-1);
-//                LiftArm.motors[1].setPower(-1);
-//            }
-//            else if (gamepadEx1.isDown(GamepadKeys.Button.RIGHT_BUMPER)){
-//                LiftArm.PID_on = false;
-//                LiftArm.motors[0].setPower(1);
-//                LiftArm.motors[1].setPower(1);
-//            }
-//            else {
-//                LiftArm.PID_on = true;
-//                LiftArm.motors[0].setPower(0);
-//                LiftArm.motors[1].setPower(0);
-//            }
 
 
             // Return true so this action keeps running throughout the TeleOp period,
@@ -518,8 +502,12 @@ public class Robot {
     private static class DisplayTelemetry implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            opMode.telemetry.addData("isDifferentialMoveable", Lift.isDifferentialMoveable());
             opMode.telemetry.addData("Lift current length", Lift.getCurrentLength());
+            opMode.telemetry.addData("Lift power: ", Lift.getRightMotor().getPower());
+            opMode.telemetry.addData("LiftArm power", LiftArm.getRightMotor().getPower());
+            opMode.telemetry.addData("LiftArm target angle", LiftArm.targetAngle);
+            opMode.telemetry.addData("LiftArm current angle", LiftArm.getCurrentAngle());
+
             opMode.telemetry.update();
             return true;
         }

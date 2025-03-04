@@ -156,9 +156,6 @@ public class LiftArm {
                 targetAngle = VERTICAL_ANGLE;
                 break;
             case HORIZONTAL:
-                if (!Robot.isDifferentialAutomating()){
-                    Differential.moveToDefault();
-                }
                 targetAngle = HORIZONTAL_ANGLE;
                 break;
         }
