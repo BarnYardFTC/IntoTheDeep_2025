@@ -13,7 +13,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.LiftProps;
 
 @Config
@@ -43,7 +42,7 @@ public class Lift {
     public static double HIGH_BASKET_POS = 58;
     public static double HIGH_BASKET_ACCEPTED_POS = 58;
 
-    public static double HIGH_BASKET_CURRENT_LENGTH_MIN = 48;
+    public static double HIGH_BASKET_MINIMUM_LENGTH = 48;
 
     public static double LIFT_HARD_RESET_POWER = 1;
     public static int LIFT_HARD_RESET_DURATION = 800;
@@ -114,7 +113,7 @@ public class Lift {
     }
 
     public static boolean isHighBasket() {
-        return getCurrentLength() > HIGH_BASKET_CURRENT_LENGTH_MIN;
+        return getCurrentLength() > HIGH_BASKET_MINIMUM_LENGTH;
     }
 
     public static double currentPos = 0;

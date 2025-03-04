@@ -67,6 +67,10 @@ public class Differential {
         servos[LEFT].setDirection(Servo.Direction.FORWARD);
     }
 
+    public static void resetRoll(){
+        move(0, currentPitchAngle);
+    }
+
     public static void prepareSpecimen(){
         move(180, PREPARE_SPECIMEN_PITCH);
     }
@@ -113,22 +117,36 @@ public class Differential {
     public static boolean isSpecimenScored(){
         return currentPitchAngle == SCORE_SPECIMEN_PITCH;
     }
+    public static boolean isResetRoll(){
+        return currentRollAngle == 0;
+    }
 
 
     /**
      * Autonomous Actions - Actions which can be used in the autonomous programs.
      */
-    private static class DifferentialMoveToDefault implements Action {
+    private static class ResetRollAction implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            Differential.resetRoll();
+            return !Differential.isResetRoll();
+        }
+    }
+    public static Action resetRollAction(){
+        return new ResetRollAction();
+    }
+
+
+    private static class MoveToDefaultAction implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             Differential.moveToDefault();
             return !Differential.isDefault();
         }
     }
-    public static Action differentialDefault(){
-        return new DifferentialMoveToDefault();
+    public static Action moveToDefaultAction(){
+        return new MoveToDefaultAction();
     }
-
 
     private static class DifferentialPrepareSpecimen implements Action {
         @Override

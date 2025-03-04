@@ -20,8 +20,8 @@ public class LiftArm {
     private static final int LEFT = 1; // Left's motor index.
     private static final MotorProps LEFT_MOTOR = new MotorProps(1425.1, 1.4); // Left's motor props.
 
-    private static final int VERTICAL_ANGLE = 120; // Angle for moving the lift arm to a vertical position.
-    private static final int HORIZONTAL_ANGLE = 0;
+    private static final int VERTICAL_ANGLE = 125; // Angle for moving the lift arm to a vertical position.
+    private static final int HORIZONTAL_ANGLE = 5;
     private static final double MIN_LIFT_LENGTH = 30;
 
     private static final int ACCEPTED_VERTICAL_ANGLE = 110;
@@ -37,6 +37,10 @@ public class LiftArm {
     public static boolean PID_on = true;
 
     public static int lengthOfLiftForPIEDChang = 40;
+
+
+    public static double LIFT_ARM_MINIMUM_MAINTAIN_POWER = 0.1;
+    public static double LIFT_ARM_MAXIMUM_MAINTAIN_POWER = 0.4;
 
     //ToDo: set correct values.
     public static double p = 0.027;
@@ -95,7 +99,7 @@ public class LiftArm {
         return getCurrentAngle() > ACCEPTED_VERTICAL_ANGLE;
     }
     public static boolean isPowerRequired() {
-        return !(getCurrentAngle() < POWER_OFF_HORIZONTAL_ANGLE && getTargetAngle() == HORIZONTAL_ANGLE) || Robot.is_reset_automating;
+        return !(getCurrentAngle() < POWER_OFF_HORIZONTAL_ANGLE && getTargetAngle() == HORIZONTAL_ANGLE) || Robot.is_reset_automating();
     }
 
     public static int getTargetAngle() {
@@ -141,13 +145,27 @@ public class LiftArm {
 
         // Giving power to motors.
         if (isPowerRequired() && PID_on){
-            motors[RIGHT].setPower(power);
-            motors[LEFT].setPower(power);
+            if (LiftArm.isVertical() && targetAngle == VERTICAL_ANGLE){
+                motors[RIGHT].setPower(holdArmVerticallyPower());
+                motors[LEFT].setPower(holdArmVerticallyPower());
+            }
+            else {
+                motors[RIGHT].setPower(power);
+                motors[LEFT].setPower(power);
+            }
         }
         else {
             motors[RIGHT].setPower(0);
             motors[LEFT].setPower(0);
         }
+    }
+
+    public static double holdArmVerticallyPower(){
+        double power = (LIFT_ARM_MAXIMUM_MAINTAIN_POWER - LIFT_ARM_MINIMUM_MAINTAIN_POWER);
+        power /= Lift.HIGH_BASKET_MINIMUM_LENGTH;
+        power *= Lift.getCurrentLength();
+        power += LIFT_ARM_MINIMUM_MAINTAIN_POWER;
+        return power;
     }
 
     public static void move(Angle angle) {

@@ -32,7 +32,7 @@ public class Test extends LinearOpMode {
                     new SequentialAction(
                             LiftArm.liftArmVertical(),
 //                            Robot.hasElapsed(LiftArm.LIFT_ARM_SETTLE_TIME),
-                            Robot.loosenClawGrip(),
+//                            Robot.loosenClawGrip(),
 //                            Lift.moveLift(Lift.Pos.SPECIMEN_SCORE),
                             Differential.differentialScoreBasket(),
                             Claw.openClaw(),
