@@ -32,7 +32,8 @@ public class Lift {
 
     public static final double ACCEPTED_RESETED_POSITION = 3;
 
-    public static int LIFT_MOVEMENT_DURATION = 2000;
+    public static int LIFT_CLOSING_DURATION = 2000;
+    public static int LIFT_OPENING_DURATION = 3000;
 
     // Lift limits
     private static final double HORIZONTAL_LIMIT = 44;
@@ -161,7 +162,7 @@ public class Lift {
             case HIGH_BASKET:
                 targetPosCm = HIGH_BASKET_POS;
                 break;
-            case HIGH_BASKET_GOAL:
+            case HIGH_BASKET_OVERSHOOT:
                 targetPosCm = HIGH_BASKET_GOAL_POS;
                 break;
             case LOW_BASKET:
@@ -197,7 +198,7 @@ public class Lift {
     }
 
     public enum Pos {
-        PREPARE_SPECIMEN, HIGH_BASKET, HIGH_BASKET_GOAL, LOW_BASKET, RESET, SAMPLE_COLLECTION
+        PREPARE_SPECIMEN, HIGH_BASKET, HIGH_BASKET_OVERSHOOT, LOW_BASKET, RESET, SAMPLE_COLLECTION
     }
 
     public static boolean arrivedTargetPos() {
@@ -271,15 +272,22 @@ public class Lift {
     }
 
 
-    public static class LiftHighBasketGoal implements Action {
+    public static class HighBasketOverShootAction implements Action {
+
+        private final TimerHelper timerHelper;
+
+        public HighBasketOverShootAction(){
+            this.timerHelper = new TimerHelper();
+        }
+
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            move(Pos.HIGH_BASKET_GOAL);
-            return !(getCurrentLength() > HIGH_BASKET_ACCEPTED_POS);
+            move(Pos.HIGH_BASKET_OVERSHOOT);
+            return !(getCurrentLength() > HIGH_BASKET_ACCEPTED_POS) || timerHelper.hasElapsed(LIFT_OPENING_DURATION);
         }
     }
-    public static Action liftHighBasketGoal(){
-        return new LiftHighBasketGoal();
+    public static Action highBasketOverShootAction(){
+        return new HighBasketOverShootAction();
     }
     public static class LiftHighBasket implements Action {
         @Override
@@ -317,7 +325,7 @@ public class Lift {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             move(Pos.PREPARE_SPECIMEN);
-            return !arrivedTargetPos() && !timerHelper.hasElapsed(LIFT_MOVEMENT_DURATION);
+            return !arrivedTargetPos() && !timerHelper.hasElapsed(LIFT_CLOSING_DURATION);
         }
     }
     public static class LiftReset implements Action {
@@ -330,7 +338,7 @@ public class Lift {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             move(Pos.RESET);
-            return !isReseted() && !moveTimer.hasElapsed(LIFT_MOVEMENT_DURATION);
+            return !isReseted() && !moveTimer.hasElapsed(LIFT_CLOSING_DURATION);
         }
     }
 
@@ -347,7 +355,7 @@ public class Lift {
         }
         else if (pos == Pos.HIGH_BASKET){
             return new SequentialAction(
-                    liftHighBasketGoal(),
+                    highBasketOverShootAction(),
                     liftHighBasket()
             );
         }

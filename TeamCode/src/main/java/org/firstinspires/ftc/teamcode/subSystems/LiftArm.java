@@ -209,6 +209,7 @@ public class LiftArm {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             move(LiftArm.Angle.HORIZONTAL);
+            Differential.moveToDefault();
             return !isHorizontal();
         }
     }

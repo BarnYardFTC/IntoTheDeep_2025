@@ -216,7 +216,7 @@ public class Robot {
                         Differential.differentialScoreBasket()
                 ),
                 Robot.hasElapsed(LiftArm.LIFT_ARM_VERTICAL_SETTLE_TIME),
-                Lift.liftHighBasketGoal(),
+                Lift.highBasketOverShootAction(),
                 Lift.liftHighBasket()
         );
     }

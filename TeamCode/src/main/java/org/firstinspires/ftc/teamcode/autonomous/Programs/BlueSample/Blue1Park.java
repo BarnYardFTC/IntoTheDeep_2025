@@ -51,21 +51,18 @@ public class Blue1Park extends LinearOpMode {
 
         Actions.runBlocking(
                 new ParallelAction(
-                        new SequentialAction(
-                                new ParallelAction(
-                                        Robot.highBasketDeposit(),
-                                        scorePreLoad
-                                ),
-                                Robot.hasElapsed(HIGH_BASKET_SETTLE_TIME),
-                                Claw.openClaw(),
-                                Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
-
-                                new ParallelAction(
-                                        park,
-                                        new SequentialAction(
-                                                Robot.hasElapsed(POST_SCORE_DELAY),
-                                                Robot.reset()
-                                        )
+                        new ParallelAction(
+                                Robot.highBasketDeposit(),
+                                scorePreLoad
+                        ),
+                        Robot.hasElapsed(HIGH_BASKET_SETTLE_TIME),
+                        Claw.openClaw(),
+                        Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
+                        new ParallelAction(
+                                park,
+                                new SequentialAction(
+                                        Robot.hasElapsed(POST_SCORE_DELAY),
+                                        Robot.reset()
                                 )
                         ),
                         LiftArm.liftArmPID(),
