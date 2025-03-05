@@ -113,6 +113,7 @@ public class Robot {
         Drivetrain.initialize(opMode);
         Differential.initialize(opMode);
         Claw.initialize(opMode);
+        LimeLight.initialize(opMode);
         initializeOpMode(opMode);
 
         // reset flags
@@ -414,6 +415,7 @@ public class Robot {
             else if (gamepadEx2.wasJustPressed(GamepadKeys.Button.X)) {
                 currentAutomation = scoreSpecimen();
             }
+
 
             // If a manual input is received, cancel all automations
             if (RIGHT_TRIGGER.isDown() || LEFT_TRIGGER.isDown() || gamepadEx1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER) || gamepadEx1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {

@@ -35,7 +35,7 @@ public class Teleop extends LinearOpMode {
                         Robot.activateLift(),
                         Robot.activateDifferential(),
                         Robot.activateClaw(),
-                        Robot.activateLimeLight(),
+//                        Robot.activateLimeLight(),
                         Robot.activateGamepads()
                 )
         );

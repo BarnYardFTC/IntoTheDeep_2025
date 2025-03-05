@@ -37,9 +37,9 @@ public class Lift {
 
     // Lift limits
     private static final double HORIZONTAL_LIMIT = 44;
-    private static final double VERTICAL_LIMIT = 71.5;
+    private static final double VERTICAL_LIMIT = 64; //71.5;
 
-    public static double HIGH_BASKET_GOAL_POS = 68;
+    public static double HIGH_BASKET_OVERSHOOT = 68;
     public static double HIGH_BASKET_POS = 61;
     public static double HIGH_BASKET_ACCEPTED_POS = 58;
 
@@ -54,7 +54,7 @@ public class Lift {
     public static int DIFFERENTIAL_MOVEABLE_POS = 5;
     public static int DISABLE_DIFEERENTIAL_LIFT_POS = 10;
 
-    public static double p = 0.0075;
+    public static double p = 0.0085;
     public static double i = 0;
     public static double d = 0;
     public static double targetPosCm; // Target position of the lift in cm.
@@ -164,7 +164,7 @@ public class Lift {
                 targetPosCm = HIGH_BASKET_POS;
                 break;
             case HIGH_BASKET_OVERSHOOT:
-                targetPosCm = HIGH_BASKET_GOAL_POS;
+                targetPosCm = HIGH_BASKET_OVERSHOOT;
                 break;
             case LOW_BASKET:
                 targetPosCm = LOW_BASKET_POS;
@@ -284,7 +284,7 @@ public class Lift {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             move(Pos.HIGH_BASKET_OVERSHOOT);
-            return !(getCurrentLength() > HIGH_BASKET_ACCEPTED_POS) || timerHelper.hasElapsed(LIFT_OPENING_DURATION);
+            return !(getCurrentLength() > HIGH_BASKET_ACCEPTED_POS) || !timerHelper.hasElapsed(LIFT_OPENING_DURATION);
         }
     }
     public static Action highBasketOverShootAction(){
