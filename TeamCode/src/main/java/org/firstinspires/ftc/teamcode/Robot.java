@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.subSystems.Differential;
 import org.firstinspires.ftc.teamcode.subSystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subSystems.Lift;
 import org.firstinspires.ftc.teamcode.subSystems.LiftArm;
+import org.firstinspires.ftc.teamcode.subSystems.LimeLight;
 import org.firstinspires.ftc.teamcode.subSystems.TimerHelper;
 
 /**
@@ -524,6 +525,28 @@ public class Robot {
            return true;
         }
     }
+
+    private static class ActivateLimeLight implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            if (gamepadEx2.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
+                LimeLight.pipeLineSwitch(LimeLight.pipeLine.RED);
+            }
+            if (gamepadEx2.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+                LimeLight.pipeLineSwitch(LimeLight.pipeLine.YELLOW);
+            }
+            if (gamepadEx2.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
+                LimeLight.pipeLineSwitch(LimeLight.pipeLine.BLUE);
+            }
+
+            if (LiftArm.isHorizontal() && Differential.isCollectSample() && LimeLight.getAngle() >= Differential.currentRollAngle - 3 && LimeLight.getAngle() <= Differential.currentRollAngle + 3) {
+                Differential.move(LimeLight.getAngle(), Differential.SAMPLE_PITCH);
+            }
+
+            return true;
+        }
+    }
+
     private static class HasElapsed implements Action {
         private final TimerHelper timer;
         private final int durationMilliseconds;
@@ -557,6 +580,7 @@ public class Robot {
             opMode.telemetry.addData("specimen preparation automating? ", is_specimen_preparation_automating);
             opMode.telemetry.addData("differential automating?", isDifferentialAutomating());
             opMode.telemetry.addData("differential moveable?", Lift.isDifferentialMoveable());
+            opMode.telemetry.addData("Limelight angle", LimeLight.getAngle());
             opMode.telemetry.update();
             return true;
         }
@@ -576,6 +600,9 @@ public class Robot {
     }
     public static Action activateLiftArm() {
         return new ActivateLiftArm();
+    }
+    public static Action activateLimeLight() {
+        return new ActivateLimeLight();
     }
     public static Action activateDrivetrain() {
         return new ActivateDrivetrain();
