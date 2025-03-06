@@ -107,12 +107,13 @@ public class Robot {
     public static void initialize(OpMode opMode) {
 
         // Initialize every system of the robot
-        //VisionProcessor.initialize(opMode);
+//        VisionProcessor.initialize(opMode);
         LiftArm.initialize(opMode);
         Lift.initialize(opMode);
         Drivetrain.initialize(opMode);
         Differential.initialize(opMode);
         Claw.initialize(opMode);
+        LimeLight.initialize(opMode);
         initializeOpMode(opMode);
 
         // reset flags
@@ -539,7 +540,7 @@ public class Robot {
                 LimeLight.pipeLineSwitch(LimeLight.pipeLine.BLUE);
             }
 
-//            if (LiftArm.isHorizontal() && Differential.isCollectSample() && Claw.isOpen() && (LimeLight.getAngle() < Differential.currentRollAngle - 3 && LimeLight.getAngle() > Differential.currentRollAngle + 3)) {
+//            if (LiftArm.isHorizontal() && Differential.isCollectSample() && Claw.isOpen() && (LimeLight.getAngle() < Differential.currentRollAngle - 4 && LimeLight.getAngle() > Differential.currentRollAngle + 4)) {
 //                Differential.move(LimeLight.getAngle(), Differential.SAMPLE_PITCH);
 //            }
 
