@@ -28,7 +28,7 @@ public class Lift {
     public static final double HIGH_CHAMBER_POS = 66 - ROBOT_LIFT_HEIGHT;
     public static final double LOW_BASKET_POS = 67.4 - ROBOT_LIFT_HEIGHT;
 
-    public static double SAMPLE_COLLECTION_POS = 10;
+    public static double SAMPLE_COLLECTION_POS = 20;
 
     public static final double ACCEPTED_RESETED_POSITION = 3;
 

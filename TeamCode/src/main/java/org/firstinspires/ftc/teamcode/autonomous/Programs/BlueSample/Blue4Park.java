@@ -23,7 +23,7 @@ import org.firstinspires.ftc.teamcode.subSystems.LiftArm;
 
 public class Blue4Park extends LinearOpMode {
 
-    public static int HIGH_BASKET_SETTLE_TIME = 1000;
+    public static int HIGH_BASKET_SETTLE_TIME = 300;
     public static int HORIZONTAL_LIFT_SETTLE_TIME = 500;
     public static int POST_SCORE_DELAY = 700;
 
@@ -81,16 +81,18 @@ public class Blue4Park extends LinearOpMode {
                                 Robot.highBasketDeposit(),
                                 scorePreLoad
                         ),
-                        Robot.hasElapsed(HIGH_BASKET_SETTLE_TIME),
+//                        Robot.hasElapsed(HIGH_BASKET_SETTLE_TIME),
                         Claw.openClaw(),
                         Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
                         new ParallelAction(
                                 intake2,
                                 new SequentialAction(
                                         Robot.hasElapsed(POST_SCORE_DELAY),
-                                        Robot.reset(),
-                                        Lift.liftSampleCollection(),
+                                        Robot.resetFromHighBasket(),
                                         Robot.hasElapsed(HORIZONTAL_LIFT_SETTLE_TIME),
+                                        Differential.resetRollAction(),
+                                        Differential.differentialCollectSample(),
+                                        Lift.liftSampleCollection(),
                                         Claw.closeClaw(),
                                         Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION)
                                 )

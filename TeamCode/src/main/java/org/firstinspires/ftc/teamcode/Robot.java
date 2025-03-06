@@ -233,6 +233,7 @@ public class Robot {
                 Lift.hardReset()
         );
     }
+
     public static Action regularReset(){
         return new SequentialAction(
                 Differential.moveToDefaultAction(),
@@ -540,9 +541,9 @@ public class Robot {
                 LimeLight.pipeLineSwitch(LimeLight.pipeLine.BLUE);
             }
 
-//            if (LiftArm.isHorizontal() && Differential.isCollectSample() && Claw.isOpen() && (LimeLight.getAngle() < Differential.currentRollAngle - 2 && LimeLight.getAngle() > Differential.currentRollAngle + 2)) {
-//                Differential.move(LimeLight.getAngle(), Differential.SAMPLE_PITCH);
-//            }
+            if (LiftArm.isHorizontal() && Differential.isCollectSample() && Claw.isOpen()) {
+                Differential.move(LimeLight.getAngle(), Differential.SAMPLE_PITCH);
+            }
 
             return true;
         }
