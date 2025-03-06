@@ -146,10 +146,12 @@ public class Blue4Park extends LinearOpMode {
                         Claw.openClaw(),
                         Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
 
+
+
                         new ParallelAction(
-                                park,
+//                                park,
                                 new SequentialAction(
-                                        Robot.hasElapsed(POST_SCORE_DELAY),
+//                                        Robot.hasElapsed(POST_SCORE_DELAY),
                                         Robot.reset()
                                 )
                         ),

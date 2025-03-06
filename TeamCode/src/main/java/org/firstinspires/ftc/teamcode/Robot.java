@@ -539,9 +539,9 @@ public class Robot {
                 LimeLight.pipeLineSwitch(LimeLight.pipeLine.BLUE);
             }
 
-            if (LiftArm.isHorizontal() && Differential.isCollectSample() && LimeLight.getAngle() >= Differential.currentRollAngle - 3 && LimeLight.getAngle() <= Differential.currentRollAngle + 3) {
-                Differential.move(LimeLight.getAngle(), Differential.SAMPLE_PITCH);
-            }
+//            if (LiftArm.isHorizontal() && Differential.isCollectSample() && Claw.isOpen() && (LimeLight.getAngle() < Differential.currentRollAngle - 3 && LimeLight.getAngle() > Differential.currentRollAngle + 3)) {
+//                Differential.move(LimeLight.getAngle(), Differential.SAMPLE_PITCH);
+//            }
 
             return true;
         }

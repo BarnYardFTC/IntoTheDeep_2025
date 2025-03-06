@@ -6,14 +6,14 @@ import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
 public class BlueSample4Park {
     public static void main(String[] args) {
-        com.noahbres.meepmeep.MeepMeep meepMeep = new com.noahbres.meepmeep.MeepMeep(800);
+        com.noahbres.meepmeep.MeepMeep meepMeep = new com.noahbres.meepmeep.MeepMeep(500);
 
-        RoadRunnerBotEntity robot = new DefaultBotBuilder(meepMeep).setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 14).build();
+        RoadRunnerBotEntity robot = new DefaultBotBuilder(meepMeep).setConstraints(100, 100, Math.toRadians(720), Math.toRadians(720), 14).build();
         robot.setDimensions(15, 16.5);
 
         robot.runAction(robot.getDrive().actionBuilder(BlueSampleCoordinatesMeepMeep.getStart())
                 .setTangent(BlueSampleCoordinatesMeepMeep.getScoreTangent())
-                .splineToLinearHeading(BlueSampleCoordinatesMeepMeep.getScore(), BlueSampleCoordinatesMeepMeep.getIntake2HeadingChange())
+                .splineToLinearHeading(BlueSampleCoordinatesMeepMeep.getScore0(), BlueSampleCoordinatesMeepMeep.getIntake2HeadingChange())
 
                 .splineToLinearHeading(BlueSampleCoordinatesMeepMeep.getIntake2(), BlueSampleCoordinatesMeepMeep.getIntake2HeadingChange())
 

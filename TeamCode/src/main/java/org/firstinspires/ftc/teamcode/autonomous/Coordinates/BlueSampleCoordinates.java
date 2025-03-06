@@ -5,17 +5,17 @@ import com.acmerobotics.roadrunner.Pose2d;
 
 @Config
 public class BlueSampleCoordinates {
-    public static double startX = 40.5;
-    public static double startY = 63.75;
-    public static double scoreX0 = 53;
-    public static double scoreY0 = 53;
-    public static double scoreX = 53;
-    public static double scoreY = 44;
-    public static double intake2X = 47;
-    public static double intake2Y = 36;
-    public static double intake3X = 50;
-    public static double intake4X = 57;
-    public static double intake4Y = 37;
+    public static double startX = 39.75;
+    public static double startY = 64.5;
+    public static double scoreX0 = 55;
+    public static double scoreY0 = 55;
+    public static double scoreX = 55;
+    public static double scoreY = 55;
+    public static double intake2X = 49;
+    public static double intake2Y = 52;
+    public static double intake3X = 57;
+    public static double intake4X = 51;
+    public static double intake4Y = 50;
     public static double park1X = 36;
     public static double park2X = 26;
     public static double parkY = 7;
