@@ -42,6 +42,10 @@ public class LimeLight {
         return angle;
     }
 
+    public static int getPipeline() {
+        return limelight.getStatus().getPipelineIndex();
+    }
+
     public enum pipeLine {
         YELLOW,
         BLUE,

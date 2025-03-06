@@ -540,7 +540,7 @@ public class Robot {
                 LimeLight.pipeLineSwitch(LimeLight.pipeLine.BLUE);
             }
 
-//            if (LiftArm.isHorizontal() && Differential.isCollectSample() && Claw.isOpen() && (LimeLight.getAngle() < Differential.currentRollAngle - 4 && LimeLight.getAngle() > Differential.currentRollAngle + 4)) {
+//            if (LiftArm.isHorizontal() && Differential.isCollectSample() && Claw.isOpen() && (LimeLight.getAngle() < Differential.currentRollAngle - 2 && LimeLight.getAngle() > Differential.currentRollAngle + 2)) {
 //                Differential.move(LimeLight.getAngle(), Differential.SAMPLE_PITCH);
 //            }
 
@@ -582,6 +582,7 @@ public class Robot {
             opMode.telemetry.addData("differential automating?", isDifferentialAutomating());
             opMode.telemetry.addData("differential moveable?", Lift.isDifferentialMoveable());
             opMode.telemetry.addData("Limelight angle", LimeLight.getAngle());
+            opMode.telemetry.addData("Limelight pipeline", LimeLight.getPipeline());
             opMode.telemetry.update();
             return true;
         }
