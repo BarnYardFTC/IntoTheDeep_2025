@@ -587,7 +587,7 @@ public class Robot {
     private static class DisplayTelemetry implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            opMode.telemetry.addData("lift target pos", Lift.getTargetPosCm());
+            opMode.telemetry.addData("liftArmTargetPos", LiftArm.getCurrentAngle());
             opMode.telemetry.update();
             return true;
         }
