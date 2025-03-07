@@ -165,7 +165,7 @@ public class Robot {
      */
     public static void teleopSetup(){
         Differential.collectSample();
-        Claw.close();
+        Claw.open();
     }
     /**
      * Move all the systems of the robot to where they should be at the beginning of the autonomous
@@ -215,13 +215,32 @@ public class Robot {
                 setAutomationFlags(false, true, false, false, false),
                 new ParallelAction(
                         LiftArm.liftArmVertical(),
-                        Differential.differentialScoreBasket()
+                        Differential.moveToDefaultAction()
                 ),
                 Robot.hasElapsed(LiftArm.LIFT_ARM_VERTICAL_SETTLE_TIME),
                 Lift.highBasketOverShootAction(),
-                Lift.liftHighBasket()
+                Lift.liftHighBasket(),
+                Differential.differentialScoreBasket()
         );
     }
+
+    public static Action sampleCollectionForAutonomous(){
+        return new SequentialAction(
+                Differential.moveToDefaultAction(),
+                Claw.openClaw(),
+                Lift.sampleCollectionAction(),
+                Differential.differentialCollectSample(),
+                Robot.hasElapsed(Differential.MOVEMENT_DURATION),
+                Claw.closeClaw(),
+                Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
+                Differential.moveToDefaultAction(),
+                Lift.moveLift(Lift.Pos.RESET)
+        );
+    }
+    public static Action sampleCollectionAtAngleForAutonomous(){
+        return new SequentialAction();
+    }
+
     public static Action resetFromHighBasket(){
         return new SequentialAction(
                 Differential.moveToDefaultAction(),
@@ -419,7 +438,7 @@ public class Robot {
 
             // If a manual input is received, cancel all automations
             if (RIGHT_TRIGGER.isDown() || LEFT_TRIGGER.isDown() || gamepadEx1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER) || gamepadEx1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-                Lift.enablePID();
+                Lift.enablePid();
 
                 if (RIGHT_TRIGGER.isDown() && Lift.isMoveable(1)) {
                     Lift.move(1);
@@ -446,7 +465,7 @@ public class Robot {
             }
 
             if (!is_reset_automating()&& !is_specimen_preparation_automating()){
-                Lift.enablePID();
+                Lift.enablePid();
                 if (currentAutomation == reset()){
                     currentAutomation = null;
                 }
@@ -568,22 +587,7 @@ public class Robot {
     private static class DisplayTelemetry implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            opMode.telemetry.addData("isLiftReset", Lift.isReseted());
-            opMode.telemetry.addData("Lift current length", Lift.getCurrentLength());
-            opMode.telemetry.addData("Lift pid enabled?", Lift.pid_on);
-            opMode.telemetry.addData("Lift power: ", Lift.getRightMotor().getPower());
-            opMode.telemetry.addData("LiftArm power", LiftArm.getRightMotor().getPower());
-            opMode.telemetry.addData("LiftArm target angle", LiftArm.targetAngle);
-            opMode.telemetry.addData("LiftArm current angle", LiftArm.getCurrentAngle());
-            opMode.telemetry.addData("reset automating? ", is_reset_automating);
-            opMode.telemetry.addData("high basket automating?", is_high_basket_automating);
-            opMode.telemetry.addData("sample collection automating?", is_sample_collection_automating);
-            opMode.telemetry.addData("specimen score automating?", is_specimen_score_automating);
-            opMode.telemetry.addData("specimen preparation automating? ", is_specimen_preparation_automating);
-            opMode.telemetry.addData("differential automating?", isDifferentialAutomating());
-            opMode.telemetry.addData("differential moveable?", Lift.isDifferentialMoveable());
-            opMode.telemetry.addData("Limelight angle", LimeLight.getAngle());
-            opMode.telemetry.addData("Limelight pipeline", LimeLight.getPipeline());
+            opMode.telemetry.addData("lift target pos", Lift.getTargetPosCm());
             opMode.telemetry.update();
             return true;
         }

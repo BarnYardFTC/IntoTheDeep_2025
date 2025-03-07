@@ -81,7 +81,7 @@ public class Blue3Park extends LinearOpMode {
                                         new SequentialAction(
                                                 Robot.hasElapsed(POST_SCORE_DELAY),
                                                 Robot.reset(),
-                                                Lift.liftSampleCollection(),
+                                                Lift.sampleCollectionAction(),
                                                 Robot.hasElapsed(HORIZONTAL_LIFT_SETTLE_TIME),
                                                 Claw.closeClaw(),
                                                 Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION)
@@ -103,7 +103,7 @@ public class Blue3Park extends LinearOpMode {
                                         new SequentialAction(
                                                 Robot.hasElapsed(POST_SCORE_DELAY),
                                                 Robot.reset(),
-                                                Lift.liftSampleCollection(),
+                                                Lift.sampleCollectionAction(),
                                                 Robot.hasElapsed(HORIZONTAL_LIFT_SETTLE_TIME),
                                                 Claw.closeClaw(),
                                                 Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION)

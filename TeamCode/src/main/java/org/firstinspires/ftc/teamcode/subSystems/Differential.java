@@ -29,7 +29,7 @@ public class Differential {
     public static int PREPARE_SPECIMEN_PITCH = 130;
     public static int SCORE_SPECIMEN_PITCH = 160;
 
-    public static int MOVEMENT_DURATION = 400;
+    public static int MOVEMENT_DURATION = 200;
 
     public static int currentRollAngle;
     public static int currentPitchAngle;

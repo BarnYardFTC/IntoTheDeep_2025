@@ -69,8 +69,8 @@ public class Blue4Park extends LinearOpMode {
                 .build();
 
         Robot.initialize(this);
-        waitForStart();
         Robot.autonomousSetup();
+        waitForStart();
 
         if (isStopRequested()) return;
 
@@ -81,22 +81,19 @@ public class Blue4Park extends LinearOpMode {
                                 Robot.highBasketDeposit(),
                                 scorePreLoad
                         ),
-//                        Robot.hasElapsed(HIGH_BASKET_SETTLE_TIME),
+                        Robot.hasElapsed(HIGH_BASKET_SETTLE_TIME),
                         Claw.openClaw(),
                         Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
+
                         new ParallelAction(
                                 intake2,
                                 new SequentialAction(
                                         Robot.hasElapsed(POST_SCORE_DELAY),
-                                        Robot.resetFromHighBasket(),
-                                        Robot.hasElapsed(HORIZONTAL_LIFT_SETTLE_TIME),
-                                        Differential.resetRollAction(),
-                                        Differential.differentialCollectSample(),
-                                        Lift.liftSampleCollection(),
-                                        Claw.closeClaw(),
-                                        Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION)
+                                        Robot.reset()
                                 )
                         ),
+                        Robot.sampleCollectionForAutonomous(),
+
                         new ParallelAction(
                                 score2,
                                 Robot.highBasketDeposit()
@@ -109,37 +106,28 @@ public class Blue4Park extends LinearOpMode {
                                 intake3,
                                 new SequentialAction(
                                         Robot.hasElapsed(POST_SCORE_DELAY),
-                                        Robot.reset(),
-                                        Lift.liftSampleCollection(),
-                                        Robot.hasElapsed(HORIZONTAL_LIFT_SETTLE_TIME),
-                                        Claw.closeClaw(),
-                                        Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION)
+                                        Robot.reset()
                                 )
                         ),
-                        Claw.closeClaw(),
-                        Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
+                        Robot.sampleCollectionForAutonomous(),
+
                         new ParallelAction(
                                 score2,
                                 Robot.highBasketDeposit()
                         ),
                         Robot.hasElapsed(HIGH_BASKET_SETTLE_TIME),
                         Claw.openClaw(),
-
                         Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
 
                         new ParallelAction(
                                 intake4,
                                 new SequentialAction(
                                         Robot.hasElapsed(POST_SCORE_DELAY),
-                                        Robot.reset(),
-                                        Lift.liftSampleCollection(),
-                                        Robot.hasElapsed(HORIZONTAL_LIFT_SETTLE_TIME),
-                                        Claw.closeClaw(),
-                                        Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION)
+                                        Robot.reset()
                                 )
                         ),
-                        Claw.closeClaw(),
-                        Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
+                        Robot.sampleCollectionAtAngleForAutonomous(),
+
                         new ParallelAction(
                                 score4,
                                 Robot.highBasketDeposit()
@@ -148,12 +136,10 @@ public class Blue4Park extends LinearOpMode {
                         Claw.openClaw(),
                         Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
 
-
-
                         new ParallelAction(
-//                                park,
+                                park,
                                 new SequentialAction(
-//                                        Robot.hasElapsed(POST_SCORE_DELAY),
+                                        Robot.hasElapsed(POST_SCORE_DELAY),
                                         Robot.reset()
                                 )
                         ),
