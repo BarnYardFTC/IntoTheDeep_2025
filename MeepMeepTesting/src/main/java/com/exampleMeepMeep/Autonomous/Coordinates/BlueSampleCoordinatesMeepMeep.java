@@ -2,18 +2,20 @@ package com.exampleMeepMeep.Autonomous.Coordinates;
 
 import com.acmerobotics.roadrunner.Pose2d;
 
+
+
 public class BlueSampleCoordinatesMeepMeep {
     public static double startX = 39.75;
     public static double startY = 64.5;
-    public static double scoreX0 = 57;
-    public static double scoreY0 = 48;
-    public static double scoreX = 51;
-    public static double scoreY = 57;
-    public static double intake2X = 49;
-    public static double intake2Y = 49;
-    public static double intake3X = 54;
-    public static double intake4X = 51;
-    public static double intake4Y = 50;
+    public static double scoreX0 = 52;
+    public static double scoreY0 = 52;
+    public static double scoreX = scoreX0;
+    public static double scoreY = scoreY0;
+    public static double intake2X = 48;
+    public static double intake2Y = 44;
+    public static double intake3X = 58;
+    public static double intake4X = 54;
+    public static double intake4Y = 44;
     public static double park1X = 36;
     public static double park2X = 26;
     public static double parkY = 7;

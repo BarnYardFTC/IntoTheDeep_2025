@@ -12,10 +12,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.autonomous.Coordinates.BlueSampleCoordinates;
-import org.firstinspires.ftc.teamcode.autonomous.Coordinates.BlueSpecimenCoordinates;
 import org.firstinspires.ftc.teamcode.roadRunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subSystems.Claw;
-import org.firstinspires.ftc.teamcode.subSystems.Differential;
 import org.firstinspires.ftc.teamcode.subSystems.Lift;
 import org.firstinspires.ftc.teamcode.subSystems.LiftArm;
 
@@ -71,59 +69,59 @@ public class Blue3Park extends LinearOpMode {
                                         Robot.highBasketDeposit(),
                                         scorePreLoad
                                 ),
-                                Robot.hasElapsed(HIGH_BASKET_SETTLE_TIME),
+                                Robot.sleep(HIGH_BASKET_SETTLE_TIME),
                                 Claw.openClaw(),
-                                Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
+                                Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
 
                                 new ParallelAction(
                                         intake2,
 //                                        Differential.differentialDown(),
                                         new SequentialAction(
-                                                Robot.hasElapsed(POST_SCORE_DELAY),
+                                                Robot.sleep(POST_SCORE_DELAY),
                                                 Robot.reset(),
                                                 Lift.sampleCollectionAction(),
-                                                Robot.hasElapsed(HORIZONTAL_LIFT_SETTLE_TIME),
+                                                Robot.sleep(HORIZONTAL_LIFT_SETTLE_TIME),
                                                 Claw.closeClaw(),
-                                                Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION)
+                                                Robot.sleep(Claw.CLAW_MOVEMENT_DURATION)
                                         )
                                 ),
                                 Claw.closeClaw(),
-                                Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
+                                Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
                                 new ParallelAction(
                                         score2,
                                         Robot.highBasketDeposit()
                                 ),
-                                Robot.hasElapsed(HIGH_BASKET_SETTLE_TIME),
+                                Robot.sleep(HIGH_BASKET_SETTLE_TIME),
                                 Claw.openClaw(),
-                                Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
+                                Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
 
                                 new ParallelAction(
                                         intake3,
 //                                        Differential.differentialDown(),
                                         new SequentialAction(
-                                                Robot.hasElapsed(POST_SCORE_DELAY),
+                                                Robot.sleep(POST_SCORE_DELAY),
                                                 Robot.reset(),
                                                 Lift.sampleCollectionAction(),
-                                                Robot.hasElapsed(HORIZONTAL_LIFT_SETTLE_TIME),
+                                                Robot.sleep(HORIZONTAL_LIFT_SETTLE_TIME),
                                                 Claw.closeClaw(),
-                                                Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION)
+                                                Robot.sleep(Claw.CLAW_MOVEMENT_DURATION)
                                         )
                                 ),
                                 Claw.closeClaw(),
-                                Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
+                                Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
                                 new ParallelAction(
                                         score2,
                                         Robot.highBasketDeposit()
                                 ),
-                                Robot.hasElapsed(HIGH_BASKET_SETTLE_TIME),
+                                Robot.sleep(HIGH_BASKET_SETTLE_TIME),
                                 Claw.openClaw(),
 
-                                Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
+                                Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
 
                                 new ParallelAction(
                                         park,
                                         new SequentialAction(
-                                                Robot.hasElapsed(POST_SCORE_DELAY),
+                                                Robot.sleep(POST_SCORE_DELAY),
                                                 Robot.reset()
                                         )
                                 )

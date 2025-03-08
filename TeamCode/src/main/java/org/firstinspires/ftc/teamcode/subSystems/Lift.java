@@ -312,7 +312,7 @@ public class Lift {
                 setIsHardResetAutomatingAction(true),
                 disablePidAction(),
                 liftHardReset(),
-                Robot.hasElapsed(LIFT_POST_RESET_MOVEMENT_DURATION),
+                Robot.sleep(LIFT_POST_RESET_MOVEMENT_DURATION),
                 resetEncodersAndTargetPosAction(),
                 enablePidAction(),
                 setIsHardResetAutomatingAction(false)

@@ -12,12 +12,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.autonomous.Coordinates.BlueSampleCoordinates;
-import org.firstinspires.ftc.teamcode.autonomous.Coordinates.BlueSpecimenCoordinates;
 import org.firstinspires.ftc.teamcode.roadRunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subSystems.Claw;
 import org.firstinspires.ftc.teamcode.subSystems.Differential;
 import org.firstinspires.ftc.teamcode.subSystems.Lift;
-import org.firstinspires.ftc.teamcode.subSystems.LiftArm;
 
 @Config
 @Autonomous(name = "Blue_Sample_1_Park", group = "Autonomous")
@@ -56,9 +54,9 @@ public class Blue1Park extends LinearOpMode {
                                 Claw.openClaw(),
                                 Lift.sampleCollectionAction(),
                                 Differential.differentialCollectSample(),
-                                Robot.hasElapsed(Differential.MOVEMENT_DURATION),
+                                Robot.sleep(Differential.MOVEMENT_DURATION),
                                 Claw.closeClaw(),
-                                Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
+                                Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
                                 Differential.moveToDefaultAction(),
                                 Lift.moveLift(Lift.Pos.RESET)
                         ),
