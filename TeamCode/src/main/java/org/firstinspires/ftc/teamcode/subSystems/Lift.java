@@ -34,7 +34,7 @@ public class Lift {
 
     public static final double ACCEPTED_RESETED_POSITION = 3;
 
-    public static int LIFT_MOVEMENT_DURATION = 2000;
+    public static int LIFT_MOVEMENT_DURATION = 700;
 
     // Lift limits
     private static final double HORIZONTAL_LIMIT = 44;
@@ -46,13 +46,13 @@ public class Lift {
 
     public static double HIGH_BASKET_MINIMUM_LENGTH = 48;
 
-    public static double LIFT_HARD_RESET_POWER = 0.1;
+    public static double LIFT_HARD_RESET_POWER = 1;
     public static int LIFT_HARD_RESET_DURATION = 200;
     public static int LIFT_POST_RESET_MOVEMENT_DURATION = 200;
 
     public static int LIFT_PREPARE_SPECIMEN = 20;
 
-    public static int DIFFERENTIAL_MOVEABLE_POS = 5;
+    public static int DIFFERENTIAL_MOVEABLE_POS = 3;
     public static int DISABLE_DIFFERENTIAL_LIFT_POS = 10;
 
     public static double p = 0.0075;
@@ -214,6 +214,9 @@ public class Lift {
         telemetry.addData("hardReset automating?", isHardResetAutomating());
         telemetry.addData("Right power", Lift.getRightMotor().getPower());
         telemetry.addData("Left power", Lift.getLeftMotor().getPower());
+        if (Robot.isInitialized()){
+            telemetry.addData("differential moveable?", isDifferentialMoveable());
+        }
     }
 
     public static boolean isPidOn(){

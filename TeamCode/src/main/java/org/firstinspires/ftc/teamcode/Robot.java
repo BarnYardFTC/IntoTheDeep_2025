@@ -12,6 +12,7 @@ import com.arcrobotics.ftclib.gamepad.TriggerReader;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.subSystems.Claw;
 import org.firstinspires.ftc.teamcode.subSystems.Differential;
 import org.firstinspires.ftc.teamcode.subSystems.Drivetrain;
@@ -160,6 +161,11 @@ public class Robot {
         initialize(opMode);
         initializeGamepads(opMode.gamepad1, opMode.gamepad2);
     }
+
+    public static boolean isInitialized(){
+        return Robot.opMode != null;
+    }
+
     /**
      * Move all the systems of the robot to where they should be at the beginning of the teleop
      */
@@ -403,10 +409,20 @@ public class Robot {
                     Differential.moveToDefault();
                 }
             }
-            if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT) && Differential.currentRollAngle + 60 <= 180) {
-                Differential.move(Differential.currentRollAngle + 60, Differential.currentPitchAngle);
-            } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_LEFT) && Differential.currentRollAngle - 60 >= 0) {
-                Differential.move(Differential.currentRollAngle - 60, Differential.currentPitchAngle);
+            if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
+                if (Differential.currentRollAngle + 60 <= 180){
+                    Differential.move(Differential.currentRollAngle + 60, Differential.currentPitchAngle);
+                }
+                else {
+                    Differential.move(175, Differential.currentPitchAngle);
+                }
+            } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
+                if (Differential.currentRollAngle - 60 >= 0){
+                    Differential.move(Differential.currentRollAngle - 60, Differential.currentPitchAngle);
+                }
+                else {
+                    Differential.move(0, Differential.currentPitchAngle);
+                }
             }
 
 
@@ -428,12 +444,6 @@ public class Robot {
                 currentAutomation = reset();
             } else if (gamepadEx2.wasJustPressed(GamepadKeys.Button.Y)) {
                 currentAutomation = highBasketDeposit();
-            }
-            else if (gamepadEx2.wasJustPressed(GamepadKeys.Button.B)) {
-                currentAutomation = prepareSpecimen();
-            }
-            else if (gamepadEx2.wasJustPressed(GamepadKeys.Button.X)) {
-                currentAutomation = scoreSpecimen();
             }
 
             // If a manual input is received, cancel all automations
@@ -487,7 +497,7 @@ public class Robot {
             // If it is, we don't want to interfere with its movement
 
 //             If the right bumper was just pressed, move the LiftArm to the vertical position
-            if (gamepadEx1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER) && Lift.isReseted()) {
+            if (gamepadEx1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
 
                 is_specimen_preparation_automating = false;
                 is_specimen_score_automating = false;
@@ -503,9 +513,11 @@ public class Robot {
                 is_reset_automating = false;
                 is_high_basket_automating = false;
 
+                if (LiftArm.getTargetAngle() == LiftArm.VERTICAL_ANGLE){
+                    Differential.resetRoll();
+                }
                 LiftArm.move(LiftArm.Angle.HORIZONTAL);
                 Differential.moveToDefault();
-                Differential.resetRoll();
             }
 
 
@@ -587,10 +599,15 @@ public class Robot {
     private static class DisplayTelemetry implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            opMode.telemetry.addData("liftArmTargetPos", LiftArm.getCurrentAngle());
             opMode.telemetry.update();
             return true;
         }
+    }
+
+    public static void printAutomationsData(Telemetry telemetry){
+        telemetry.addData("reset automating?", is_reset_automating());
+        telemetry.addData("high basket automating? ", is_high_basket_automating());
+        telemetry.addData("sample collection automating?", is_sample_collection_automating());
     }
 
     public static Action activateGamepads() {

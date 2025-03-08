@@ -20,9 +20,9 @@ public class LiftArm {
     private static final int LEFT = 1; // Left's motor index.
     private static final MotorProps LEFT_MOTOR = new MotorProps(1425.1, 1.4); // Left's motor props.
 
-    private static final int VERTICAL_ANGLE = 120; // Angle for moving the lift arm to a vertical position.
+    public static final int VERTICAL_ANGLE = 120; // Angle for moving the lift arm to a vertical position.
 
-    private static final int HORIZONTAL_ANGLE = 5;
+    public static final int HORIZONTAL_ANGLE = 5;
     private static final double MIN_LIFT_LENGTH = 30;
 
     private static final int ACCEPTED_VERTICAL_ANGLE = 100;
