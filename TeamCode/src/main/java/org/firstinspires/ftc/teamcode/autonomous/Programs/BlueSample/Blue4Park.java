@@ -17,6 +17,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.autonomous.Coordinates.BlueSampleCoordinates;
 import org.firstinspires.ftc.teamcode.roadRunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.subSystems.Claw;
+import org.firstinspires.ftc.teamcode.subSystems.Lift;
 import org.firstinspires.ftc.teamcode.subSystems.LiftArm;
 
 @Config
@@ -81,95 +83,94 @@ public class Blue4Park extends LinearOpMode {
 
         if (isStopRequested()) return;
 
+
         Actions.runBlocking(
+            new ParallelAction(
                 new SequentialAction(
-                        scorePreLoad,
+                    new ParallelAction(
+                        Robot.highBasketDeposit(),
+                        scorePreLoad
+                    ),
+                    Robot.sleep(HIGH_BASKET_SETTLE_TIME),
+                    Claw.openClaw(),
+                    Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
+
+                    new ParallelAction(
                         intake2,
+                        new SequentialAction(
+                            Robot.sleep(POST_SCORE_DELAY),
+                            Robot.reset(),
+                            Lift.sampleCollectionAction(),
+                            Robot.sleep(HORIZONTAL_LIFT_SETTLE_TIME),
+                            Claw.closeClaw(),
+                            Robot.sleep(Claw.CLAW_MOVEMENT_DURATION)
+                        )
+                    ),
+                    Claw.closeClaw(),
+                    Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
+                    new ParallelAction(
                         score2,
+                        Robot.highBasketDeposit()
+                    ),
+                    Robot.sleep(HIGH_BASKET_SETTLE_TIME),
+                    Claw.openClaw(),
+                    Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
+
+                    new ParallelAction(
                         intake3,
+                        new SequentialAction(
+                            Robot.sleep(POST_SCORE_DELAY),
+                            Robot.reset(),
+                            Lift.sampleCollectionAction(),
+                            Robot.sleep(HORIZONTAL_LIFT_SETTLE_TIME),
+                            Claw.closeClaw(),
+                            Robot.sleep(Claw.CLAW_MOVEMENT_DURATION)
+                        )
+                    ),
+                    Claw.closeClaw(),
+                    Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
+                    new ParallelAction(
                         score3,
+                        Robot.highBasketDeposit()
+                    ),
+                    Robot.sleep(HIGH_BASKET_SETTLE_TIME),
+                    Claw.openClaw(),
+
+                    Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
+
+                    new ParallelAction(
                         intake4,
+                        new SequentialAction(
+                            Robot.sleep(POST_SCORE_DELAY),
+                            Robot.reset(),
+                            Lift.sampleCollectionAction(),
+                            Robot.sleep(HORIZONTAL_LIFT_SETTLE_TIME),
+                            Claw.closeClaw(),
+                            Robot.sleep(Claw.CLAW_MOVEMENT_DURATION)
+                        )
+                    ),
+                    Claw.closeClaw(),
+                    Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
+                    new ParallelAction(
                         score4,
-                        park
-                )
+                        Robot.highBasketDeposit()
+                    ),
+                    Robot.sleep(HIGH_BASKET_SETTLE_TIME),
+                    Claw.openClaw(),
+
+                    Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
+
+                    new ParallelAction(
+                        park,
+                        new SequentialAction(
+                            Robot.sleep(POST_SCORE_DELAY),
+                            Robot.reset()
+                        )
+                    )
+                ),
+                LiftArm.liftArmPID(),
+                Lift.liftPID()
+            )
         );
-
-
-//        Actions.runBlocking(
-//            new ParallelAction(
-//                new SequentialAction(
-//                        new ParallelAction(
-//                                Robot.highBasketDeposit(),
-//                                scorePreLoad
-//                        ),
-//                        Robot.hasElapsed(HIGH_BASKET_SETTLE_TIME),
-//                        Claw.openClaw(),
-//                        Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
-//
-//                        new ParallelAction(
-//                                intake2,
-//                                new SequentialAction(
-//                                        Robot.hasElapsed(POST_SCORE_DELAY),
-//                                        Robot.reset()
-//                                )
-//                        ),
-//                        Robot.sampleCollectionForAutonomous()
-
-//                        new ParallelAction(
-//                                score2,
-//                                Robot.highBasketDeposit()
-//                        ),
-//                        Robot.hasElapsed(HIGH_BASKET_SETTLE_TIME),
-//                        Claw.openClaw(),
-//                        Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
-//
-//                        new ParallelAction(
-//                                intake3,
-//                                new SequentialAction(
-//                                        Robot.hasElapsed(POST_SCORE_DELAY),
-//                                        Robot.reset()
-//                                )
-//                        ),
-//                        Robot.sampleCollectionForAutonomous(),
-//
-//                        new ParallelAction(
-//                                score3,
-//                                Robot.highBasketDeposit()
-//                        ),
-//                        Robot.hasElapsed(HIGH_BASKET_SETTLE_TIME),
-//                        Claw.openClaw(),
-//                        Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION)
-//
-//                        new ParallelAction(
-//                                intake4,
-//                                new SequentialAction(
-//                                        Robot.hasElapsed(POST_SCORE_DELAY),
-//                                        Robot.reset()
-//                                )
-//                        ),
-//                        Robot.sampleCollectionAtAngleForAutonomous(),
-//
-//                        new ParallelAction(
-//                                score4,
-//                                Robot.highBasketDeposit()
-//                        ),
-//                        Robot.hasElapsed(HIGH_BASKET_SETTLE_TIME),
-//                        Claw.openClaw(),
-//                        Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
-//
-//                        new ParallelAction(
-//                                park,
-//                                new SequentialAction(
-//                                        Robot.hasElapsed(POST_SCORE_DELAY),
-//                                        Robot.reset()
-//                                )
-//                        ),
-//                        LiftArm.liftArmHorizontal()
-//                ),
-//                LiftArm.liftArmPID(),
-//                Lift.liftPID()
-//            )
-//        );
-
     }
 }

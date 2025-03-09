@@ -9,8 +9,8 @@ public class BlueSampleCoordinatesMeepMeep {
     public static double startY = 64.5;
     public static double scoreX0 = 52;
     public static double scoreY0 = 52;
-    public static double scoreX = scoreX0;
-    public static double scoreY = scoreY0;
+    public static double scoreX = 52;
+    public static double scoreY = 52;
     public static double intake2X = 48;
     public static double intake2Y = 44;
     public static double intake3X = 58;
