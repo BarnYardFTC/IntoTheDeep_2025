@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.autonomous.Coordinates.BlueSampleCoordinates;
 import org.firstinspires.ftc.teamcode.roadRunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subSystems.Claw;
+import org.firstinspires.ftc.teamcode.subSystems.Differential;
 import org.firstinspires.ftc.teamcode.subSystems.Lift;
 import org.firstinspires.ftc.teamcode.subSystems.LiftArm;
 
@@ -41,33 +42,30 @@ public class Blue4Park extends LinearOpMode {
                 .build();
 
         Action intake2 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore0())
-                .splineToLinearHeading(BlueSampleCoordinates.getIntake2(), BlueSampleCoordinates.getIntake2HeadingChange())
+                .strafeToLinearHeading(BlueSampleCoordinates.getIntake2().component1(), BlueSampleCoordinates.getIntake2().heading)
 
                 .build();
 
         Action score2 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getIntake2())
-                .setTangent(BlueSampleCoordinates.getScoreTangent())
-                .splineToLinearHeading(BlueSampleCoordinates.getScore(), BlueSampleCoordinates.getIntake2HeadingChange())
+                .strafeToLinearHeading(BlueSampleCoordinates.getScore().component1(), BlueSampleCoordinates.getScore().heading)
                 .build();
 
         Action score3 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getIntake3())
-                .setTangent(BlueSampleCoordinates.getScoreTangent())
-                .splineToLinearHeading(BlueSampleCoordinates.getScore(), BlueSampleCoordinates.getIntake2HeadingChange())
+                .strafeToLinearHeading(BlueSampleCoordinates.getScore().component1(), BlueSampleCoordinates.getScore().heading)
                 .build();
 
         Action intake3 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore())
-                .splineToLinearHeading(BlueSampleCoordinates.getIntake3(), BlueSampleCoordinates.getIntake2HeadingChange())
+                .strafeToLinearHeading(BlueSampleCoordinates.getIntake3().component1(), BlueSampleCoordinates.getIntake3().heading)
 
                 .build();
 
         Action intake4 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore())
-                .splineToLinearHeading(BlueSampleCoordinates.getIntake4(), BlueSampleCoordinates.getIntake4HeadingChange())
+                .strafeToLinearHeading(BlueSampleCoordinates.getIntake4().component1(), BlueSampleCoordinates.getIntake4().heading)
 
                 .build();
 
         Action score4 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getIntake4())
-                .setTangent(BlueSampleCoordinates.getScoreTangent())
-                .splineToLinearHeading(BlueSampleCoordinates.getScore(), BlueSampleCoordinates.getIntake4HeadingChange())
+                .strafeToLinearHeading(BlueSampleCoordinates.getScore4().component1(), BlueSampleCoordinates.getScore().heading)
                 .build();
 
         Action park = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore())
@@ -82,7 +80,6 @@ public class Blue4Park extends LinearOpMode {
         LiftArm.is_extra_power_required = true;
 
         if (isStopRequested()) return;
-
 
         Actions.runBlocking(
             new ParallelAction(
@@ -101,12 +98,13 @@ public class Blue4Park extends LinearOpMode {
                             Robot.sleep(POST_SCORE_DELAY),
                             Robot.reset(),
                             Lift.sampleCollectionAction(),
+                            Differential.differentialCollectSample(),
                             Robot.sleep(HORIZONTAL_LIFT_SETTLE_TIME),
                             Claw.closeClaw(),
                             Robot.sleep(Claw.CLAW_MOVEMENT_DURATION)
                         )
                     ),
-                    Claw.closeClaw(),
+                    Lift.hardReset(),
                     Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
                     new ParallelAction(
                         score2,
@@ -119,15 +117,16 @@ public class Blue4Park extends LinearOpMode {
                     new ParallelAction(
                         intake3,
                         new SequentialAction(
-                            Robot.sleep(POST_SCORE_DELAY),
-                            Robot.reset(),
-                            Lift.sampleCollectionAction(),
-                            Robot.sleep(HORIZONTAL_LIFT_SETTLE_TIME),
-                            Claw.closeClaw(),
-                            Robot.sleep(Claw.CLAW_MOVEMENT_DURATION)
+                                Robot.sleep(POST_SCORE_DELAY),
+                                Robot.reset(),
+                                Lift.sampleCollectionAction(),
+                                Differential.differentialCollectSample(),
+                                Robot.sleep(HORIZONTAL_LIFT_SETTLE_TIME),
+                                Claw.closeClaw(),
+                                Robot.sleep(Claw.CLAW_MOVEMENT_DURATION)
                         )
                     ),
-                    Claw.closeClaw(),
+                    Lift.hardReset(),
                     Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
                     new ParallelAction(
                         score3,
@@ -136,37 +135,39 @@ public class Blue4Park extends LinearOpMode {
                     Robot.sleep(HIGH_BASKET_SETTLE_TIME),
                     Claw.openClaw(),
 
-                    Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
+                    Robot.sleep(Claw.CLAW_MOVEMENT_DURATION)
 
-                    new ParallelAction(
-                        intake4,
-                        new SequentialAction(
-                            Robot.sleep(POST_SCORE_DELAY),
-                            Robot.reset(),
-                            Lift.sampleCollectionAction(),
-                            Robot.sleep(HORIZONTAL_LIFT_SETTLE_TIME),
-                            Claw.closeClaw(),
-                            Robot.sleep(Claw.CLAW_MOVEMENT_DURATION)
-                        )
-                    ),
-                    Claw.closeClaw(),
-                    Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
-                    new ParallelAction(
-                        score4,
-                        Robot.highBasketDeposit()
-                    ),
-                    Robot.sleep(HIGH_BASKET_SETTLE_TIME),
-                    Claw.openClaw(),
-
-                    Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
-
-                    new ParallelAction(
-                        park,
-                        new SequentialAction(
-                            Robot.sleep(POST_SCORE_DELAY),
-                            Robot.reset()
-                        )
-                    )
+//                    new ParallelAction(
+//                        intake4,
+//                        new SequentialAction(
+//                                Robot.sleep(POST_SCORE_DELAY),
+//                                Robot.reset(),
+////                                Lift.sampleCollectionAction(),
+//                                Differential.differentialCollectSample(),
+//                                Robot.sleep(HORIZONTAL_LIFT_SETTLE_TIME),
+//                                Claw.closeClaw(),
+//                                Robot.sleep(Claw.CLAW_MOVEMENT_DURATION)
+//                        )
+//                    ),
+//                    Lift.hardReset(),
+//                    Claw.closeClaw(),
+//                    Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
+//                    new ParallelAction(
+//                        score4,
+//                        Robot.highBasketDeposit()
+//                    ),
+//                    Robot.sleep(HIGH_BASKET_SETTLE_TIME),
+//                    Claw.openClaw(),
+//
+//                    Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
+//
+//                    new ParallelAction(
+//                        park,
+//                        new SequentialAction(
+//                            Robot.sleep(POST_SCORE_DELAY),
+//                            Robot.reset()
+//                        )
+//                    )
                 ),
                 LiftArm.liftArmPID(),
                 Lift.liftPID()

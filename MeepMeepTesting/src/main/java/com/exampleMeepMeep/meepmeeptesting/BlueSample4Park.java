@@ -7,7 +7,7 @@ import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
 public class BlueSample4Park {
     public static void main(String[] args) {
-        com.noahbres.meepmeep.MeepMeep meepMeep = new com.noahbres.meepmeep.MeepMeep(800);
+        com.noahbres.meepmeep.MeepMeep meepMeep = new com.noahbres.meepmeep.MeepMeep(500);
 
         RoadRunnerBotEntity robot = new DefaultBotBuilder(meepMeep).setConstraints(100, 100, Math.toRadians(720), Math.toRadians(720), 14).build();
         robot.setDimensions(15, 16.5);
@@ -16,20 +16,17 @@ public class BlueSample4Park {
                 .setTangent(BlueSampleCoordinatesMeepMeep.getScoreTangent())
                 .splineToLinearHeading(BlueSampleCoordinatesMeepMeep.getScore0(), BlueSampleCoordinatesMeepMeep.getIntake2HeadingChange())
 
-                .splineToLinearHeading(BlueSampleCoordinatesMeepMeep.getIntake2(), BlueSampleCoordinatesMeepMeep.getIntake2HeadingChange())
+                .strafeToLinearHeading(BlueSampleCoordinatesMeepMeep.getIntake2().component1(), BlueSampleCoordinatesMeepMeep.getIntake2().heading)
 
-                .setTangent(BlueSampleCoordinatesMeepMeep.getScoreTangent())
-                .splineToLinearHeading(BlueSampleCoordinatesMeepMeep.getScore(), BlueSampleCoordinatesMeepMeep.getIntake2HeadingChange())
+                .strafeToLinearHeading(BlueSampleCoordinatesMeepMeep.getScore().component1(), BlueSampleCoordinatesMeepMeep.getScore().heading)
 
-                .splineToLinearHeading(BlueSampleCoordinatesMeepMeep.getIntake3(), BlueSampleCoordinatesMeepMeep.getIntake2HeadingChange())
+                .strafeToLinearHeading(BlueSampleCoordinatesMeepMeep.getIntake3().component1(), BlueSampleCoordinatesMeepMeep.getIntake3().heading)
 
-                .setTangent(BlueSampleCoordinatesMeepMeep.getScoreTangent())
-                .splineToLinearHeading(BlueSampleCoordinatesMeepMeep.getScore(), BlueSampleCoordinatesMeepMeep.getIntake2HeadingChange())
+                .strafeToLinearHeading(BlueSampleCoordinatesMeepMeep.getScore().component1(), BlueSampleCoordinatesMeepMeep.getScore().heading)
 
-                .splineToLinearHeading(BlueSampleCoordinatesMeepMeep.getIntake4(), BlueSampleCoordinatesMeepMeep.getIntake4HeadingChange())
+                .strafeToLinearHeading(BlueSampleCoordinatesMeepMeep.getIntake4().component1(), BlueSampleCoordinatesMeepMeep.getIntake4().heading)
 
-                .setTangent(BlueSampleCoordinatesMeepMeep.getScoreTangent())
-                .splineToLinearHeading(BlueSampleCoordinatesMeepMeep.getScore(), BlueSampleCoordinatesMeepMeep.getIntake4HeadingChange())
+                .strafeToLinearHeading(BlueSampleCoordinatesMeepMeep.getScore().component1(), BlueSampleCoordinatesMeepMeep.getScore().heading)
 
                 .strafeToLinearHeading(BlueSampleCoordinatesMeepMeep.getPark1().component1(), BlueSampleCoordinatesMeepMeep.getPark1().heading)
 
