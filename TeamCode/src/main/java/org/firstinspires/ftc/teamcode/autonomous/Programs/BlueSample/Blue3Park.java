@@ -31,26 +31,26 @@ public class Blue3Park extends LinearOpMode {
 
         Action scorePreLoad = ignitionSystem.actionBuilder(BlueSampleCoordinates.getStart())
                 .setTangent(BlueSampleCoordinates.getScoreTangent())
-                .splineToLinearHeading(BlueSampleCoordinates.getScore0(), BlueSampleCoordinates.getIntake2HeadingChange())
+                .splineToLinearHeading(BlueSampleCoordinates.getScore1(), BlueSampleCoordinates.getIntake2HeadingChange())
 
                 .build();
 
-        Action intake2 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore0())
+        Action intake2 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore1())
                 .splineToLinearHeading(BlueSampleCoordinates.getIntake2(), BlueSampleCoordinates.getIntake2HeadingChange())
 
                 .build();
 
         Action score2 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getIntake2())
                 .setTangent(BlueSampleCoordinates.getScoreTangent())
-                .splineToLinearHeading(BlueSampleCoordinates.getScore(), BlueSampleCoordinates.getIntake2HeadingChange())
+                .splineToLinearHeading(BlueSampleCoordinates.getScore2(), BlueSampleCoordinates.getIntake2HeadingChange())
                 .build();
 
-        Action intake3 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore())
+        Action intake3 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore2())
                 .splineToLinearHeading(BlueSampleCoordinates.getIntake3(), BlueSampleCoordinates.getIntake2HeadingChange())
 
                 .build();
 
-        Action park = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore())
+        Action park = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore2())
                 .strafeToLinearHeading(BlueSampleCoordinates.getPark1().component1(), BlueSampleCoordinates.getPark1().heading)
 
                 .strafeToConstantHeading(BlueSampleCoordinates.getPark2().component1())

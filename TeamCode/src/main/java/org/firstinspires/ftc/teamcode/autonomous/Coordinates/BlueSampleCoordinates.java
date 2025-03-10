@@ -7,15 +7,17 @@ import com.acmerobotics.roadrunner.Pose2d;
 public class BlueSampleCoordinates {
     public static double startX = 39.75;
     public static double startY = 64.5;
-    public static double scoreX0 = 52;
-    public static double scoreY0 = 50;
-    public static double scoreX1 = 51.5;
-    public static double scoreY1 = 53.5;
+    public static double scoreX1 = 52;
+    public static double scoreY1 = 51;
+    public static double scoreX2 = 51.5;
+    public static double scoreY2 = 53.5;
+    public static double scoreX3 = 51.5;
+    public static double scoreY3 = 55;
     public static double scoreX4 = 46;
     public static double scoreY4 = 48;
     public static double intake2X = 46;
-    public static double intake2Y = 47.5;
-    public static double intake3X = 54.5;
+    public static double intake2Y = 51;
+    public static double intake3X = 59.5;
     public static double intake3Y = 48.5;
     public static double intake4X = 42;
     public static double intake4Y = 48;
@@ -31,8 +33,9 @@ public class BlueSampleCoordinates {
     private static final double intake2HeadingChange = Math.toRadians(45);
     private static final double intake4HeadingChange = Math.toRadians(90);
     private static final Pose2d start = new Pose2d(startX, startY, startPoseHeading);
-    private static final Pose2d score0 = new Pose2d(scoreX0, scoreY0, scorePoseHeading);
-    private static final Pose2d score = new Pose2d(scoreX1, scoreY1, scorePoseHeading);
+    private static final Pose2d score1 = new Pose2d(scoreX1, scoreY1, scorePoseHeading);
+    private static final Pose2d score2 = new Pose2d(scoreX2, scoreY2, scorePoseHeading);
+    private static final Pose2d score3 = new Pose2d(scoreX3, scoreY3, scorePoseHeading);
     private static final Pose2d score4 = new Pose2d(scoreX4, scoreY4, scorePoseHeading);
     private static final Pose2d intake2 = new Pose2d(intake2X, intake2Y, intake2PoseHeading);
     private static final Pose2d intake3 = new Pose2d(intake3X, intake3Y, intake2PoseHeading);
@@ -44,11 +47,14 @@ public class BlueSampleCoordinates {
         return start;
     }
 
-    public static Pose2d getScore() {
-        return score;
+    public static Pose2d getScore2() {
+        return score2;
     }
-    public static Pose2d getScore0() {
-        return score0;
+    public static Pose2d getScore1() {
+        return score1;
+    }
+    public static Pose2d getScore3() {
+        return score3;
     }
     public static Pose2d getScore4() {
         return score4;

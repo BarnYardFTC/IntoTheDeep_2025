@@ -31,11 +31,11 @@ public class Blue1Park extends LinearOpMode {
 
         Action scorePreLoad = ignitionSystem.actionBuilder(BlueSampleCoordinates.getStart())
                 .setTangent(BlueSampleCoordinates.getScoreTangent())
-                .splineToLinearHeading(BlueSampleCoordinates.getScore0(), BlueSampleCoordinates.getIntake2HeadingChange())
+                .splineToLinearHeading(BlueSampleCoordinates.getScore1(), BlueSampleCoordinates.getIntake2HeadingChange())
 
                 .build();
 
-        Action park = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore0())
+        Action park = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore1())
                 .strafeToLinearHeading(BlueSampleCoordinates.getPark1().component1(), BlueSampleCoordinates.getPark1().heading)
 
                 .strafeToConstantHeading(BlueSampleCoordinates.getPark2().component1())

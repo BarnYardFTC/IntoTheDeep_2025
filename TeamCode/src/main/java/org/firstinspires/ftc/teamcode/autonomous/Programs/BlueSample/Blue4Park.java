@@ -5,11 +5,7 @@ package org.firstinspires.ftc.teamcode.autonomous.Programs.BlueSample;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
-import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.SleepAction;
-import com.acmerobotics.roadrunner.Trajectory;
-import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -37,38 +33,38 @@ public class Blue4Park extends LinearOpMode {
 
         Action scorePreLoad = ignitionSystem.actionBuilder(BlueSampleCoordinates.getStart())
                 .setTangent(BlueSampleCoordinates.getScoreTangent())
-                .splineToLinearHeading(BlueSampleCoordinates.getScore0(), BlueSampleCoordinates.getIntake2HeadingChange())
+                .splineToLinearHeading(BlueSampleCoordinates.getScore1(), BlueSampleCoordinates.getIntake2HeadingChange())
 
                 .build();
 
-        Action intake2 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore0())
+        Action intake2 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore1())
                 .strafeToLinearHeading(BlueSampleCoordinates.getIntake2().component1(), BlueSampleCoordinates.getIntake2().heading)
 
                 .build();
 
         Action score2 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getIntake2())
-                .strafeToLinearHeading(BlueSampleCoordinates.getScore().component1(), BlueSampleCoordinates.getScore().heading)
+                .strafeToLinearHeading(BlueSampleCoordinates.getScore2().component1(), BlueSampleCoordinates.getScore2().heading)
                 .build();
 
         Action score3 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getIntake3())
-                .strafeToLinearHeading(BlueSampleCoordinates.getScore().component1(), BlueSampleCoordinates.getScore().heading)
+                .strafeToLinearHeading(BlueSampleCoordinates.getScore3().component1(), BlueSampleCoordinates.getScore3().heading)
                 .build();
 
-        Action intake3 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore())
+        Action intake3 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore3())
                 .strafeToLinearHeading(BlueSampleCoordinates.getIntake3().component1(), BlueSampleCoordinates.getIntake3().heading)
 
                 .build();
 
-        Action intake4 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore())
+        Action intake4 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore4())
                 .strafeToLinearHeading(BlueSampleCoordinates.getIntake4().component1(), BlueSampleCoordinates.getIntake4().heading)
 
                 .build();
 
         Action score4 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getIntake4())
-                .strafeToLinearHeading(BlueSampleCoordinates.getScore4().component1(), BlueSampleCoordinates.getScore().heading)
+                .strafeToLinearHeading(BlueSampleCoordinates.getScore4().component1(), BlueSampleCoordinates.getScore2().heading)
                 .build();
 
-        Action park = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore())
+        Action park = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore4())
                 .strafeToLinearHeading(BlueSampleCoordinates.getPark1().component1(), BlueSampleCoordinates.getPark1().heading)
 
                 .strafeToConstantHeading(BlueSampleCoordinates.getPark2().component1())
