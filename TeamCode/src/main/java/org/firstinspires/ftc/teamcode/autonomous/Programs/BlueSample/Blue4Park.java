@@ -73,7 +73,7 @@ public class Blue4Park extends LinearOpMode {
         Robot.initialize(this);
         Robot.autonomousSetup();
         waitForStart();
-//        LiftArm.is_extra_power_required = true;
+        LiftArm.is_extra_power_required = true;
 
         if (isStopRequested()) return;
 
@@ -100,7 +100,7 @@ public class Blue4Park extends LinearOpMode {
                             Robot.sleep(Claw.CLAW_MOVEMENT_DURATION)
                         )
                     ),
-                    Lift.hardReset(),
+                    Robot.reset(),
                     Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
                     new ParallelAction(
                         score2,
@@ -122,7 +122,7 @@ public class Blue4Park extends LinearOpMode {
                                 Robot.sleep(Claw.CLAW_MOVEMENT_DURATION)
                         )
                     ),
-                    Lift.hardReset(),
+                    Robot.reset(),
                     Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
                     new ParallelAction(
                         score3,
@@ -145,7 +145,7 @@ public class Blue4Park extends LinearOpMode {
 //                                Robot.sleep(Claw.CLAW_MOVEMENT_DURATION)
 //                        )
 //                    ),
-//                    Lift.hardReset(),
+//                    Robot.reset(),
 //                    Claw.closeClaw(),
 //                    Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
 //                    new ParallelAction(
