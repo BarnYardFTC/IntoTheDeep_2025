@@ -73,7 +73,7 @@ public class Blue4Park extends LinearOpMode {
         Robot.initialize(this);
         Robot.autonomousSetup();
         waitForStart();
-        LiftArm.is_extra_power_required = true;
+//        LiftArm.is_extra_power_required = true;
 
         if (isStopRequested()) return;
 

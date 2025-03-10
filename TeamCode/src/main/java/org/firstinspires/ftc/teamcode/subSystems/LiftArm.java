@@ -159,8 +159,8 @@ public class LiftArm {
             }
             else {
                 if (is_extra_power_required && Lift.targetPosCm == VERTICAL_ANGLE){ //ONLY FOR AUTONOMOUS
-                    motors[RIGHT].setPower(0.7);
-                    motors[LEFT].setPower(0.7);
+                    motors[RIGHT].setPower(1);
+                    motors[LEFT].setPower(1);
                 }
                 else {
                     motors[RIGHT].setPower(power);
