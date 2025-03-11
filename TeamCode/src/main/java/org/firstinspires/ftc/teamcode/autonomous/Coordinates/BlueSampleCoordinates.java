@@ -12,7 +12,7 @@ public class BlueSampleCoordinates {
     public static double scoreX2 = 50.5;
     public static double scoreY2 = 51.5;
     public static double scoreX3 = 51.5;
-    public static double scoreY3 = 56;
+    public static double scoreY3 = 55;
     public static double scoreX4 = 46;
     public static double scoreY4 = 48;
     public static double intake2X = 47.25;

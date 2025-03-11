@@ -131,7 +131,7 @@ public class Blue4Park extends LinearOpMode {
                     Robot.sleep(HIGH_BASKET_SETTLE_TIME),
                     Claw.openClaw(),
 
-                    Robot.sleep(Claw.CLAW_MOVEMENT_DURATION)
+                    Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
 
 //                    new ParallelAction(
 //                        intake4,
@@ -145,7 +145,7 @@ public class Blue4Park extends LinearOpMode {
 //                                Robot.sleep(Claw.CLAW_MOVEMENT_DURATION)
 //                        )
 //                    ),
-//                    Robot.reset(),
+                    Robot.reset()
 //                    Claw.closeClaw(),
 //                    Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
 //                    new ParallelAction(
