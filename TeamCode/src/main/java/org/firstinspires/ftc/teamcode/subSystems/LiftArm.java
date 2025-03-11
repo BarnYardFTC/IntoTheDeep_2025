@@ -31,7 +31,7 @@ public class LiftArm {
     private static final int POWER_OFF_HORIZONTAL_ANGLE = 20;
 
     public static int LIFT_ARM_VERTICAL_SETTLE_TIME = 500;
-    public static int LIFT_ARM_HORIZONTAL_SETTLE_TIME = 800;
+    public static int LIFT_ARM_HORIZONTAL_SETTLE_TIME = 150;
 
     public static int SPECIMEN_SCORE_TIME = 1000;
 
@@ -70,7 +70,7 @@ public class LiftArm {
         controller = new PIDController(p, i, d);
 
         PID_on = true;
-        is_extra_power_required = false;
+        is_extra_power_required = true;
         move(Angle.HORIZONTAL);
     }
 

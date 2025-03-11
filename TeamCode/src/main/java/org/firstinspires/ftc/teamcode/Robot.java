@@ -226,7 +226,7 @@ public class Robot {
                         LiftArm.liftArmVertical(),
                         Differential.moveToDefaultAction()
                 ),
-                Robot.sleep(LiftArm.LIFT_ARM_VERTICAL_SETTLE_TIME),
+//                Robot.sleep(LiftArm.LIFT_ARM_VERTICAL_SETTLE_TIME),
                 Lift.highBasketOverShootAction(),
                 Lift.liftHighBasket(),
                 Differential.differentialScoreBasket()
@@ -252,10 +252,12 @@ public class Robot {
 
     public static Action resetFromHighBasket(){
         return new SequentialAction(
-                Differential.moveToDefaultAction(),
-                Differential.resetRollAction(),
-                setAutomationFlags(true, false, false, false, false),
-                Lift.moveLift(Lift.Pos.RESET),
+                new ParallelAction(
+                    Differential.moveToDefaultAction(),
+                    Differential.resetRollAction(),
+                    setAutomationFlags(true, false, false, false, false),
+                    Lift.moveLift(Lift.Pos.RESET)
+                ),
                 LiftArm.liftArmHorizontal(),
                 Robot.sleep(LiftArm.LIFT_ARM_HORIZONTAL_SETTLE_TIME),
                 Lift.hardReset()
@@ -264,10 +266,12 @@ public class Robot {
 
     public static Action regularReset(){
         return new SequentialAction(
-                Differential.moveToDefaultAction(),
-                Differential.resetRollAction(),
-                setAutomationFlags(true, false, false, false, false),
-                Lift.moveLift(Lift.Pos.RESET),
+                new ParallelAction(
+                    Differential.moveToDefaultAction(),
+                    Differential.resetRollAction(),
+                    setAutomationFlags(true, false, false, false, false),
+                    Lift.moveLift(Lift.Pos.RESET)
+                ),
                 LiftArm.liftArmHorizontal(),
                 Lift.hardReset()
         );
@@ -603,6 +607,7 @@ public class Robot {
     private static class DisplayTelemetry implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
+            opMode.telemetry.addData("heading", Drivetrain.getRobotHeading());
             opMode.telemetry.update();
             return true;
         }

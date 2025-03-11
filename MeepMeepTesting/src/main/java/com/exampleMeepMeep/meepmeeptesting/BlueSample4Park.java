@@ -14,19 +14,19 @@ public class BlueSample4Park {
 
         robot.runAction(robot.getDrive().actionBuilder(BlueSampleCoordinatesMeepMeep.getStart())
                 .setTangent(BlueSampleCoordinatesMeepMeep.getScoreTangent())
-                .splineToLinearHeading(BlueSampleCoordinatesMeepMeep.getScore0(), BlueSampleCoordinatesMeepMeep.getIntake2HeadingChange())
+                .splineToLinearHeading(BlueSampleCoordinatesMeepMeep.getScore1(), BlueSampleCoordinatesMeepMeep.getIntake2HeadingChange())
 
                 .strafeToLinearHeading(BlueSampleCoordinatesMeepMeep.getIntake2().component1(), BlueSampleCoordinatesMeepMeep.getIntake2().heading)
 
-                .strafeToLinearHeading(BlueSampleCoordinatesMeepMeep.getScore().component1(), BlueSampleCoordinatesMeepMeep.getScore().heading)
+                .strafeToLinearHeading(BlueSampleCoordinatesMeepMeep.getScore2().component1(), BlueSampleCoordinatesMeepMeep.getScore2().heading)
 
                 .strafeToLinearHeading(BlueSampleCoordinatesMeepMeep.getIntake3().component1(), BlueSampleCoordinatesMeepMeep.getIntake3().heading)
 
-                .strafeToLinearHeading(BlueSampleCoordinatesMeepMeep.getScore().component1(), BlueSampleCoordinatesMeepMeep.getScore().heading)
+                .strafeToLinearHeading(BlueSampleCoordinatesMeepMeep.getScore3().component1(), BlueSampleCoordinatesMeepMeep.getScore3().heading)
 
                 .strafeToLinearHeading(BlueSampleCoordinatesMeepMeep.getIntake4().component1(), BlueSampleCoordinatesMeepMeep.getIntake4().heading)
 
-                .strafeToLinearHeading(BlueSampleCoordinatesMeepMeep.getScore().component1(), BlueSampleCoordinatesMeepMeep.getScore().heading)
+                .strafeToLinearHeading(BlueSampleCoordinatesMeepMeep.getScore4().component1(), BlueSampleCoordinatesMeepMeep.getScore4().heading)
 
                 .strafeToLinearHeading(BlueSampleCoordinatesMeepMeep.getPark1().component1(), BlueSampleCoordinatesMeepMeep.getPark1().heading)
 
