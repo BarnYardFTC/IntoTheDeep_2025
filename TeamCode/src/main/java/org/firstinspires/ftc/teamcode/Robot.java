@@ -418,6 +418,7 @@ public class Robot {
                 }
                 else if (gamepadEx2.wasJustPressed(GamepadKeys.Button.X)){
                     Differential.preSample();
+                    Claw.open();
                 }
             }
             if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
@@ -517,7 +518,7 @@ public class Robot {
                 LiftArm.move(LiftArm.Angle.VERTICAL);
 
                 // If the left bumper was just pressed, move the LiftArm to the horizontal position
-            } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER) && Lift.isReseted()) {
+            } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
 
                 isSpecimenPreparationAutomating = false;
                 isSpecimenScoreAutomating = false;
@@ -605,8 +606,6 @@ public class Robot {
     private static class DisplayTelemetry implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            opMode.telemetry.addData("heading", Drivetrain.getRobotHeading());
-            opMode.telemetry.addData("drivetrain power", Drivetrain.motors[0].getPower());
             opMode.telemetry.update();
             return true;
         }
