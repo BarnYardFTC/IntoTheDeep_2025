@@ -548,12 +548,7 @@ public class Robot {
             // Check if the lift arm is horizontal and lift is not reset, or if the lift arm is vertical
             // or if the X button is pressed and the drivetrain is not slowed
            if (gamepadEx2.isDown(GamepadKeys.Button.DPAD_DOWN)){
-               if (LiftArm.isVertical()){
-                   Drivetrain.regularMode();
-               }
-               else {
-                   Drivetrain.slowMode();
-               }
+               Drivetrain.regularMode();
            }
            else if (!Lift.isReseted() || LiftArm.isVertical()){
                Drivetrain.slowMode();
@@ -608,6 +603,7 @@ public class Robot {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             opMode.telemetry.addData("heading", Drivetrain.getRobotHeading());
+            opMode.telemetry.addData("drivetrain power", Drivetrain.motors[0].getPower());
             opMode.telemetry.update();
             return true;
         }

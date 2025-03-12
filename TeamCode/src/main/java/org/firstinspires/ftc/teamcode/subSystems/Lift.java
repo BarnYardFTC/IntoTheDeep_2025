@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.modules.LiftProps;
 public class Lift {
     public static final DcMotorEx[] motors = new DcMotorEx[2];
     public static final double LOW_CHAMBER_POS = 0;
-    public static final int LIFT_SPEED = 1;
+    public static final int LIFT_SPEED = 2;
     private static final int RIGHT = 0;
     private static final int LEFT = 1;
     private static final LiftProps RIGHT_MOTOR = new LiftProps(8, 4, 537.7, 1.4, 14); // Right's motor props.
@@ -32,7 +32,7 @@ public class Lift {
 
     public static double SAMPLE_COLLECTION_POS = 33.5;
 
-    public static final double ACCEPTED_RESETED_POSITION = 3;
+    public static final double ACCEPTED_RESETED_POSITION = 5;
 
     public static int LIFT_MOVEMENT_DURATION = 700;
 
