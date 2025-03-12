@@ -37,7 +37,7 @@ public class LiftArm {
 
     public static boolean PID_on;
 
-    public static boolean is_extra_power_required;
+    public static final boolean is_extra_power_required = true;
     public static double EXTRA_POWER_COEFFICIENT = 2;
 
     public static int lengthOfLiftForPIEDChang = 40;
@@ -70,7 +70,6 @@ public class LiftArm {
         controller = new PIDController(p, i, d);
 
         PID_on = true;
-        is_extra_power_required = true;
         move(Angle.HORIZONTAL);
     }
 
