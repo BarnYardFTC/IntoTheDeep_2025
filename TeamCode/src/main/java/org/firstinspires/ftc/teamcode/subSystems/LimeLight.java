@@ -62,7 +62,6 @@ public class LimeLight {
         LLResult result = limelight.getLatestResult();
         if (result != null) {
             angle = (int) result.getPythonOutput()[3];
-            return angle;
         }
         return angle;
     }
@@ -113,7 +112,7 @@ public class LimeLight {
             a2 = result.getTy();
         }
         else {
-            a2 = 0;
+            return 0;
         }
 
         if (a2 <= 0.5 && a2 >= -0.5) {
