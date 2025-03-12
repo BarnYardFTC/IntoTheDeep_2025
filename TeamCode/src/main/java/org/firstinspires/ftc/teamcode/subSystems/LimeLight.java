@@ -11,6 +11,8 @@ import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import org.firstinspires.ftc.teamcode.Robot;
+
 public class LimeLight {
     public static Limelight3A limelight;
 
@@ -151,7 +153,10 @@ public class LimeLight {
                 moveChassis(),
                 moveLift()
             ),
-            collectFinal()
+            collectFinal(),
+            Robot.sleep(100),
+            Claw.closeClaw(),
+            Robot.reset()
         );
     }
 
