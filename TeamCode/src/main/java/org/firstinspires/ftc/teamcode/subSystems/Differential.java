@@ -22,6 +22,7 @@ public class Differential {
     private static final int LEFT = 1; // Left's servo index.
     // Angles for moving the differential.
     public static final int SAMPLE_PITCH = 0;
+    public static final int PRE_SAMPLE_PITCH = 30;
     public static int RESET_PITCH = 170;
     public static final int SCORE_BASKET_PITCH = 140;
 
@@ -83,6 +84,9 @@ public class Differential {
     /**
      * Moves differential to the sample intake position.
      */
+    public static void preSample(){
+        move(currentRollAngle, PRE_SAMPLE_PITCH);
+    }
     public static void collectSample() {
         move(currentRollAngle, SAMPLE_PITCH);
     }
@@ -102,6 +106,9 @@ public class Differential {
      */
     public static boolean isDefault(){
         return currentPitchAngle == DEFAULT_PITCH;
+    }
+    public static boolean isPreSample(){
+        return currentPitchAngle == PRE_SAMPLE_PITCH;
     }
     public static boolean isReset() {
         return currentPitchAngle == RESET_PITCH;
@@ -142,6 +149,16 @@ public class Differential {
         return new ResetRollAction();
     }
 
+    private static class PreSampleAction implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            Differential.preSample();
+            return !Differential.isPreSample();
+        }
+    }
+    public static Action preSampleAction(){
+        return new PreSampleAction();
+    }
 
     private static class MoveToDefaultAction implements Action {
         @Override
@@ -175,15 +192,15 @@ public class Differential {
     public static Action differentialScoreSpecimen(){
         return new DifferentialScoreSpecimen();
     }
-    private static class DifferentialCollectSample implements Action {
+    private static class CollectSampleAction implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             Differential.collectSample();
             return !isCollectSample();
         }
     }
-    public static Action differentialCollectSample(){
-        return new DifferentialCollectSample();
+    public static Action CollectSampleAction(){
+        return new CollectSampleAction();
     }
 
     private static class DifferentialReset implements Action {

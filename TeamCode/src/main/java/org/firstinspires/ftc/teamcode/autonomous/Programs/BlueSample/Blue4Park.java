@@ -94,7 +94,7 @@ public class Blue4Park extends LinearOpMode {
                             Robot.sleep(POST_SCORE_DELAY),
                             Robot.reset(),
                             Lift.sampleCollectionAction(),
-                            Differential.differentialCollectSample(),
+                            Differential.CollectSampleAction(),
                             Robot.sleep(HORIZONTAL_LIFT_SETTLE_TIME),
                             Claw.closeClaw(),
                             Robot.sleep(Claw.CLAW_MOVEMENT_DURATION)
@@ -116,7 +116,7 @@ public class Blue4Park extends LinearOpMode {
                                 Robot.sleep(POST_SCORE_DELAY),
                                 Robot.reset(),
                                 Lift.sampleCollectionAction(),
-                                Differential.differentialCollectSample(),
+                                Differential.CollectSampleAction(),
                                 Robot.sleep(HORIZONTAL_LIFT_SETTLE_TIME),
                                 Claw.closeClaw(),
                                 Robot.sleep(Claw.CLAW_MOVEMENT_DURATION)

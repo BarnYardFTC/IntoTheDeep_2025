@@ -11,7 +11,6 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.TriggerReader;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
-import com.sun.tools.javac.Main;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.subSystems.Claw;
@@ -58,6 +57,7 @@ import org.firstinspires.ftc.teamcode.subSystems.TimerHelper;
  * A: Reset the Lift and Arm (=close lift & bring Arm down if necessary)
  * Y: Bring the Lift and Arm to a high-basket-discharge position
  * B: Score a specimen on the high chamber
+ * X: Differential prepare sample
  * Dpad-down: Slow mode
  */
 
@@ -238,7 +238,7 @@ public class Robot {
                 Differential.moveToDefaultAction(),
                 Claw.openClaw(),
                 Lift.sampleCollectionAction(),
-                Differential.differentialCollectSample(),
+                Differential.CollectSampleAction(),
                 Robot.sleep(Differential.MOVEMENT_DURATION),
                 Claw.closeClaw(),
                 Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
@@ -288,6 +288,8 @@ public class Robot {
     public static Action collectSample(){
         return new SequentialAction(
                 setAutomationFlags(false, false, true, false, false),
+                Differential.CollectSampleAction(),
+                sleep(Differential.MOVEMENT_DURATION),
                 Claw.closeClaw(),
                 sleep(Claw.CLAW_MOVEMENT_DURATION),
                 Differential.moveToDefaultAction()
@@ -380,8 +382,7 @@ public class Robot {
                 if (gamepadEx1.wasJustPressed(GamepadKeys.Button.Y)) {
                     // Toggle the claw open or closed
                     if (Claw.isOpen()) {
-                        Claw.close();
-                        if (Differential.isCollectSample() && Lift.isDifferentialMoveable()){
+                        if ((Differential.isPreSample() || Differential.isCollectSample()) && Lift.isDifferentialMoveable()){
                             currentAutomation = collectSample();
                             isSampleCollectionAutomating = true;
                         }
@@ -408,12 +409,15 @@ public class Robot {
             if (!isDifferentialAutomating() && Lift.isDifferentialMoveable()) {
 
                 if (gamepadEx1.wasJustPressed(GamepadKeys.Button.A)){
-                    Differential.collectSample();
+                    Differential.preSample();
                 }
                 else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_UP)){
                     Differential.reset();
                 } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.X)) {
                     Differential.moveToDefault();
+                }
+                else if (gamepadEx2.wasJustPressed(GamepadKeys.Button.X)){
+                    Differential.preSample();
                 }
             }
             if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
@@ -431,8 +435,6 @@ public class Robot {
                     Differential.move(0, Differential.currentPitchAngle);
                 }
             }
-
-
 
             return true; // Keep this action running during TeleOp
         }

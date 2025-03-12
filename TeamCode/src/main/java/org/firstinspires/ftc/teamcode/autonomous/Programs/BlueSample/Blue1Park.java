@@ -53,7 +53,7 @@ public class Blue1Park extends LinearOpMode {
                                 Differential.moveToDefaultAction(),
                                 Claw.openClaw(),
                                 Lift.sampleCollectionAction(),
-                                Differential.differentialCollectSample(),
+                                Differential.CollectSampleAction(),
                                 Robot.sleep(Differential.MOVEMENT_DURATION),
                                 Claw.closeClaw(),
                                 Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
