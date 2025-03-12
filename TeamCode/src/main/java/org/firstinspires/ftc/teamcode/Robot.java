@@ -551,11 +551,11 @@ public class Robot {
            if (gamepadEx2.isDown(GamepadKeys.Button.DPAD_DOWN)){
                Drivetrain.regularMode();
            }
-           else if (!Lift.isReseted() || LiftArm.isVertical()){
-               Drivetrain.slowMode();
+           else if (Lift.isReseted() && !LiftArm.isVertical() || !Lift.isReseted() && LiftArm.isVertical() && Claw.isOpen()){
+               Drivetrain.regularMode();
            }
            else {
-               Drivetrain.regularMode();
+               Drivetrain.slowMode();
            }
 
            // Return true to indicate that the action should continue running and check conditions again
