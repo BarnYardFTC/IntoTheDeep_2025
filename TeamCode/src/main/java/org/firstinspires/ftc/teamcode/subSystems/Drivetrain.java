@@ -6,7 +6,6 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -115,6 +114,14 @@ public class Drivetrain {
         motors[RF].setPower((adjustedLy - adjustedLx - rx) / maxPower / speed_adjustment);
         motors[LB].setPower((adjustedLy - adjustedLx + rx) / maxPower / speed_adjustment);
         motors[RB].setPower((adjustedLy + adjustedLx - rx) / maxPower / speed_adjustment);
+    }
+
+    public static void moveHorizontally(double power) {
+        // Giving power to motors.
+        motors[LF].setPower(power);
+        motors[RF].setPower(-power);
+        motors[LB].setPower(-power);
+        motors[RB].setPower(power);
     }
 
     /**
