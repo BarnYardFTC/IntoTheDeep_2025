@@ -58,14 +58,10 @@ public class LimeLight {
         limelight.start();
     }
 
-    public static LLResult getResult() {
+    public static int getAngle() {
         LLResult result = limelight.getLatestResult();
-        return result;
-    }
-
-    public static int getAngle(LLResult result) {
         if (result != null) {
-            angle = (int) result.getPythonOutput()[5];
+            angle = (int) result.getPythonOutput()[3];
             return angle;
         }
         return angle;
@@ -75,18 +71,29 @@ public class LimeLight {
         return limelight.getStatus().getPipelineIndex();
     }
 
-    public static boolean isCenter(LLResult result) {
-        double tx = result.getTx();
-        double ty = result.getTy();
-        if (tx <= 0.5 && tx >= -0.5 && ty <= 0.5 && ty >= -0.5) {
-            return true;
+    public static boolean isCenter() {
+        LLResult result = limelight.getLatestResult();
+        double tx;
+        double ty;
+        if (result != null) {
+            tx = result.getTx();
+            ty = result.getTy();
+            return tx <= 0.5 && tx >= -0.5 && ty <= 0.5 && ty >= -0.5;
         }
         return false;
     }
 
-    public static void drivePID(LLResult result) {
+    public static void drivePID() {
         driveController.setPID(driveP, driveI, driveD);
-        double tx = result.getTx();
+        LLResult result = limelight.getLatestResult();
+        double tx;
+
+        if (result != null) {
+            tx = result.getTx();
+        }
+        else {
+            tx = 0;
+        }
 
         // Calculate motor power.
         if (tx <= 0.5 && tx >= -0.5) {
@@ -98,8 +105,17 @@ public class LimeLight {
         }
     }
 
-    public static double getDistance(LLResult result) {
-        double a2 = result.getTy();
+    public static double getDistance() {
+        LLResult result = limelight.getLatestResult();
+        double a2;
+
+        if (result != null) {
+            a2 = result.getTy();
+        }
+        else {
+            a2 = 0;
+        }
+
         if (a2 <= 0.5 && a2 >= -0.5) {
             return 0;
         }
@@ -113,7 +129,7 @@ public class LimeLight {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             Differential.collectSample();
-            Differential.move(getAngle(getResult()), 0);
+            Differential.move(getAngle(), 0);
             Lift.move(LIFT_EXTENSION);
             return false;
         }
@@ -126,7 +142,7 @@ public class LimeLight {
     public static class MoveLift implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            Lift.move(getDistance(getResult()));
+            Lift.move(getDistance());
             return false;
         }
     }
@@ -138,8 +154,8 @@ public class LimeLight {
     public static class MoveChassis implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            drivePID(getResult());
-            return !isCenter(getResult());
+            drivePID();
+            return !isCenter();
         }
     }
 

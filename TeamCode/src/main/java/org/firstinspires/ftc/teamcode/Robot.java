@@ -602,6 +602,8 @@ public class Robot {
     private static class DisplayTelemetry implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
+            opMode.telemetry.addData("angle", LimeLight.getAngle());
+            opMode.telemetry.addData("distance", LimeLight.getDistance());
             opMode.telemetry.update();
             return true;
         }
