@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
+import com.acmerobotics.roadrunner.SequentialAction;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
@@ -12,12 +14,13 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 public class LimeLight {
     public static Limelight3A limelight;
 
-    private static final double h1 = 16.5;
-    private static final double h2 = 3.8;
-    private static final int a1 = 45;
+    private static final double H1 = 16.5; // CM
+    private static final double H2 = 3.8; // CM
+    private static final double A1 = 45;
+    private static final int LIFT_EXTENSION = 4;
 
     public static int angle;
-    public static int distance;
+    public static double distance;
 
     public static final int YELLOW = 0;
     public static final int BLUE = 1;
@@ -31,7 +34,6 @@ public class LimeLight {
     public static void initialize(OpMode opMode) {
         limelight = opMode.hardwareMap.get(Limelight3A.class, "limelight");
 
-        limelight.setPollRateHz(75);
         driveController = new PIDController(driveP, driveI, driveD);
     }
 
@@ -49,8 +51,12 @@ public class LimeLight {
         }
     }
 
-    public static LLResult runLimeLight() {
+    public static void runLimeLight() {
+        limelight.setPollRateHz(75);
         limelight.start();
+    }
+
+    public static LLResult getResult() {
         LLResult result = limelight.getLatestResult();
         return result;
     }
@@ -90,21 +96,35 @@ public class LimeLight {
         }
     }
 
-    public static int getDistance(LLResult result) {
+    public static double getDistance(LLResult result) {
         double a2 = result.getTy();
         if (a2 <= 0.5 && a2 >= -0.5) {
             return 0;
         }
-        double angleToGoal = Math.toRadians(a1 + a2);
-        distance = (int) ((h2 - h1) / Math.tan(angleToGoal));
+        double angleToGoal = Math.toRadians(A1 + a2);
+        distance = (int) ((H2 - H1) / Math.tan(angleToGoal));
 
         return distance;
+    }
+
+    public static class CollectFinal implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            Differential.collectSample();
+            Differential.move(getAngle(getResult()), 0);
+            Lift.move(LIFT_EXTENSION);
+            return false;
+        }
+    }
+
+    public static Action collectFinal(){
+        return new CollectFinal();
     }
 
     public static class MoveLift implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            Lift.move(getDistance(runLimeLight()));
+            Lift.move(getDistance(getResult()));
             return false;
         }
     }
@@ -116,13 +136,23 @@ public class LimeLight {
     public static class MoveChassis implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            drivePID(runLimeLight());
-            return true;
+            drivePID(getResult());
+            return !isCenter(getResult());
         }
     }
 
     public static Action moveChassis(){
         return new MoveChassis();
+    }
+
+    public static Action autoCollection(){
+        return new SequentialAction(
+            new ParallelAction(
+                moveChassis(),
+                moveLift()
+            ),
+            collectFinal()
+        );
     }
 
     public enum pipeLine {
