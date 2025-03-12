@@ -13,6 +13,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.LiftProps;
 
 @Config
@@ -28,40 +30,40 @@ public class Lift {
     public static final double HIGH_CHAMBER_POS = 66 - ROBOT_LIFT_HEIGHT;
     public static final double LOW_BASKET_POS = 67.4 - ROBOT_LIFT_HEIGHT;
 
-    public static double SAMPLE_COLLECTION_POS = 10;
+    public static double SAMPLE_COLLECTION_POS = 33.5;
 
-    public static final double ACCEPTED_RESETED_POSITION = 3;
+    public static final double ACCEPTED_RESETED_POSITION = 5;
 
-    public static int LIFT_CLOSING_DURATION = 2000;
-    public static int LIFT_OPENING_DURATION = 3000;
+    public static int LIFT_MOVEMENT_DURATION = 700;
 
     // Lift limits
     private static final double HORIZONTAL_LIMIT = 44;
-    private static final double VERTICAL_LIMIT = 64; //71.5;
+    private static final double VERTICAL_LIMIT = 71.5;
 
-    public static double HIGH_BASKET_OVERSHOOT = 68;
+    public static double HIGH_BASKET_GOAL_POS = 68;
     public static double HIGH_BASKET_POS = 61;
     public static double HIGH_BASKET_ACCEPTED_POS = 58;
 
     public static double HIGH_BASKET_MINIMUM_LENGTH = 48;
 
     public static double LIFT_HARD_RESET_POWER = 1;
-    public static int LIFT_HARD_RESET_DURATION = 800;
-    public static int LIFT_RESET_TIME_INTERVALS = 400;
+    public static int LIFT_HARD_RESET_DURATION = 200;
+    public static int LIFT_POST_RESET_MOVEMENT_DURATION = 200;
 
     public static int LIFT_PREPARE_SPECIMEN = 20;
 
-    public static int DIFFERENTIAL_MOVEABLE_POS = 5;
-    public static int DISABLE_DIFEERENTIAL_LIFT_POS = 10;
+    public static int DIFFERENTIAL_MOVEABLE_POS = 3;
+    public static int DISABLE_DIFFERENTIAL_LIFT_POS = 10;
 
-    public static double p = 0.0085;
+    public static double p = 0.0075;
     public static double i = 0;
     public static double d = 0;
     public static double targetPosCm; // Target position of the lift in cm.
     public static int targetPos; // Target position of the right motor.
     private static PIDController controller; // PID controller.
 
-    public static boolean pid_on;
+    public static boolean is_pid_on;
+    public static boolean is_hard_reset_automating;
 
     public static void initialize(OpMode opMode) {
         motors[RIGHT] = opMode.hardwareMap.get(DcMotorEx.class, "rightLift");
@@ -70,15 +72,13 @@ public class Lift {
         motors[LEFT].setDirection(DcMotorSimple.Direction.REVERSE);
         motors[RIGHT].setDirection(DcMotorSimple.Direction.REVERSE);
 
-        for (DcMotorEx motor : motors) {
-            motor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-            motor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        }
+        resetEncoders();
+        move(Pos.RESET);
+        enablePid();
 
         controller = new PIDController(p, i, d);
-        move(Pos.RESET);
 
-        pid_on = true;
+        setIsHardResetAutomating(false);
     }
     public static void resetEncoders(){
         for (DcMotorEx motor : motors) {
@@ -111,7 +111,7 @@ public class Lift {
         return getCurrentLength() >= DIFFERENTIAL_MOVEABLE_POS;
     }
     public static boolean disableDifferentialLiftPos(){
-        return getCurrentLength() <= DISABLE_DIFEERENTIAL_LIFT_POS;
+        return getCurrentLength() <= DISABLE_DIFFERENTIAL_LIFT_POS;
     }
 
     public static boolean isHighBasket() {
@@ -129,21 +129,20 @@ public class Lift {
         // Calculate motor power.
         double power = controller.calculate(currentPos, targetPos);
 
-        if (pid_on){
+        if (is_pid_on){
             motors[RIGHT].setPower(power);
             motors[LEFT].setPower(power);
         }
     }
 
     public static void disablePID(){
-        pid_on = false;
-        targetPosCm = 0;
+        is_pid_on = false;
     }
-    public static void enablePID(){
-        pid_on = true;
+    public static void enablePid(){
+        is_pid_on = true;
     }
     public static boolean isPIDEnabled(){
-        return pid_on;
+        return is_pid_on;
     }
 
     public static DcMotorEx getRightMotor() {
@@ -164,13 +163,14 @@ public class Lift {
                 targetPosCm = HIGH_BASKET_POS;
                 break;
             case HIGH_BASKET_OVERSHOOT:
-                targetPosCm = HIGH_BASKET_OVERSHOOT;
+                targetPosCm = HIGH_BASKET_GOAL_POS;
                 break;
             case LOW_BASKET:
                 targetPosCm = LOW_BASKET_POS;
                 break;
             case SAMPLE_COLLECTION:
                 targetPosCm = SAMPLE_COLLECTION_POS;
+                break;
             case RESET:
                 targetPosCm = 0;
                 break;
@@ -206,6 +206,29 @@ public class Lift {
         return getCurrentLength() <= targetPosCm + LIFT_SPEED && getCurrentLength() >= targetPosCm - LIFT_SPEED;
     }
 
+    public static void displayData(Telemetry telemetry){
+        telemetry.addData("Right encoder: ", Lift.getRightMotor().getCurrentPosition());
+        telemetry.addData("Left encoder: ", Lift.getLeftMotor().getCurrentPosition());
+        telemetry.addData("target pos: ", Lift.getTargetPosCm());
+        telemetry.addData("pid on?", isPidOn());
+        telemetry.addData("hardReset automating?", isHardResetAutomating());
+        telemetry.addData("Right power", Lift.getRightMotor().getPower());
+        telemetry.addData("Left power", Lift.getLeftMotor().getPower());
+        if (Robot.isInitialized()){
+            telemetry.addData("differential moveable?", isDifferentialMoveable());
+        }
+    }
+
+    public static boolean isPidOn(){
+        return Lift.is_pid_on;
+    }
+    public static boolean isHardResetAutomating(){
+        return Lift.is_hard_reset_automating;
+    }
+    public static void setIsHardResetAutomating(boolean is_hard_reset_automating){
+        Lift.is_hard_reset_automating = is_hard_reset_automating;
+    }
+
 
     /**
      * Autonomous Actions - Actions which can be used in the autonomous programs.
@@ -222,15 +245,44 @@ public class Lift {
         return new LiftPID();
     }
 
-    public static class EnablePIDAction implements Action {
+    public static class EnablePidAction implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            enablePID();
+            enablePid();
             return false;
         }
     }
-    private static Action enablePIDAction(){
-        return new EnablePIDAction();
+    private static Action enablePidAction(){
+        return new EnablePidAction();
+    }
+
+    private static class DisablePidAction implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            disablePID();
+            return false;
+        }
+    }
+    private static Action disablePidAction(){
+        return new DisablePidAction();
+    }
+
+    private static class SetIsHardResetAutomatingAction implements Action {
+
+        private final boolean is_hard_reset_automating;
+
+        public SetIsHardResetAutomatingAction(boolean is_hard_reset_automating){
+            this.is_hard_reset_automating = is_hard_reset_automating;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            setIsHardResetAutomating(is_hard_reset_automating);
+            return false;
+        }
+    }
+    private static Action setIsHardResetAutomatingAction(boolean is_hard_reset_automating){
+        return new SetIsHardResetAutomatingAction(is_hard_reset_automating);
     }
 
     public static class LiftHardReset implements Action {
@@ -242,10 +294,9 @@ public class Lift {
 
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            disablePID();
             Lift.getRightMotor().setPower(-LIFT_HARD_RESET_POWER);
             Lift.getLeftMotor().setPower(-LIFT_HARD_RESET_POWER);
-            if (timerHelper.hasElapsed(LIFT_HARD_RESET_DURATION) || pid_on) {
+            if (timerHelper.hasElapsed(LIFT_HARD_RESET_DURATION) || is_pid_on) {
                 Lift.getRightMotor().setPower(0);
                 Lift.getLeftMotor().setPower(0);
                 return false;
@@ -258,17 +309,13 @@ public class Lift {
     }
     public static Action hardReset(){
         return new SequentialAction(
+                setIsHardResetAutomatingAction(true),
+                disablePidAction(),
                 liftHardReset(),
-                liftResetEncoders(),
-//                Robot.hasElapsed(LIFT_RESET_TIME_INTERVALS),
-//                liftResetEncoders(),
-//                Robot.hasElapsed(LIFT_RESET_TIME_INTERVALS),
-//                liftResetEncoders(),
-//                Robot.hasElapsed(LIFT_RESET_TIME_INTERVALS),
-//                liftResetEncoders(),
-//                Robot.hasElapsed(LIFT_RESET_TIME_INTERVALS),
-//                liftResetEncoders(),
-                enablePIDAction()
+                Robot.sleep(LIFT_POST_RESET_MOVEMENT_DURATION),
+                resetEncodersAndTargetPosAction(),
+                enablePidAction(),
+                setIsHardResetAutomatingAction(false)
         );
     }
 
@@ -284,7 +331,7 @@ public class Lift {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             move(Pos.HIGH_BASKET_OVERSHOOT);
-            return !(getCurrentLength() > HIGH_BASKET_ACCEPTED_POS) || !timerHelper.hasElapsed(LIFT_OPENING_DURATION);
+            return getCurrentLength() < HIGH_BASKET_ACCEPTED_POS && !timerHelper.hasElapsed(LIFT_MOVEMENT_DURATION);
         }
     }
     public static Action highBasketOverShootAction(){
@@ -307,15 +354,15 @@ public class Lift {
             return !arrivedTargetPos();
         }
     }
-    public static Action liftSampleCollection(){
-        return new LiftSampleCollection();
-    }
     public static class LiftSampleCollection implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             move(Pos.SAMPLE_COLLECTION);
             return !arrivedTargetPos();
         }
+    }
+    public static Action sampleCollectionAction() {
+        return new LiftSampleCollection();
     }
     public static class LiftPrepareSpecimen implements Action {
         private final TimerHelper timerHelper;
@@ -326,7 +373,7 @@ public class Lift {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             move(Pos.PREPARE_SPECIMEN);
-            return !arrivedTargetPos() && !timerHelper.hasElapsed(LIFT_CLOSING_DURATION);
+            return !arrivedTargetPos() && !timerHelper.hasElapsed(LIFT_MOVEMENT_DURATION);
         }
     }
     public static class LiftReset implements Action {
@@ -339,7 +386,7 @@ public class Lift {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             move(Pos.RESET);
-            return !isReseted() && !moveTimer.hasElapsed(LIFT_CLOSING_DURATION);
+            return !isReseted() && !moveTimer.hasElapsed(LIFT_MOVEMENT_DURATION);
         }
     }
 
@@ -368,14 +415,33 @@ public class Lift {
         }
     }
 
-    private static class LiftResetEncoders implements Action {
+    private static class ResetEncodersAndTargetPosAction implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             resetEncoders();
+            setTargetPosCm(0);
             return false;
         }
     }
-    public static Action liftResetEncoders(){
-        return new LiftResetEncoders();
+    public static Action resetEncodersAndTargetPosAction(){
+        return new ResetEncodersAndTargetPosAction();
+    }
+
+    private static class DisplayData implements Action {
+
+        private final Telemetry telemetry;
+
+        public DisplayData(Telemetry telemetry){
+            this.telemetry = telemetry;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            displayData(telemetry);
+            return true;
+        }
+    }
+    public static Action displayDataAction(Telemetry telemetry){
+        return new DisplayData(telemetry);
     }
 }

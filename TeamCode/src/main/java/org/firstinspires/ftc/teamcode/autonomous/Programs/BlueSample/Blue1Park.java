@@ -12,12 +12,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.autonomous.Coordinates.BlueSampleCoordinates;
-import org.firstinspires.ftc.teamcode.autonomous.Coordinates.BlueSpecimenCoordinates;
 import org.firstinspires.ftc.teamcode.roadRunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subSystems.Claw;
 import org.firstinspires.ftc.teamcode.subSystems.Differential;
 import org.firstinspires.ftc.teamcode.subSystems.Lift;
-import org.firstinspires.ftc.teamcode.subSystems.LiftArm;
 
 @Config
 @Autonomous(name = "Blue_Sample_1_Park", group = "Autonomous")
@@ -33,40 +31,37 @@ public class Blue1Park extends LinearOpMode {
 
         Action scorePreLoad = ignitionSystem.actionBuilder(BlueSampleCoordinates.getStart())
                 .setTangent(BlueSampleCoordinates.getScoreTangent())
-                .splineToLinearHeading(BlueSampleCoordinates.getScore0(), BlueSampleCoordinates.getIntake2HeadingChange())
+                .splineToLinearHeading(BlueSampleCoordinates.getScore1(), BlueSampleCoordinates.getIntake2HeadingChange())
 
                 .build();
 
-        Action park = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore0())
+        Action park = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore1())
                 .strafeToLinearHeading(BlueSampleCoordinates.getPark1().component1(), BlueSampleCoordinates.getPark1().heading)
 
                 .strafeToConstantHeading(BlueSampleCoordinates.getPark2().component1())
                 .build();
 
         Robot.initialize(this);
-        waitForStart();
         Robot.autonomousSetup();
+        waitForStart();
 
         if (isStopRequested()) return;
 
         Actions.runBlocking(
                 new ParallelAction(
-                        new ParallelAction(
-                                Robot.highBasketDeposit(),
-                                scorePreLoad
+                        new SequentialAction(
+                                Differential.moveToDefaultAction(),
+                                Claw.openClaw(),
+                                Lift.sampleCollectionAction(),
+                                Differential.differentialCollectSample(),
+                                Robot.sleep(Differential.MOVEMENT_DURATION),
+                                Claw.closeClaw(),
+                                Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
+                                Differential.moveToDefaultAction(),
+                                Lift.moveLift(Lift.Pos.RESET)
                         ),
-                        Robot.hasElapsed(HIGH_BASKET_SETTLE_TIME),
-                        Claw.openClaw(),
-                        Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
-                        new ParallelAction(
-                                park,
-                                new SequentialAction(
-                                        Robot.hasElapsed(POST_SCORE_DELAY),
-                                        Robot.reset()
-                                )
-                        ),
-                        LiftArm.liftArmPID(),
-                        Lift.liftPID()
+                        Lift.liftPID(),
+                        Robot.displayTelemetry()
                 )
         );
     }

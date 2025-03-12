@@ -10,6 +10,7 @@ import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.modules.ServoProps;
 
 @Config
@@ -21,7 +22,7 @@ public class Differential {
     private static final int LEFT = 1; // Left's servo index.
     // Angles for moving the differential.
     public static final int SAMPLE_PITCH = 0;
-    public static int RESET_PITCH = 165;
+    public static int RESET_PITCH = 170;
     public static final int SCORE_BASKET_PITCH = 140;
 
     public static int DEFAULT_PITCH = 90;
@@ -29,7 +30,7 @@ public class Differential {
     public static int PREPARE_SPECIMEN_PITCH = 130;
     public static int SCORE_SPECIMEN_PITCH = 160;
 
-    public static int MOVEMENT_DURATION = 400;
+    public static int MOVEMENT_DURATION = 200;
 
     public static int currentRollAngle;
     public static int currentPitchAngle;
@@ -121,6 +122,11 @@ public class Differential {
         return currentRollAngle == 0;
     }
 
+
+    public static void printData(Telemetry telemetry){
+        telemetry.addData("current pitch angle: ", currentPitchAngle);
+        telemetry.addData("current roll angle: ", currentRollAngle);
+    }
 
     /**
      * Autonomous Actions - Actions which can be used in the autonomous programs.

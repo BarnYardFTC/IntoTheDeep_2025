@@ -12,10 +12,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.autonomous.Coordinates.BlueSampleCoordinates;
-import org.firstinspires.ftc.teamcode.autonomous.Coordinates.BlueSpecimenCoordinates;
 import org.firstinspires.ftc.teamcode.roadRunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subSystems.Claw;
-import org.firstinspires.ftc.teamcode.subSystems.Differential;
 import org.firstinspires.ftc.teamcode.subSystems.Lift;
 import org.firstinspires.ftc.teamcode.subSystems.LiftArm;
 
@@ -33,21 +31,21 @@ public class Blue2Park extends LinearOpMode {
 
         Action scorePreLoad = ignitionSystem.actionBuilder(BlueSampleCoordinates.getStart())
                 .setTangent(BlueSampleCoordinates.getScoreTangent())
-                .splineToLinearHeading(BlueSampleCoordinates.getScore0(), BlueSampleCoordinates.getIntake2HeadingChange())
+                .splineToLinearHeading(BlueSampleCoordinates.getScore1(), BlueSampleCoordinates.getIntake2HeadingChange())
 
                 .build();
 
-        Action intake2 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore0())
+        Action intake2 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore1())
                 .splineToLinearHeading(BlueSampleCoordinates.getIntake2(), BlueSampleCoordinates.getIntake2HeadingChange())
 
                 .build();
 
         Action score2 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getIntake2())
                 .setTangent(BlueSampleCoordinates.getScoreTangent())
-                .splineToLinearHeading(BlueSampleCoordinates.getScore(), BlueSampleCoordinates.getIntake2HeadingChange())
+                .splineToLinearHeading(BlueSampleCoordinates.getScore2(), BlueSampleCoordinates.getIntake2HeadingChange())
                 .build();
 
-        Action park = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore())
+        Action park = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore2())
                 .strafeToLinearHeading(BlueSampleCoordinates.getPark1().component1(), BlueSampleCoordinates.getPark1().heading)
 
                 .strafeToConstantHeading(BlueSampleCoordinates.getPark2().component1())
@@ -66,34 +64,34 @@ public class Blue2Park extends LinearOpMode {
                                         Robot.highBasketDeposit(),
                                         scorePreLoad
                                 ),
-                                Robot.hasElapsed(HIGH_BASKET_SETTLE_TIME),
+                                Robot.sleep(HIGH_BASKET_SETTLE_TIME),
                                 Claw.openClaw(),
-                                Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
+                                Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
 
                                 new ParallelAction(
                                         intake2,
                                         new SequentialAction(
-                                                Robot.hasElapsed(POST_SCORE_DELAY),
+                                                Robot.sleep(POST_SCORE_DELAY),
                                                 Robot.reset(),
 //                                                Differential.differentialDown(),
-                                                Robot.hasElapsed(HORIZONTAL_LIFT_SETTLE_TIME),
+                                                Robot.sleep(HORIZONTAL_LIFT_SETTLE_TIME),
                                                 Claw.closeClaw(),
-                                                Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION)
+                                                Robot.sleep(Claw.CLAW_MOVEMENT_DURATION)
                                         )
                                 ),
-                                Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
+                                Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
                                 new ParallelAction(
                                         score2,
                                         Robot.highBasketDeposit()
                                 ),
-                                Robot.hasElapsed(HIGH_BASKET_SETTLE_TIME),
+                                Robot.sleep(HIGH_BASKET_SETTLE_TIME),
                                 Claw.openClaw(),
-                                Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
+                                Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
 
                                 new ParallelAction(
                                         park,
                                         new SequentialAction(
-                                                Robot.hasElapsed(POST_SCORE_DELAY),
+                                                Robot.sleep(POST_SCORE_DELAY),
                                                 Robot.reset()
                                         )
                                 )

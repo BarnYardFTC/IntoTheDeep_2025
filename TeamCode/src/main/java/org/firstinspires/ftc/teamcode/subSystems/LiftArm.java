@@ -20,21 +20,25 @@ public class LiftArm {
     private static final int LEFT = 1; // Left's motor index.
     private static final MotorProps LEFT_MOTOR = new MotorProps(1425.1, 1.4); // Left's motor props.
 
-    private static final int VERTICAL_ANGLE = 125; // Angle for moving the lift arm to a vertical position.
-    private static final int HORIZONTAL_ANGLE = 5;
+    public static final int VERTICAL_ANGLE = 130; // Angle for moving the lift arm to a vertical position.
+
+    public static final int HORIZONTAL_ANGLE = 5;
     private static final double MIN_LIFT_LENGTH = 30;
 
-    private static final int ACCEPTED_VERTICAL_ANGLE = 110;
+    private static final int ACCEPTED_VERTICAL_ANGLE = 100;
     private static final int ACCEPTED_HORIZONTAL_ANGLE = 20;
 
     private static final int POWER_OFF_HORIZONTAL_ANGLE = 20;
 
     public static int LIFT_ARM_VERTICAL_SETTLE_TIME = 500;
-    public static int LIFT_ARM_HORIZONTAL_SETTLE_TIME = 800;
+    public static int LIFT_ARM_HORIZONTAL_SETTLE_TIME = 150;
 
     public static int SPECIMEN_SCORE_TIME = 1000;
 
-    public static boolean PID_on = true;
+    public static boolean PID_on;
+
+    public static boolean is_extra_power_required;
+    public static double EXTRA_POWER_COEFFICIENT = 2;
 
     public static int lengthOfLiftForPIEDChang = 40;
 
@@ -65,6 +69,8 @@ public class LiftArm {
 
         controller = new PIDController(p, i, d);
 
+        PID_on = true;
+        is_extra_power_required = true;
         move(Angle.HORIZONTAL);
     }
 
@@ -152,8 +158,14 @@ public class LiftArm {
                 motors[LEFT].setPower(holdArmVerticallyPower());
             }
             else {
-                motors[RIGHT].setPower(power);
-                motors[LEFT].setPower(power);
+                if (is_extra_power_required && Lift.targetPosCm == VERTICAL_ANGLE){ //ONLY FOR AUTONOMOUS
+                    motors[RIGHT].setPower(1);
+                    motors[LEFT].setPower(1);
+                }
+                else {
+                    motors[RIGHT].setPower(power);
+                    motors[LEFT].setPower(power);
+                }
             }
         }
         else {

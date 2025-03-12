@@ -17,29 +17,11 @@ public class Test extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Robot.initializeOpMode(this);
-        Lift.initialize(this);
-        LiftArm.initialize(this);
-        Claw.initialize(this);
         Differential.initialize(this);
-        Robot.teleopSetup();
+        Differential.move(0, 175);
         waitForStart();
-        Actions.runBlocking(
-            new ParallelAction(
-                    Lift.liftPID(),
-                    LiftArm.liftArmPID(),
-                    Robot.displayTelemetry(),
-                    new SequentialAction(
-                            LiftArm.liftArmVertical(),
-//                            Robot.hasElapsed(LiftArm.LIFT_ARM_SETTLE_TIME),
-//                            Robot.loosenClawGrip(),
-//                            Lift.moveLift(Lift.Pos.SPECIMEN_SCORE),
-                            Differential.differentialScoreBasket(),
-                            Claw.openClaw(),
-                            Lift.moveLift(Lift.Pos.RESET),
-                            LiftArm.liftArmHorizontal()
-                    )
-            )
-        );
+        while (opModeIsActive()){
+
+        }
     }
 }

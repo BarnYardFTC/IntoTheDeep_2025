@@ -97,7 +97,7 @@ public class BlueSpecimen4Park extends LinearOpMode {
 //                                        Differential.differentialCollectSpecimen()
                                 ),
                                 Claw.closeClaw(),
-                                Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
+                                Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
                                 new ParallelAction(
                                         scoreSecond,
                                         Differential.differentialReset(),
@@ -110,7 +110,7 @@ public class BlueSpecimen4Park extends LinearOpMode {
                                         collectThird
                                 ),
                                 Claw.closeClaw(),
-                                Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
+                                Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
                                 new ParallelAction(
                                         scoreThird,
                                         Differential.differentialReset(),
@@ -124,7 +124,7 @@ public class BlueSpecimen4Park extends LinearOpMode {
                                         collectFourth
                                 ),
                                 Claw.closeClaw(),
-                                Robot.hasElapsed(Claw.CLAW_MOVEMENT_DURATION),
+                                Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
                                 new ParallelAction(
                                         scoreFourth,
                                         Differential.differentialReset(),

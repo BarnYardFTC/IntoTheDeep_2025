@@ -24,6 +24,7 @@ public class Teleop extends LinearOpMode {
         Robot.initializeTeleop(this);
         Robot.teleopSetup();
         waitForStart();
+        Differential.moveToDefault();
         if (isStopRequested()) return;
         Actions.runBlocking(
                 new ParallelAction(
@@ -35,9 +36,9 @@ public class Teleop extends LinearOpMode {
                         Robot.activateLift(),
                         Robot.activateDifferential(),
                         Robot.activateClaw(),
-//                        Robot.activateLimeLight(),
                         Robot.activateGamepads()
                 )
         );
     }
 }
+
