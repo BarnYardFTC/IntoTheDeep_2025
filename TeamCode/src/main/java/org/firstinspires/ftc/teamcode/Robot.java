@@ -579,10 +579,6 @@ public class Robot {
                 LimeLight.pipeLineSwitch(LimeLight.pipeLine.BLUE);
             }
 
-            if (LiftArm.isHorizontal() && Differential.isCollectSample() && Claw.isOpen()) {
-                Differential.move(LimeLight.getAngle(), Differential.SAMPLE_PITCH);
-            }
-
             return true;
         }
     }
