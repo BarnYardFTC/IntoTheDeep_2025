@@ -82,13 +82,20 @@ public class LimeLight {
         return limelight.getStatus().getPipelineIndex();
     }
 
-    public static boolean isCenter() {
+    public static boolean isCenterX() {
         if (limelight.getLatestResult() == null) {
             return false;
         }
         double tx = limelight.getLatestResult().getTx();
+        return tx <= 0.5 && tx >= -0.5;
+    }
+
+    public static boolean isCenterY() {
+        if (limelight.getLatestResult() == null) {
+            return false;
+        }
         double ty = limelight.getLatestResult().getTy();
-        return tx <= 0.5 && tx >= -0.5 && ty <= 0.5 && ty >= -0.5;
+        return ty <= 0.5 && ty >= -0.5;
     }
 
     public static void drivePID() {
@@ -165,7 +172,7 @@ public class LimeLight {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             drivePID();
-            return !isCenter();
+            return !isCenterX();
         }
     }
 
@@ -215,10 +222,9 @@ public class LimeLight {
             new SequentialAction(
                 Differential.moveToLimeLightAction(),
                 startTrackingAction(),
-                new ParallelAction(
-                    moveChassis(),
-                    moveLift()
-                ),
+                moveChassis(),
+                Robot.sleep(100),
+                moveLift(),
                 collectFinal(),
                 stopTrackingAction(),
                 Robot.sleep(100),
