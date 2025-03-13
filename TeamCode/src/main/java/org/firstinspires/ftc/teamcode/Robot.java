@@ -82,7 +82,7 @@ public class Robot {
     Gamepads we run the Teleop based on in the Teleop Period.
     TriggerReader is used only for gamepad1
     */
-    private static GamepadEx gamepadEx1;
+    public static GamepadEx gamepadEx1;
     private static GamepadEx gamepadEx2;
     private static TriggerReader RIGHT_TRIGGER;
     private static TriggerReader LEFT_TRIGGER;

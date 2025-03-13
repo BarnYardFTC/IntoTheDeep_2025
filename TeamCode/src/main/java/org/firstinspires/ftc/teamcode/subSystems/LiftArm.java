@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
@@ -26,7 +27,7 @@ public class LiftArm {
     private static final double MIN_LIFT_LENGTH = 30;
 
     private static final int ACCEPTED_VERTICAL_ANGLE = 100;
-    private static final int ACCEPTED_HORIZONTAL_ANGLE = 20;
+    private static final int ACCEPTED_HORIZONTAL_ANGLE = 5;
 
     private static final int POWER_OFF_HORIZONTAL_ANGLE = 20;
 
