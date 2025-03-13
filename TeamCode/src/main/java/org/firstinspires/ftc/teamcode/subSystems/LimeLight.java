@@ -162,6 +162,7 @@ public class LimeLight {
 
     public static Action autoCollection(){
         return new SequentialAction(
+            Differential.moveToLimeLightAction(),
             new ParallelAction(
                 moveChassis(),
                 moveLift()

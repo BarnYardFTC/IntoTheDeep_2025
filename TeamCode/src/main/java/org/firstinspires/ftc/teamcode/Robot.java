@@ -603,7 +603,6 @@ public class Robot {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             try {
-
                 opMode.telemetry.addData("angle", LimeLight.getAngle());
                 opMode.telemetry.addData("distance", LimeLight.getDistance());
                 opMode.telemetry.update();

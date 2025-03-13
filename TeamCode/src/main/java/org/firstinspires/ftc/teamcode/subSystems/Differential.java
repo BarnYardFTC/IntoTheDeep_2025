@@ -171,6 +171,17 @@ public class Differential {
         return new MoveToDefaultAction();
     }
 
+    private static class moveToLimeLightAction implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            Differential.move(0, 15);
+            return false;
+        }
+    }
+    public static Action  moveToLimeLightAction(){
+        return new moveToLimeLightAction();
+    }
+
     private static class DifferentialPrepareSpecimen implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
