@@ -2,6 +2,9 @@ package org.firstinspires.ftc.teamcode;
 
 // Imports.
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.opMode;
+import static org.firstinspires.ftc.teamcode.Robot.initializeOpMode;
+
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -22,12 +25,13 @@ import org.firstinspires.ftc.teamcode.subSystems.LimeLight;
 public class TestLimeLight extends LinearOpMode {
     @Override
     public void runOpMode() {
-        LimeLight.initialize(this);
+        Robot.initializeTeleop(this);
         waitForStart();
         LimeLight.runLimeLight();
         if (isStopRequested()) return;
         Actions.runBlocking(
                 new ParallelAction(
+                        LimeLight.updateInputs(),
                         Robot.displayTelemetry(),
                         Robot.activateLimeLight()
                 )

@@ -579,6 +579,13 @@ public class Robot {
                 LimeLight.pipeLineSwitch(LimeLight.pipeLine.BLUE);
             }
 
+            if (gamepadEx2.wasJustPressed(GamepadKeys.Button.B)) {
+                Differential.moveToLimeLightAction();
+            }
+            if (gamepadEx2.wasJustPressed(GamepadKeys.Button.Y)) {
+                Differential.collectSample();
+            }
+
             return true;
         }
     }
@@ -602,13 +609,9 @@ public class Robot {
     private static class DisplayTelemetry implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            try {
-                opMode.telemetry.addData("angle", LimeLight.getAngle());
-                opMode.telemetry.addData("distance", LimeLight.getDistance());
-                opMode.telemetry.update();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+            opMode.telemetry.addData("angle", LimeLight.getAngle());
+            opMode.telemetry.addData("distance", LimeLight.getDistance());
+            opMode.telemetry.update();
             return true;
         }
     }

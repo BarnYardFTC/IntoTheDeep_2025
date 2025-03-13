@@ -23,6 +23,8 @@ public class LimeLight {
     private static final double H2 = 3.8; // CM
     private static final double A1 = -45;
     private static final int LIFT_EXTENSION = 4;
+    private static double trackSample = 0;
+    private LLResult result;
 
     public static int angle;
     public static double distance;
@@ -62,6 +64,14 @@ public class LimeLight {
     public static void runLimeLight() {
         limelight.setPollRateHz(75);
         limelight.start();
+    }
+
+    public void startTracking() {
+        trackSample = 1;
+    }
+
+    public void stopTracking() {
+        trackSample = 0;
     }
 
     public static int getAngle() {
@@ -122,6 +132,12 @@ public class LimeLight {
         }
     }
 
+    public static void limelightUpdate() {
+        limelight.updatePythonInputs(
+                new double[] {0, trackSample, 0, 0, 0, 0, 0, 0}
+        );
+    }
+
     public static class CollectFinal implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
@@ -160,17 +176,32 @@ public class LimeLight {
         return new MoveChassis();
     }
 
+    public static class UpdateInputs implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            limelightUpdate();
+            return true;
+        }
+    }
+
+    public static Action updateInputs(){
+        return new UpdateInputs();
+    }
+
     public static Action autoCollection(){
-        return new SequentialAction(
-            Differential.moveToLimeLightAction(),
-            new ParallelAction(
-                moveChassis(),
-                moveLift()
-            ),
-            collectFinal(),
-            Robot.sleep(100),
-            Claw.closeClaw(),
-            Robot.reset()
+        return new ParallelAction(
+            updateInputs(),
+            new SequentialAction(
+                Differential.moveToLimeLightAction(),
+                new ParallelAction(
+                    moveChassis(),
+                    moveLift()
+                ),
+                collectFinal(),
+                Robot.sleep(100),
+                Claw.closeClaw(),
+                Robot.reset()
+            )
         );
     }
 
