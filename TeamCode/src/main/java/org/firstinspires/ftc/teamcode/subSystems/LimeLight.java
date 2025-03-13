@@ -66,11 +66,11 @@ public class LimeLight {
         limelight.start();
     }
 
-    public void startTracking() {
+    public static void startTracking() {
         trackSample = 1;
     }
 
-    public void stopTracking() {
+    public static void stopTracking() {
         trackSample = 0;
     }
 
@@ -188,16 +188,42 @@ public class LimeLight {
         return new UpdateInputs();
     }
 
+    public static class StartTracking implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            startTracking();
+            return false;
+        }
+    }
+
+    public static Action startTrackingAction(){
+        return new StartTracking();
+    }
+
+    public static class StopTracking implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            stopTracking();
+            return false;
+        }
+    }
+
+    public static Action stopTrackingAction(){
+        return new StartTracking();
+    }
+
     public static Action autoCollection(){
         return new ParallelAction(
             updateInputs(),
             new SequentialAction(
                 Differential.moveToLimeLightAction(),
+                startTrackingAction(),
                 new ParallelAction(
                     moveChassis(),
                     moveLift()
                 ),
                 collectFinal(),
+                stopTrackingAction(),
                 Robot.sleep(100),
                 Claw.closeClaw(),
                 Robot.reset()

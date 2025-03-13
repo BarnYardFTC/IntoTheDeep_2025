@@ -580,9 +580,11 @@ public class Robot {
             }
 
             if (gamepadEx2.wasJustPressed(GamepadKeys.Button.B)) {
+                LimeLight.startTracking();
                 Differential.moveToLimeLightAction();
             }
             if (gamepadEx2.wasJustPressed(GamepadKeys.Button.Y)) {
+                LimeLight.stopTracking();
                 Differential.collectSample();
             }
 
