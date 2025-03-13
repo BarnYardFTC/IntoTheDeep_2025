@@ -116,12 +116,12 @@ public class Drivetrain {
         motors[RB].setPower((adjustedLy + adjustedLx - rx) / maxPower / speed_adjustment);
     }
 
-    public static void moveHorizontally(double power) {
+    public static void changeHeading(double power) {
         // Giving power to motors.
         motors[LF].setPower(power);
         motors[RF].setPower(-power);
-        motors[LB].setPower(-power);
-        motors[RB].setPower(power);
+        motors[LB].setPower(power);
+        motors[RB].setPower(-power);
     }
 
     /**

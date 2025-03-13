@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.subSystems;
 
 import androidx.annotation.NonNull;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
@@ -13,7 +11,6 @@ import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Robot;
 
 public class LimeLight {
@@ -99,16 +96,16 @@ public class LimeLight {
         double tx;
 
         if (limelight.getLatestResult() == null) {
-            Drivetrain.moveHorizontally(0);
+            Drivetrain.changeHeading(0);
         }
         else {
             tx = limelight.getLatestResult().getTx();
             if (tx <= 0.5 || tx >= -0.5) {
-                Drivetrain.moveHorizontally(0);
+                Drivetrain.changeHeading(0);
             }
             else {
                 double power = driveController.calculate(tx);
-                Drivetrain.moveHorizontally(power);
+                Drivetrain.changeHeading(power);
             }
         }
     }
