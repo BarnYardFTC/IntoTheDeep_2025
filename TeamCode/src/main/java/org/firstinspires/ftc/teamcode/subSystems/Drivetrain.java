@@ -30,9 +30,9 @@ public class Drivetrain {
     private static double adjustedLx; // Adjusted x axis vector of movement.
     private static double adjustedLy; // Adjusted y axis vector of movement.
 
-    private static int speed_adjustment = 1;
+    private static double speed_adjustment = 1;
 
-    public static final int SLOW_MODE_DIVIDER = 3;
+    public static final double SLOW_MODE_DIVIDER = 2.3;
 
     public static void initialize(OpMode opMode) {
         motors[LF] = opMode.hardwareMap.get(DcMotorEx.class, "leftFront");

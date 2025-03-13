@@ -26,6 +26,7 @@ public class TestLimeLight extends LinearOpMode {
     @Override
     public void runOpMode() {
         Robot.initializeTeleop(this);
+        Robot.teleopSetup();
         waitForStart();
         LimeLight.runLimeLight();
         if (isStopRequested()) return;
@@ -33,7 +34,8 @@ public class TestLimeLight extends LinearOpMode {
                 new ParallelAction(
                         LimeLight.updateInputs(),
                         Robot.displayTelemetry(),
-                        Robot.activateLimeLight()
+                        Robot.activateLimeLight(),
+                        Robot.activateGamepads()
                 )
         );
     }

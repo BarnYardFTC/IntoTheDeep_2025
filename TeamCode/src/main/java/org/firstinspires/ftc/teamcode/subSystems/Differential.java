@@ -22,7 +22,7 @@ public class Differential {
     private static final int LEFT = 1; // Left's servo index.
     // Angles for moving the differential.
     public static final int SAMPLE_PITCH = 0;
-    public static int PRE_SAMPLE_PITCH = 40;
+    public static int PRE_SAMPLE_PITCH = 15;
     public static int RESET_PITCH = 170;
     public static final int SCORE_BASKET_PITCH = 140;
 
@@ -174,7 +174,7 @@ public class Differential {
     private static class moveToLimeLightAction implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            Differential.move(0, 15);
+            Differential.move(0, 20);
             return false;
         }
     }
@@ -235,7 +235,7 @@ public class Differential {
         }
     }
 
-    public static Action differentialScoreBasket(){
+    public static Action rollScoreBasket(){
         return new DifferentialScoreBasket();
     }
 

@@ -32,19 +32,19 @@ public class Lift {
 
     public static double SAMPLE_COLLECTION_POS = 33.5;
 
-    public static final double ACCEPTED_RESETED_POSITION = 5;
+    public static final double ACCEPTED_RESETED_POSITION = 8;
 
-    public static int LIFT_MOVEMENT_DURATION = 700;
+    public static int LIFT_MOVEMENT_DURATION = 1500;
+
+    public static double HIGH_BASKET_GOAL_POS = 68;
+    public static double HIGH_BASKET_POS = 54;
+    public static double HIGH_BASKET_ACCEPTED_POS = HIGH_BASKET_POS-1;
+
+    public static double HIGH_BASKET_MINIMUM_LENGTH = 48;
 
     // Lift limits
     private static final double HORIZONTAL_LIMIT = 44;
-    private static final double VERTICAL_LIMIT = 71.5;
-
-    public static double HIGH_BASKET_GOAL_POS = 68;
-    public static double HIGH_BASKET_POS = 58;
-    public static double HIGH_BASKET_ACCEPTED_POS = 58;
-
-    public static double HIGH_BASKET_MINIMUM_LENGTH = 48;
+    private static final double VERTICAL_LIMIT = HIGH_BASKET_POS;
 
     public static double LIFT_HARD_RESET_POWER = 1;
     public static int LIFT_HARD_RESET_DURATION = 200;

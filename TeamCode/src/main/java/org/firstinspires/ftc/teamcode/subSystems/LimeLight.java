@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.Robot;
 public class LimeLight {
     public static Limelight3A limelight;
 
-    private static final double H1 = 16.5; // CM
+    private static final double H1 = 17.5; // CM
     private static final double H2 = 3.8; // CM
     private static final double A1 = -45;
     private static final int LIFT_EXTENSION = 4;
@@ -142,24 +142,10 @@ public class LimeLight {
         );
     }
 
-    public static class CollectFinal implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            Differential.collectSample();
-            Differential.move(getAngle(), 0);
-            Lift.move(LIFT_EXTENSION);
-            return false;
-        }
-    }
-
-    public static Action collectFinal(){
-        return new CollectFinal();
-    }
-
     public static class MoveLift implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            Lift.move(getDistance());
+            Lift.move(Lift.getTargetPos() + getDistance());
             return false;
         }
     }
@@ -222,13 +208,11 @@ public class LimeLight {
             new SequentialAction(
                 Differential.moveToLimeLightAction(),
                 startTrackingAction(),
-                moveChassis(),
-                Robot.sleep(100),
                 moveLift(),
-                collectFinal(),
                 stopTrackingAction(),
                 Robot.sleep(100),
                 Claw.closeClaw(),
+                Robot.sleep(100),
                 Robot.reset()
             )
         );

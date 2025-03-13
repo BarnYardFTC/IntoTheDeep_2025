@@ -27,9 +27,9 @@ public class LiftArm {
     private static final double MIN_LIFT_LENGTH = 30;
 
     private static final int ACCEPTED_VERTICAL_ANGLE = 100;
-    private static final int ACCEPTED_HORIZONTAL_ANGLE = 5;
+    private static final int ACCEPTED_HORIZONTAL_ANGLE = 20;
 
-    private static final int POWER_OFF_HORIZONTAL_ANGLE = 20;
+    private static final int POWER_OFF_HORIZONTAL_ANGLE = 90;
 
     public static int LIFT_ARM_VERTICAL_SETTLE_TIME = 500;
     public static int LIFT_ARM_HORIZONTAL_SETTLE_TIME = 150;
@@ -44,8 +44,8 @@ public class LiftArm {
     public static int lengthOfLiftForPIEDChang = 40;
 
 
-    public static double LIFT_ARM_MINIMUM_MAINTAIN_POWER = 0.1;
-    public static double LIFT_ARM_MAXIMUM_MAINTAIN_POWER = 0.4;
+    public static double LIFT_ARM_MINIMUM_MAINTAIN_POWER = 0.2;
+    public static double LIFT_ARM_MAXIMUM_MAINTAIN_POWER = 0.45;
 
     //ToDo: set correct values.
     public static double p = 0.02;
@@ -107,7 +107,7 @@ public class LiftArm {
         return getCurrentAngle() > ACCEPTED_VERTICAL_ANGLE;
     }
     public static boolean isPowerRequired() {
-        return !(getCurrentAngle() < POWER_OFF_HORIZONTAL_ANGLE && getTargetAngle() == HORIZONTAL_ANGLE) || Robot.is_reset_automating();
+        return !(getCurrentAngle() < POWER_OFF_HORIZONTAL_ANGLE && getTargetAngle() == HORIZONTAL_ANGLE);
     }
 
     public static int getTargetAngle() {

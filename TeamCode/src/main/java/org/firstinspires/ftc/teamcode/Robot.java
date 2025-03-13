@@ -213,7 +213,7 @@ public class Robot {
         return is_reset_automating() || is_sample_collection_automating() || is_specimen_preparation_automating() || is_specimen_score_automating() || is_high_basket_automating();
     }
     public static boolean isClawAutomating(){
-        return is_sample_collection_automating() || is_specimen_score_automating();
+        return is_sample_collection_automating();
     }
 
     /*
@@ -224,12 +224,11 @@ public class Robot {
                 setAutomationFlags(false, true, false, false, false),
                 new ParallelAction(
                         LiftArm.liftArmVertical(),
-                        Differential.moveToDefaultAction()
+                        Differential.moveToDefaultAction(),
+                        Differential.rollScoreBasket()
                 ),
-//                Robot.sleep(LiftArm.LIFT_ARM_VERTICAL_SETTLE_TIME),
                 Lift.highBasketOverShootAction(),
-                Lift.liftHighBasket(),
-                Differential.differentialScoreBasket()
+                Lift.liftHighBasket()
         );
     }
 
@@ -382,18 +381,19 @@ public class Robot {
                 if (gamepadEx1.wasJustPressed(GamepadKeys.Button.Y)) {
                     // Toggle the claw open or closed
                     if (Claw.isOpen()) {
-                        if ((Differential.isPreSample() || Differential.isCollectSample()) && Lift.isDifferentialMoveable()){
+                        if ((Differential.isPreSample() || Differential.isCollectSample()) && Lift.isDifferentialMoveable()) {
                             currentAutomation = collectSample();
                             isSampleCollectionAutomating = true;
                         }
-                    } else {
+                    }
+                    else{
                         Claw.open();
                     }
                 }
             }
 
             if (currentAutomation != null){
-                if (!currentAutomation.run(packet)){
+                if (!currentAutomation.run(packet) ){
                     isSampleCollectionAutomating = false;
                     currentAutomation = null;
                 }
@@ -581,13 +581,16 @@ public class Robot {
 
             if (gamepadEx2.wasJustPressed(GamepadKeys.Button.B)) {
                 LimeLight.startTracking();
-                Differential.moveToLimeLightAction();
+                Differential.move(0, 20);
             }
             if (gamepadEx2.wasJustPressed(GamepadKeys.Button.Y)) {
                 LimeLight.stopTracking();
                 Differential.collectSample();
             }
 
+            if (gamepadEx2.wasJustPressed(GamepadKeys.Button.A)) {
+                LimeLight.autoCollection();
+            }
             return true;
         }
     }
@@ -611,8 +614,12 @@ public class Robot {
     private static class DisplayTelemetry implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
+//            Lift.displayData(opMode.telemetry);
+//            opMode.telemetry.addData("LiftArm angle", LiftArm.getCurrentAngle());
+//            opMode.telemetry.addData("LiftArm power", LiftArm.getRightMotor().getPower());
             opMode.telemetry.addData("angle", LimeLight.getAngle());
             opMode.telemetry.addData("distance", LimeLight.getDistance());
+            opMode.telemetry.addData("pipeLine", LimeLight.getPipeline());
             opMode.telemetry.update();
             return true;
         }
