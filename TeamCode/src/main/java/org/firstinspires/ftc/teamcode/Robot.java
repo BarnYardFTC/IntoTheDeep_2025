@@ -426,14 +426,14 @@ public class Robot {
                     Differential.move(Differential.currentRollAngle + 60, Differential.currentPitchAngle);
                 }
                 else {
-                    Differential.move(175, Differential.currentPitchAngle);
+                    Differential.move(0, Differential.currentPitchAngle);
                 }
             } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
                 if (Differential.currentRollAngle - 60 >= 0){
                     Differential.move(Differential.currentRollAngle - 60, Differential.currentPitchAngle);
                 }
                 else {
-                    Differential.move(0, Differential.currentPitchAngle);
+                    Differential.move(180, Differential.currentPitchAngle);
                 }
             }
 

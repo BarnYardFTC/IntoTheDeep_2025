@@ -22,7 +22,7 @@ public class Differential {
     private static final int LEFT = 1; // Left's servo index.
     // Angles for moving the differential.
     public static final int SAMPLE_PITCH = 0;
-    public static final int PRE_SAMPLE_PITCH = 30;
+    public static int PRE_SAMPLE_PITCH = 40;
     public static int RESET_PITCH = 170;
     public static final int SCORE_BASKET_PITCH = 140;
 
@@ -31,7 +31,7 @@ public class Differential {
     public static int PREPARE_SPECIMEN_PITCH = 130;
     public static int SCORE_SPECIMEN_PITCH = 160;
 
-    public static int MOVEMENT_DURATION = 200;
+    public static int MOVEMENT_DURATION = 100;
 
     public static int currentRollAngle;
     public static int currentPitchAngle;
