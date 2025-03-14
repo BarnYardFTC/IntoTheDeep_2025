@@ -202,7 +202,7 @@ public class LimeLight {
         return new StartTracking();
     }
 
-    public static Action autoCollection(){
+    public static Action autoCollection() {
         return new ParallelAction(
             updateInputs(),
             new SequentialAction(

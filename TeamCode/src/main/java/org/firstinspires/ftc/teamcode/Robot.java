@@ -589,7 +589,8 @@ public class Robot {
             }
 
             if (gamepadEx2.wasJustPressed(GamepadKeys.Button.A)) {
-                LimeLight.autoCollection();
+                Lift.move(Lift.getTargetPos() + LimeLight.getDistance());
+                Differential.move(LimeLight.getAngle(), 0);
             }
             return true;
         }
