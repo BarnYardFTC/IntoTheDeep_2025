@@ -34,11 +34,11 @@ public class Lift {
 
     public static final double ACCEPTED_RESETED_POSITION = 8;
 
-    public static int LIFT_MOVEMENT_DURATION = 1500;
+    public static int LIFT_MOVEMENT_DURATION = 2800;
 
     public static double HIGH_BASKET_GOAL_POS = 68;
     public static double HIGH_BASKET_POS = 54;
-    public static double HIGH_BASKET_ACCEPTED_POS = HIGH_BASKET_POS-1;
+    public static double HIGH_BASKET_ACCEPTED_POS = HIGH_BASKET_POS;
 
     public static double HIGH_BASKET_MINIMUM_LENGTH = 48;
 
@@ -55,15 +55,19 @@ public class Lift {
     public static int DIFFERENTIAL_MOVEABLE_POS = 3;
     public static int DISABLE_DIFFERENTIAL_LIFT_POS = 10;
 
-    public static double p = 0.0075;
-    public static double i = 0;
-    public static double d = 0;
+    public static double horizontal_p = 0.0075;
+    public static double horizontal_i = 0;
+    public static double horizontal_d = 0;
+    public static double vertical_p = 0.0075;
+    public static double vertical_i = 0;
+    public static double vertical_d = 0;
     public static double targetPosCm; // Target position of the lift in cm.
     public static int targetPos; // Target position of the right motor.
     private static PIDController controller; // PID controller.
 
     public static boolean is_pid_on;
     public static boolean is_hard_reset_automating;
+    public static boolean is_arabic_lift_operating;
 
     public static void initialize(OpMode opMode) {
         motors[RIGHT] = opMode.hardwareMap.get(DcMotorEx.class, "rightLift");
@@ -76,9 +80,11 @@ public class Lift {
         move(Pos.RESET);
         enablePid();
 
-        controller = new PIDController(p, i, d);
+        controller = new PIDController(horizontal_p, horizontal_i, horizontal_d);
 
         setIsHardResetAutomating(false);
+
+        is_arabic_lift_operating = false;
     }
     public static void resetEncoders(){
         for (DcMotorEx motor : motors) {
@@ -120,7 +126,15 @@ public class Lift {
 
     public static double currentPos = 0;
     public static void PID() {
-        controller.setPID(p, i, d);
+//        if (LiftArm.isVertical()) {
+//            controller.setPID(vertical_p, vertical_i, vertical_d);
+//        }
+//        else {
+//            controller.setPID(horizontal_p, horizontal_i, horizontal_d);
+//        }
+        // TESTING. REMOVE FROM COMMENT
+
+        controller.setPID(vertical_p, vertical_i, vertical_d);
 
         // Sets the current and target position of the motor.
         currentPos = motors[RIGHT].getCurrentPosition();
@@ -129,7 +143,15 @@ public class Lift {
         // Calculate motor power.
         double power = controller.calculate(currentPos, targetPos);
 
-        if (is_pid_on){
+        if (is_arabic_lift_operating){
+            motors[RIGHT].setPower(1);
+            motors[LEFT].setPower(1);
+        }
+        else if (targetPosCm == HIGH_BASKET_POS){
+            motors[RIGHT].setPower(0.1);
+            motors[LEFT].setPower(0.1);
+        }
+        else if (isPidOn()){
             motors[RIGHT].setPower(power);
             motors[LEFT].setPower(power);
         }
@@ -192,8 +214,7 @@ public class Lift {
                 targetPosCm + LIFT_SPEED * direction <= HORIZONTAL_LIMIT
                 &&  targetPosCm + LIFT_SPEED * direction >= 0
         ) ||
-                (LiftArm.isVertical() &&
-                        targetPosCm + LIFT_SPEED * direction <= VERTICAL_LIMIT
+                (LiftArm.isVertical()
                         && targetPosCm + LIFT_SPEED * direction >= 0
                 );
     }
@@ -207,6 +228,8 @@ public class Lift {
     }
 
     public static void displayData(Telemetry telemetry){
+        telemetry.addData("is_arabic_lift_operating", is_arabic_lift_operating);
+        telemetry.addData("current length", getCurrentLength());
         telemetry.addData("Right encoder: ", Lift.getRightMotor().getCurrentPosition());
         telemetry.addData("Left encoder: ", Lift.getLeftMotor().getCurrentPosition());
         telemetry.addData("target pos: ", Lift.getTargetPosCm());
@@ -338,10 +361,25 @@ public class Lift {
         return new HighBasketOverShootAction();
     }
     public static class LiftHighBasket implements Action {
+        private final TimerHelper timerHelper;
+
+        public LiftHighBasket(){
+            this.timerHelper = new TimerHelper();
+        }
+
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            move(Pos.HIGH_BASKET);
-            return false;
+            //move(Pos.HIGH_BASKET);
+            // TESTING
+            if (getCurrentLength() > HIGH_BASKET_ACCEPTED_POS || timerHelper.hasElapsed(LIFT_MOVEMENT_DURATION)){
+                is_arabic_lift_operating = false;
+                move(Pos.HIGH_BASKET);
+                return false;
+            }
+            else{
+                is_arabic_lift_operating = true;
+                return true;
+            }
         }
     }
     public static Action liftHighBasket(){

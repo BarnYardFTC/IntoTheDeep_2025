@@ -227,7 +227,6 @@ public class Robot {
                         Differential.moveToDefaultAction(),
                         Differential.rollScoreBasket()
                 ),
-                Lift.highBasketOverShootAction(),
                 Lift.liftHighBasket()
         );
     }
@@ -287,8 +286,6 @@ public class Robot {
     public static Action collectSample(){
         return new SequentialAction(
                 setAutomationFlags(false, false, true, false, false),
-                Differential.CollectSampleAction(),
-                sleep(Differential.MOVEMENT_DURATION),
                 Claw.closeClaw(),
                 sleep(Claw.CLAW_MOVEMENT_DURATION),
                 Differential.moveToDefaultAction()
@@ -381,7 +378,7 @@ public class Robot {
                 if (gamepadEx1.wasJustPressed(GamepadKeys.Button.Y)) {
                     // Toggle the claw open or closed
                     if (Claw.isOpen()) {
-                        if ((Differential.isPreSample() || Differential.isCollectSample()) && Lift.isDifferentialMoveable()) {
+                        if (Differential.isCollectSample() && Lift.isDifferentialMoveable()) {
                             currentAutomation = collectSample();
                             isSampleCollectionAutomating = true;
                         }
@@ -409,15 +406,15 @@ public class Robot {
             if (!isDifferentialAutomating() && Lift.isDifferentialMoveable()) {
 
                 if (gamepadEx1.wasJustPressed(GamepadKeys.Button.A)){
-                    Differential.preSample();
+                    Differential.collectSample();
                 }
-                else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_UP)){
+                else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.RIGHT_STICK_BUTTON) || gamepadEx1.wasJustPressed(GamepadKeys.Button.LEFT_STICK_BUTTON)){
                     Differential.reset();
                 } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.X)) {
                     Differential.moveToDefault();
                 }
                 else if (gamepadEx2.wasJustPressed(GamepadKeys.Button.X)){
-                    Differential.preSample();
+                    Differential.collectSample();
                     Claw.open();
                 }
             }
@@ -621,6 +618,7 @@ public class Robot {
             opMode.telemetry.addData("angle", LimeLight.getAngle());
             opMode.telemetry.addData("distance", LimeLight.getDistance());
             opMode.telemetry.addData("pipeLine", LimeLight.getPipeline());
+            Lift.displayData(opMode.telemetry);
             opMode.telemetry.update();
             return true;
         }

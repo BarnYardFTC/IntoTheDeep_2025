@@ -6,11 +6,9 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.arcrobotics.ftclib.controller.PIDController;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.MotorProps;
 
 @Config
@@ -72,6 +70,10 @@ public class LiftArm {
 
         PID_on = true;
         move(Angle.HORIZONTAL);
+    }
+
+    public static boolean isInitialized(){
+        return motors[RIGHT] != null;
     }
 
     public static void resetEncoders(){

@@ -26,10 +26,10 @@ public class LiftPIDTuning extends LinearOpMode {
         while (opModeIsActive()) {
             Lift.PID();
 
-            telemetry.addData("pos", Lift.getTargetPos());
+            telemetry.addData("target pos", Lift.getTargetPos());
             telemetry.addData("current", Lift.getRightMotor().getCurrentPosition());
             telemetry.addData("currentPos", Lift.currentPos);
-            telemetry.addData("liftPower", Lift.getRightMotor().getPower());
+            telemetry.addData("liftPower", Lift.getLeftMotor().getPower());
             telemetry.update();
         }
     }
