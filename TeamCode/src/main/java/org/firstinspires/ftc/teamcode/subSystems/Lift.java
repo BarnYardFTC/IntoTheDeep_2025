@@ -52,6 +52,8 @@ public class Lift {
 
     public static int LIFT_PREPARE_SPECIMEN = 20;
 
+    public static int HIGH_BASKET_CHECK_INTERVALS = 200;
+
     public static int DIFFERENTIAL_MOVEABLE_POS = 3;
     public static int DISABLE_DIFFERENTIAL_LIFT_POS = 10;
 
@@ -125,6 +127,7 @@ public class Lift {
     }
 
     public static double currentPos = 0;
+    public static double prevPos = 0;
     public static void PID() {
 //        if (LiftArm.isVertical()) {
 //            controller.setPID(vertical_p, vertical_i, vertical_d);
@@ -309,17 +312,17 @@ public class Lift {
     }
 
     public static class LiftHardReset implements Action {
-        private final TimerHelper timerHelper;
+        private final Timer timer;
 
         public LiftHardReset(){
-            this.timerHelper = new TimerHelper();
+            this.timer = new Timer();
         }
 
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             Lift.getRightMotor().setPower(-LIFT_HARD_RESET_POWER);
             Lift.getLeftMotor().setPower(-LIFT_HARD_RESET_POWER);
-            if (timerHelper.hasElapsed(LIFT_HARD_RESET_DURATION) || is_pid_on) {
+            if (timer.hasElapsed(LIFT_HARD_RESET_DURATION) || is_pid_on) {
                 Lift.getRightMotor().setPower(0);
                 Lift.getLeftMotor().setPower(0);
                 return false;
@@ -345,43 +348,62 @@ public class Lift {
 
     public static class HighBasketOverShootAction implements Action {
 
-        private final TimerHelper timerHelper;
+        private final Timer timer;
 
         public HighBasketOverShootAction(){
-            this.timerHelper = new TimerHelper();
+            this.timer = new Timer();
         }
 
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             move(Pos.HIGH_BASKET_OVERSHOOT);
-            return getCurrentLength() < HIGH_BASKET_ACCEPTED_POS && !timerHelper.hasElapsed(LIFT_MOVEMENT_DURATION);
+            return getCurrentLength() < HIGH_BASKET_ACCEPTED_POS && !timer.hasElapsed(LIFT_MOVEMENT_DURATION);
         }
     }
     public static Action highBasketOverShootAction(){
         return new HighBasketOverShootAction();
     }
-    public static class LiftHighBasket implements Action {
-        private final TimerHelper timerHelper;
 
-        public LiftHighBasket(){
-            this.timerHelper = new TimerHelper();
+    public static class LiftHighBasket implements Action {
+        private final Timer timer;
+        private final Timer checkIntervalsTimer;
+        private boolean keepRunning;
+
+        public LiftHighBasket() {
+            this.timer = new Timer();
+            this.checkIntervalsTimer = new Timer();
         }
 
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            //move(Pos.HIGH_BASKET);
-            // TESTING
-            if (getCurrentLength() > HIGH_BASKET_ACCEPTED_POS || timerHelper.hasElapsed(LIFT_MOVEMENT_DURATION)){
+
+            // Move lift to high basket position
+
+
+            if (checkIntervalsTimer.hasElapsed(HIGH_BASKET_CHECK_INTERVALS)) {
+                if (prevPos == currentPos) {
+                    keepRunning = false;
+                }
+                else {
+                    prevPos = currentPos;
+                    checkIntervalsTimer.reset(); // Reset timer after incrementing
+                }
+            }
+            else {
+                keepRunning = true;
+            }
+
+            if (!keepRunning) {
                 is_arabic_lift_operating = false;
                 move(Pos.HIGH_BASKET);
-                return false;
-            }
-            else{
+            } else {
                 is_arabic_lift_operating = true;
-                return true;
             }
+
+            return keepRunning;
         }
     }
+
     public static Action liftHighBasket(){
         return new LiftHighBasket();
     }
@@ -403,22 +425,22 @@ public class Lift {
         return new LiftSampleCollection();
     }
     public static class LiftPrepareSpecimen implements Action {
-        private final TimerHelper timerHelper;
+        private final Timer timer;
 
         public LiftPrepareSpecimen(){
-            timerHelper = new TimerHelper();
+            timer = new Timer();
         }
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             move(Pos.PREPARE_SPECIMEN);
-            return !arrivedTargetPos() && !timerHelper.hasElapsed(LIFT_MOVEMENT_DURATION);
+            return !arrivedTargetPos() && !timer.hasElapsed(LIFT_MOVEMENT_DURATION);
         }
     }
     public static class LiftReset implements Action {
-        private final TimerHelper moveTimer;
+        private final Timer moveTimer;
 
         public LiftReset() {
-            moveTimer = new TimerHelper(); // Always create a new TimerHelper
+            moveTimer = new Timer(); // Always create a new TimerHelper
         }
 
         @Override
@@ -441,7 +463,6 @@ public class Lift {
         }
         else if (pos == Pos.HIGH_BASKET){
             return new SequentialAction(
-                    highBasketOverShootAction(),
                     liftHighBasket()
             );
         }

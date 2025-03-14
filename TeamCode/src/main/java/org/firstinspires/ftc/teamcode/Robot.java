@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.subSystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subSystems.Lift;
 import org.firstinspires.ftc.teamcode.subSystems.LiftArm;
 import org.firstinspires.ftc.teamcode.subSystems.LimeLight;
-import org.firstinspires.ftc.teamcode.subSystems.TimerHelper;
+import org.firstinspires.ftc.teamcode.subSystems.Timer;
 
 /**
  * ========General Description=======
@@ -594,13 +594,13 @@ public class Robot {
     }
 
     private static class Sleep implements Action {
-        private final TimerHelper timer;
+        private final Timer timer;
         private final int durationMilliseconds;
 
         // Constructor to set the duration
         public Sleep(int durationMilliseconds) {
             this.durationMilliseconds = durationMilliseconds;
-            this.timer = new TimerHelper();
+            this.timer = new Timer();
         }
 
         @Override
@@ -619,6 +619,8 @@ public class Robot {
             opMode.telemetry.addData("distance", LimeLight.getDistance());
             opMode.telemetry.addData("pipeLine", LimeLight.getPipeline());
             Lift.displayData(opMode.telemetry);
+            opMode.telemetry.addData("prev", Lift.prevPos);
+            opMode.telemetry.addData("current", Lift.currentPos);
             opMode.telemetry.update();
             return true;
         }

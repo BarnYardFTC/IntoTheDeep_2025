@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.subSystems;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-public class TimerHelper {
+public class Timer {
     private final ElapsedTime timer = new ElapsedTime();
     private boolean isRunning = false;
 
