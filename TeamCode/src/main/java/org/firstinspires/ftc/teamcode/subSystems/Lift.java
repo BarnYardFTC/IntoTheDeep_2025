@@ -54,7 +54,7 @@ public class Lift {
 
     public static int LIFT_PREPARE_SPECIMEN = 20;
 
-    public static int HIGH_BASKET_CHECK_INTERVALS = 200;
+    public static int HIGH_BASKET_CHECK_INTERVALS = 1000;
 
     public static int DIFFERENTIAL_MOVEABLE_POS = 3;
     public static int DISABLE_DIFFERENTIAL_LIFT_POS = 10;
@@ -187,7 +187,7 @@ public class Lift {
     public static void move(Pos pos) {
         switch (pos) {
             case HIGH_BASKET:
-                targetPosCm = getCurrentLength() - 1;
+                targetPosCm = getCurrentLength();
                 break;
             case HIGH_BASKET_OVERSHOOT:
                 targetPosCm = HIGH_BASKET_GOAL_POS;
