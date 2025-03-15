@@ -8,13 +8,13 @@ public class BlueSampleCoordinates {
     public static double startX = 39.75;
     public static double startY = 64.5;
     public static double scoreX1 = 56;
-    public static double scoreY1 = 53;
+    public static double scoreY1 = 52;
     public static double scoreX2 = 56;
-    public static double scoreY2 = 53;
+    public static double scoreY2 = 52;
     public static double scoreX3 = 56;
-    public static double scoreY3 = 53;
+    public static double scoreY3 = 52;
     public static double scoreX4 = 56;
-    public static double scoreY4 = 53;
+    public static double scoreY4 = 52;
     public static double intake2X = 47.5;
     public static double intake2Y = 48;
     public static double intake3X = 57.5;

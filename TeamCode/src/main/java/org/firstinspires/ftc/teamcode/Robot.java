@@ -41,10 +41,10 @@ import org.firstinspires.ftc.teamcode.subSystems.Timer;
  * Y: Close Claw, followed by an automation of the differential when sample/specimen is collected
  * X: Move Differential to collect-specimen/specimen-pre-score-position
  * Joysticks: Drive the robot
- * Dpad-up: Move Lift to high-basket position
- * Dpad-down: loosen grip automation
- * Dpad-right: Adjust Differential for sample intake
- * Dpad-left: Adjust Differential for sample intake
+ * Dpad-up: Differential 90
+ * Dpad-down: Differential 0
+ * Dpad-right: Differential 45
+ * Dpad-left: Differential 135
  * Right-Bumper: Move Arm to a vertical position
  * Left-Bumper: Move Arm to a horizontal position
  * Right-Trigger: Open the Lift 'Manually'
@@ -419,19 +419,29 @@ public class Robot {
                 }
             }
             if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
-                if (Differential.currentRollAngle + 60 <= 180){
-                    Differential.move(Differential.currentRollAngle + 60, Differential.currentPitchAngle);
-                }
-                else {
-                    Differential.move(0, Differential.currentPitchAngle);
-                }
+//                if (Differential.currentRollAngle + 60 <= 180){
+//                    Differential.move(Differential.currentRollAngle + 60, Differential.currentPitchAngle);
+//                }
+//                else {
+//                    Differential.move(0, Differential.currentPitchAngle);
+//                }
+                // CHANGED WAY OF OPERATING DIFFERENTIAL
+                Differential.move(Differential.DIFFERENTIAL_135_ROLL, Differential.DIFFERENTIAL_135_PITCH);
             } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
-                if (Differential.currentRollAngle - 60 >= 0){
-                    Differential.move(Differential.currentRollAngle - 60, Differential.currentPitchAngle);
-                }
-                else {
-                    Differential.move(180, Differential.currentPitchAngle);
-                }
+//                if (Differential.currentRollAngle - 60 >= 0){
+//                    Differential.move(Differential.currentRollAngle - 60, Differential.currentPitchAngle);
+//                }
+//                else {
+//                    Differential.move(180, Differential.currentPitchAngle);
+//                }
+                // CHANGED WAY OF OPERATING DIFFERENTIAL
+                Differential.move(Differential.DIFFERENTIAL_45_ROLL, Differential.DIFFERENTIAL_45_PITCH);
+            }
+            else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+                Differential.move(Differential.DIFFERENTIAL_90_ROLL, Differential.DIFFERENTIAL_90_PITCH);
+            }
+            else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
+                Differential.move(Differential.DIFFERENTIAL_0_ROLL, Differential.SAMPLE_PITCH);
             }
 
             return true; // Keep this action running during TeleOp

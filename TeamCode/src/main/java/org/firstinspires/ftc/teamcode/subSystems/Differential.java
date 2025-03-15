@@ -21,9 +21,9 @@ public class Differential {
     private static final int RIGHT = 0; // Right's servo index.
     private static final int LEFT = 1; // Left's servo index.
     // Angles for moving the differential.
-    public static final int SAMPLE_PITCH = 0;
+    public static int SAMPLE_PITCH = 5;
     public static int RESET_PITCH = 170;
-    public static final int SCORE_BASKET_PITCH = 140;
+    public static  int SCORE_BASKET_PITCH = 140;
 
     public static int DEFAULT_PITCH = 90;
 
@@ -31,6 +31,15 @@ public class Differential {
     public static int SCORE_SPECIMEN_PITCH = 160;
 
     public static int MOVEMENT_DURATION = 100;
+
+    public static int DIFFERENTIAL_0_ROLL = 0;
+    public static int DIFFERENTIAL_45_ROLL = 45;
+    public static int DIFFERENTIAL_90_ROLL = 100;
+    public static int DIFFERENTIAL_135_ROLL = 150;
+
+    public static int DIFFERENTIAL_45_PITCH = 10;
+    public static int DIFFERENTIAL_90_PITCH = 10;
+    public static int DIFFERENTIAL_135_PITCH = 10;
 
     public static int currentRollAngle;
     public static int currentPitchAngle;
@@ -88,7 +97,7 @@ public class Differential {
     }
 
     public static void moveToDefault(){
-        move(currentRollAngle, DEFAULT_PITCH);
+        move(0, DEFAULT_PITCH);
     }
 
     public static void scoreBasket(){
@@ -110,7 +119,7 @@ public class Differential {
         return currentPitchAngle == SCORE_BASKET_PITCH;
     }
     public static boolean isCollectSample() {
-        return currentPitchAngle == SAMPLE_PITCH;
+        return currentPitchAngle < 50;
     }
     public static boolean isSpecimenPrepared(){
         return currentPitchAngle == PREPARE_SPECIMEN_PITCH;
