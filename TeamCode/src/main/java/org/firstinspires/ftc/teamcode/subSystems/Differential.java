@@ -196,6 +196,17 @@ public class Differential {
         return new CollectSampleAction();
     }
 
+    private static class CollectSample4Action implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            Differential.move(45, 0);
+            return false;
+        }
+    }
+    public static Action CollectSample4Action(){
+        return new CollectSample4Action();
+    }
+
     private static class DifferentialReset implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {

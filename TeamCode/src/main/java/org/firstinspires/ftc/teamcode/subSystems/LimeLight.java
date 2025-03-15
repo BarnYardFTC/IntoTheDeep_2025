@@ -39,8 +39,6 @@ public class LimeLight {
         limelight = opMode.hardwareMap.get(Limelight3A.class, "limelight");
         limelight.pipelineSwitch(YELLOW);
 
-        driveController = new PIDController(driveP, driveI, driveD);
-
         runLimeLight();
     }
 
@@ -154,6 +152,18 @@ public class LimeLight {
         return new MoveLift();
     }
 
+    public static class MoveDifferential implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            Differential.move(LimeLight.getAngle(), 0);
+            return false;
+        }
+    }
+
+    public static Action moveDifferential(){
+        return new MoveDifferential();
+    }
+
     public static class MoveChassis implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
@@ -209,6 +219,7 @@ public class LimeLight {
                 Differential.moveToLimeLightAction(),
                 startTrackingAction(),
                 moveLift(),
+                moveDifferential(),
                 stopTrackingAction(),
                 Robot.sleep(100),
                 Claw.closeClaw(),

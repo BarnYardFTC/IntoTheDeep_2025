@@ -31,6 +31,7 @@ public class Lift {
     public static final double LOW_BASKET_POS = 67.4 - ROBOT_LIFT_HEIGHT;
 
     public static double SAMPLE_COLLECTION_POS = 33.5;
+    public static double SAMPLE_COLLECTION_4_POS = 25;
 
     public static final double ACCEPTED_RESETED_POSITION = 8;
 
@@ -196,6 +197,9 @@ public class Lift {
             case SAMPLE_COLLECTION:
                 targetPosCm = SAMPLE_COLLECTION_POS;
                 break;
+            case SAMPLE_COLLECTION_4:
+                targetPosCm = SAMPLE_COLLECTION_4_POS;
+                break;
             case RESET:
                 targetPosCm = 0;
                 break;
@@ -223,7 +227,7 @@ public class Lift {
     }
 
     public enum Pos {
-        PREPARE_SPECIMEN, HIGH_BASKET, HIGH_BASKET_OVERSHOOT, LOW_BASKET, RESET, SAMPLE_COLLECTION
+        PREPARE_SPECIMEN, HIGH_BASKET, HIGH_BASKET_OVERSHOOT, LOW_BASKET, RESET, SAMPLE_COLLECTION, SAMPLE_COLLECTION_4
     }
 
     public static boolean arrivedTargetPos() {
@@ -423,6 +427,16 @@ public class Lift {
     }
     public static Action sampleCollectionAction() {
         return new LiftSampleCollection();
+    }
+    public static class LiftSample4Collection implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            move(Pos.SAMPLE_COLLECTION);
+            return !arrivedTargetPos();
+        }
+    }
+    public static Action sampleCollection4Action() {
+        return new LiftSample4Collection();
     }
     public static class LiftPrepareSpecimen implements Action {
         private final Timer timer;
