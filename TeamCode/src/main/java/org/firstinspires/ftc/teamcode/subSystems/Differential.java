@@ -25,8 +25,6 @@ public class Differential {
     public static int RESET_PITCH = 170;
     public static  int SCORE_BASKET_PITCH = 140;
 
-    public static int DEFAULT_PITCH = 90;
-
     public static int PREPARE_SPECIMEN_PITCH = 130;
     public static int SCORE_SPECIMEN_PITCH = 160;
 
@@ -41,6 +39,10 @@ public class Differential {
     public static int DIFFERENTIAL_90_PITCH = 10;
     public static int DIFFERENTIAL_135_PITCH = 10;
 
+    public static int DEFAULT_ROLL = 100;
+    public static int defaultRoll;
+    public static int DEFAULT_PITCH = 100;
+
     public static int currentRollAngle;
     public static int currentPitchAngle;
 
@@ -50,6 +52,8 @@ public class Differential {
 
         currentRollAngle = 0;
         currentPitchAngle = 0;
+
+        defaultRoll = 0;
     }
 
     /**
@@ -97,7 +101,7 @@ public class Differential {
     }
 
     public static void moveToDefault(){
-        move(0, DEFAULT_PITCH);
+        move(defaultRoll, DEFAULT_PITCH);
     }
 
     public static void scoreBasket(){
@@ -237,7 +241,7 @@ public class Differential {
         }
     }
 
-    public static Action rollScoreBasket(){
+    public static Action differentialScoreBasket(){
         return new DifferentialScoreBasket();
     }
 

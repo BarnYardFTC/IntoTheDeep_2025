@@ -41,8 +41,8 @@ import org.firstinspires.ftc.teamcode.subSystems.Timer;
  * Y: Close Claw, followed by an automation of the differential when sample/specimen is collected
  * X: Move Differential to collect-specimen/specimen-pre-score-position
  * Joysticks: Drive the robot
- * Dpad-up: Differential 90
- * Dpad-down: Differential 0
+ * Dpad-up: Differential 0
+ * Dpad-down: Differential 90
  * Dpad-right: Differential 45
  * Dpad-left: Differential 135
  * Right-Bumper: Move Arm to a vertical position
@@ -59,6 +59,7 @@ import org.firstinspires.ftc.teamcode.subSystems.Timer;
  * B: Score a specimen on the high chamber
  * X: Differential prepare sample
  * Dpad-down: Slow mode
+ *
  */
 
 
@@ -82,8 +83,8 @@ public class Robot {
     Gamepads we run the Teleop based on in the Teleop Period.
     TriggerReader is used only for gamepad1
     */
-    private static GamepadEx gamepadEx1;
-    private static GamepadEx gamepadEx2;
+    public static GamepadEx gamepadEx1;
+    public static GamepadEx gamepadEx2;
     private static TriggerReader RIGHT_TRIGGER;
     private static TriggerReader LEFT_TRIGGER;
 
@@ -126,6 +127,8 @@ public class Robot {
         isSpecimenPreparationAutomating = false;
         isSpecimenScoreAutomating = false;
         isMaintainingPositionAutonomous = false;
+
+
     }
     public static void initializeOpMode(OpMode opMode){
         Robot.opMode = opMode;
@@ -222,12 +225,11 @@ public class Robot {
     public static Action highBasketDeposit() {
         return new SequentialAction(
                 setAutomationFlags(false, true, false, false, false),
+                LiftArm.liftArmVertical(),
                 new ParallelAction(
-                        LiftArm.liftArmVertical(),
-                        Differential.moveToDefaultAction(),
-                        Differential.rollScoreBasket()
-                ),
-                Lift.liftHighBasket()
+                        Lift.liftHighBasket(),
+                        Differential.differentialScoreBasket()
+                )
         );
     }
 
@@ -252,7 +254,6 @@ public class Robot {
         return new SequentialAction(
                 new ParallelAction(
                     Differential.moveToDefaultAction(),
-                    Differential.resetRollAction(),
                     setAutomationFlags(true, false, false, false, false),
                     Lift.moveLift(Lift.Pos.RESET)
                 ),
@@ -266,7 +267,6 @@ public class Robot {
         return new SequentialAction(
                 new ParallelAction(
                     Differential.moveToDefaultAction(),
-                    Differential.resetRollAction(),
                     setAutomationFlags(true, false, false, false, false),
                     Lift.moveLift(Lift.Pos.RESET)
                 ),
@@ -374,18 +374,17 @@ public class Robot {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             // Check if the Y button was just pressed
-            if (!isClawAutomating()){
-                if (gamepadEx1.wasJustPressed(GamepadKeys.Button.Y)) {
-                    // Toggle the claw open or closed
-                    if (Claw.isOpen()) {
-                        if (Differential.isCollectSample() && Lift.isDifferentialMoveable()) {
-                            currentAutomation = collectSample();
-                            isSampleCollectionAutomating = true;
-                        }
+
+            if (gamepadEx1.wasJustPressed(GamepadKeys.Button.Y)) {
+                // Toggle the claw open or closed
+                if (Claw.isOpen()) {
+                    if (Differential.isCollectSample() && Lift.isDifferentialMoveable()) {
+                        currentAutomation = collectSample();
+                        isSampleCollectionAutomating = true;
                     }
-                    else{
-                        Claw.open();
-                    }
+                }
+                else{
+                    Claw.open();
                 }
             }
 
@@ -403,7 +402,7 @@ public class Robot {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             // Only allow manual control if no automation is running
-            if (!isDifferentialAutomating() && Lift.isDifferentialMoveable()) {
+            if (Lift.isDifferentialMoveable()) {
 
                 if (gamepadEx1.wasJustPressed(GamepadKeys.Button.A)){
                     Differential.collectSample();
@@ -437,12 +436,25 @@ public class Robot {
                 // CHANGED WAY OF OPERATING DIFFERENTIAL
                 Differential.move(Differential.DIFFERENTIAL_45_ROLL, Differential.DIFFERENTIAL_45_PITCH);
             }
-            else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+            else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
                 Differential.move(Differential.DIFFERENTIAL_90_ROLL, Differential.DIFFERENTIAL_90_PITCH);
             }
-            else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
+            else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
                 Differential.move(Differential.DIFFERENTIAL_0_ROLL, Differential.SAMPLE_PITCH);
             }
+
+            if (isSampleCollectionAutomating){
+                Differential.defaultRoll = Differential.DEFAULT_ROLL;
+            }
+
+            if (isHighBasketAutomating || Claw.isOpen() && gamepadEx1.wasJustPressed(GamepadKeys.Button.Y) && !Differential.isCollectSample()){
+                Differential.defaultRoll = 0;
+            }
+            if (RIGHT_TRIGGER.isDown() && !Differential.isCollectSample() && LiftArm.isHorizontal()){
+                Differential.defaultRoll = 0;
+                Differential.moveToDefault();
+            }
+
 
             return true; // Keep this action running during TeleOp
         }
@@ -492,15 +504,8 @@ public class Robot {
                 }
             }
 
-            if (!is_reset_automating()&& !is_specimen_preparation_automating()){
+            if (!is_reset_automating() && !is_specimen_preparation_automating()){
                 Lift.enablePid();
-                if (currentAutomation == reset()){
-                    currentAutomation = null;
-                }
-            }
-
-            if (!is_reset_automating() && !is_high_basket_automating() && !is_specimen_score_automating() && !is_specimen_preparation_automating()){
-                currentAutomation = null;
             }
 
             return true; // Keep this action running during TeleOp
@@ -525,7 +530,7 @@ public class Robot {
                 LiftArm.move(LiftArm.Angle.VERTICAL);
 
                 // If the left bumper was just pressed, move the LiftArm to the horizontal position
-            } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+            } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER) && Lift.isReseted()) {
 
                 isSpecimenPreparationAutomating = false;
                 isSpecimenScoreAutomating = false;
@@ -630,7 +635,8 @@ public class Robot {
             opMode.telemetry.addData("pipeLine", LimeLight.getPipeline());
             Lift.displayData(opMode.telemetry);
             opMode.telemetry.addData("prev", Lift.prevPos);
-            opMode.telemetry.addData("current", Lift.currentPos);
+            opMode.telemetry.addData("current length", Lift.getCurrentLength());
+            opMode.telemetry.addData("keepRunning", Lift.keepRunning);
             opMode.telemetry.update();
             return true;
         }

@@ -9,6 +9,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -186,7 +187,7 @@ public class Lift {
     public static void move(Pos pos) {
         switch (pos) {
             case HIGH_BASKET:
-                targetPosCm = HIGH_BASKET_POS;
+                targetPosCm = getCurrentLength() - 1;
                 break;
             case HIGH_BASKET_OVERSHOOT:
                 targetPosCm = HIGH_BASKET_GOAL_POS;
@@ -368,10 +369,10 @@ public class Lift {
         return new HighBasketOverShootAction();
     }
 
+    public static boolean keepRunning;
     public static class LiftHighBasket implements Action {
         private final Timer timer;
         private final Timer checkIntervalsTimer;
-        private boolean keepRunning;
 
         public LiftHighBasket() {
             this.timer = new Timer();
@@ -382,7 +383,6 @@ public class Lift {
         public boolean run(@NonNull TelemetryPacket packet) {
 
             // Move lift to high basket position
-
 
             if (checkIntervalsTimer.hasElapsed(HIGH_BASKET_CHECK_INTERVALS)) {
                 if (prevPos == currentPos) {
@@ -395,6 +395,10 @@ public class Lift {
             }
             else {
                 keepRunning = true;
+            }
+
+            if (Robot.gamepadEx2.isDown(GamepadKeys.Button.A) || Claw.isOpen()){
+                keepRunning = false;
             }
 
             if (!keepRunning) {
