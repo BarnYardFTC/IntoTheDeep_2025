@@ -32,7 +32,6 @@ public class BlueSampleCoordinatesMeepMeep {
     private static final double scoreTangent = Math.toRadians(270);
     private static final double intake4PoseHeading = Math.toRadians(315);
     private static final double intake2HeadingChange = Math.toRadians(45);
-    private static final double intake4HeadingChange = Math.toRadians(90);
     private static final Pose2d start = new Pose2d(startX, startY, startPoseHeading);
     private static final Pose2d score1 = new Pose2d(scoreX1, scoreY1, scorePoseHeading);
     private static final Pose2d score2 = new Pose2d(scoreX2, scoreY2, scorePoseHeading);
@@ -86,9 +85,5 @@ public class BlueSampleCoordinatesMeepMeep {
 
     public static double getIntake2HeadingChange() {
         return intake2HeadingChange;
-    }
-
-    public static double getIntake4HeadingChange() {
-        return intake4HeadingChange;
     }
 }

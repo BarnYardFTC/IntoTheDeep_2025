@@ -7,20 +7,20 @@ import com.acmerobotics.roadrunner.Pose2d;
 public class BlueSampleCoordinates {
     public static double startX = 39.75;
     public static double startY = 64.5;
-    public static double scoreX1 = 52;
-    public static double scoreY1 = 51;
-    public static double scoreX2 = 52;
-    public static double scoreY2 = 51;
-    public static double scoreX3 = 52;
-    public static double scoreY3 = 51;
-    public static double scoreX4 = 52;
-    public static double scoreY4 = 51;
-    public static double intake2X = 47.25;
-    public static double intake2Y = 50;
-    public static double intake3X = 54.25;
-    public static double intake3Y = 50;
+    public static double scoreX1 = 56;
+    public static double scoreY1 = 53;
+    public static double scoreX2 = 56;
+    public static double scoreY2 = 53;
+    public static double scoreX3 = 56;
+    public static double scoreY3 = 53;
+    public static double scoreX4 = 56;
+    public static double scoreY4 = 53;
+    public static double intake2X = 47.5;
+    public static double intake2Y = 48;
+    public static double intake3X = 57.5;
+    public static double intake3Y = 48;
     public static double intake4X = 52;
-    public static double intake4Y = 50;
+    public static double intake4Y = 41;
     public static double park1X = 36;
     public static double park2X = 26;
     public static double parkY = 5;
@@ -30,9 +30,8 @@ public class BlueSampleCoordinates {
     private static final double intake2PoseHeading = Math.toRadians(270);
     private static final double parkPoseHeading = Math.toRadians(0);
     private static final double scoreTangent = Math.toRadians(270);
-    private static final double intake4PoseHeading = Math.toRadians(315);
+    private static final double intake4PoseHeading = Math.toRadians(295);
     private static final double intake2HeadingChange = Math.toRadians(45);
-    private static final double intake4HeadingChange = Math.toRadians(90);
     private static final Pose2d start = new Pose2d(startX, startY, startPoseHeading);
     private static final Pose2d score1 = new Pose2d(scoreX1, scoreY1, scorePoseHeading);
     private static final Pose2d score2 = new Pose2d(scoreX2, scoreY2, scorePoseHeading);
@@ -86,9 +85,5 @@ public class BlueSampleCoordinates {
 
     public static double getIntake2HeadingChange() {
         return intake2HeadingChange;
-    }
-
-    public static double getIntake4HeadingChange() {
-        return intake4HeadingChange;
     }
 }

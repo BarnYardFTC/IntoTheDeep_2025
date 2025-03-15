@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -46,22 +47,22 @@ public class Blue4Park extends LinearOpMode {
                 .strafeToLinearHeading(BlueSampleCoordinates.getScore2().component1(), BlueSampleCoordinates.getScore2().heading)
                 .build();
 
-        Action score3 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getIntake3())
-                .strafeToLinearHeading(BlueSampleCoordinates.getScore3().component1(), BlueSampleCoordinates.getScore3().heading)
-                .build();
-
-        Action intake3 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore3())
+        Action intake3 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore2())
                 .strafeToLinearHeading(BlueSampleCoordinates.getIntake3().component1(), BlueSampleCoordinates.getIntake3().heading)
 
                 .build();
 
-        Action intake4 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore4())
+        Action score3 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getIntake3())
+                .strafeToLinearHeading(BlueSampleCoordinates.getScore3().component1(), BlueSampleCoordinates.getScore3().heading)
+                .build();
+
+        Action intake4 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore3())
                 .strafeToLinearHeading(BlueSampleCoordinates.getIntake4().component1(), BlueSampleCoordinates.getIntake4().heading)
 
                 .build();
 
         Action score4 = ignitionSystem.actionBuilder(BlueSampleCoordinates.getIntake4())
-                .strafeToLinearHeading(BlueSampleCoordinates.getScore4().component1(), BlueSampleCoordinates.getScore2().heading)
+                .strafeToLinearHeading(BlueSampleCoordinates.getScore4().component1(), BlueSampleCoordinates.getScore4().heading)
                 .build();
 
         Action park = ignitionSystem.actionBuilder(BlueSampleCoordinates.getScore4())
@@ -75,6 +76,18 @@ public class Blue4Park extends LinearOpMode {
         waitForStart();
 
         if (isStopRequested()) return;
+
+//        Actions.runBlocking(
+//                new SequentialAction(
+//                        scorePreLoad
+////                        intake2,
+////                        score2,
+////                        intake3,
+////                        score3,
+////                        intake4,
+////                        score4
+//                )
+//        );
 
         Actions.runBlocking(
             new ParallelAction(
@@ -144,23 +157,23 @@ public class Blue4Park extends LinearOpMode {
                                 Robot.sleep(Claw.CLAW_MOVEMENT_DURATION)
                         )
                     ),
-                    Robot.reset()
-//                    Claw.closeClaw(),
-//                    Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
-//                    new ParallelAction(
-//                        score4,
-//                        Robot.highBasketDeposit()
-//                    ),
-//                    Robot.sleep(HIGH_BASKET_SETTLE_TIME),
-//                    Claw.openClaw(),
-//
-//                    Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
+                    Robot.reset(),
+                    Claw.closeClaw(),
+                    Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
+                    new ParallelAction(
+                        score4,
+                        Robot.highBasketDeposit()
+                    ),
+                    Robot.sleep(HIGH_BASKET_SETTLE_TIME),
+                    Claw.openClaw(),
+
+                    Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
 //
 //                    new ParallelAction(
 //                        park,
 //                        new SequentialAction(
 //                            Robot.sleep(POST_SCORE_DELAY),
-//                            Robot.reset()
+                            Robot.reset()
 //                        )
 //                    )
                 ),
