@@ -477,6 +477,7 @@ public class Robot {
             }
 
 
+
             // If a manual input is received, cancel all automations
             if (RIGHT_TRIGGER.isDown() || LEFT_TRIGGER.isDown() || gamepadEx1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER) || gamepadEx1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
                 Lift.enablePid();
@@ -580,6 +581,9 @@ public class Robot {
     }
 
     private static class ActivateLimeLight implements Action {
+
+        private Action currentAutomation = null;
+
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             if (gamepadEx2.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
@@ -602,8 +606,15 @@ public class Robot {
             }
 
             if (gamepadEx2.wasJustPressed(GamepadKeys.Button.A)) {
-                Lift.move(Lift.getTargetPos() + LimeLight.getDistance());
-                Differential.move(LimeLight.getAngle(), 0);
+                currentAutomation = LimeLight.autoCollection();
+            }
+
+
+            if (currentAutomation != null){
+                if (!currentAutomation.run((packet))){
+
+                    currentAutomation = null;
+                }
             }
             return true;
         }

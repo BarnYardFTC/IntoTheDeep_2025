@@ -33,7 +33,7 @@ public class Differential {
     public static int DIFFERENTIAL_0_ROLL = 0;
     public static int DIFFERENTIAL_45_ROLL = 45;
     public static int DIFFERENTIAL_90_ROLL = 100;
-    public static int DIFFERENTIAL_135_ROLL = 150;
+    public static int DIFFERENTIAL_135_ROLL = 160;
 
     public static int DIFFERENTIAL_45_PITCH = 10;
     public static int DIFFERENTIAL_90_PITCH = 10;

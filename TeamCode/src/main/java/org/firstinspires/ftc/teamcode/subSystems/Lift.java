@@ -22,7 +22,8 @@ import org.firstinspires.ftc.teamcode.modules.LiftProps;
 public class Lift {
     public static final DcMotorEx[] motors = new DcMotorEx[2];
     public static final double LOW_CHAMBER_POS = 0;
-    public static int liftSpeed = 3;
+    public static double liftSpeed;
+    public static double LIFT_SPEED = 4;
     private static final int RIGHT = 0;
     private static final int LEFT = 1;
     private static final LiftProps RIGHT_MOTOR = new LiftProps(8, 4, 537.7, 1.4, 14); // Right's motor props.
@@ -88,7 +89,7 @@ public class Lift {
 
         setIsHardResetAutomating(false);
 
-        liftSpeed = 3;
+        liftSpeed = 0;
 
         is_arabic_lift_operating = false;
     }
@@ -214,6 +215,7 @@ public class Lift {
     }
 
     public static void move(double direction) {
+        liftSpeed = Math.max(Robot.gamepadEx1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER), Robot.gamepadEx1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER)) * LIFT_SPEED;
         targetPosCm += liftSpeed * direction;
     }
 
