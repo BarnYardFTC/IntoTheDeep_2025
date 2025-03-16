@@ -130,6 +130,11 @@ public class Robot {
 
 
     }
+    public static boolean isTeleopInitialized(){
+        return gamepadEx1 != null &&
+                gamepadEx2 != null &&
+                opMode != null;
+    }
     public static void initializeOpMode(OpMode opMode){
         Robot.opMode = opMode;
     }

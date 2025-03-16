@@ -402,8 +402,10 @@ public class Lift {
                 keepRunning = true;
             }
 
-            if (Robot.gamepadEx2.isDown(GamepadKeys.Button.A) || Claw.isOpen()){
-                keepRunning = false;
+            if (Robot.isTeleopInitialized()){
+                if (Robot.gamepadEx2.isDown(GamepadKeys.Button.A) || Robot.gamepadEx1.wasJustPressed(GamepadKeys.Button.Y)){
+                    keepRunning = false;
+                }
             }
 
             if (!keepRunning) {
