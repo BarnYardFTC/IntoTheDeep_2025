@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.modules.LiftProps;
 public class Lift {
     public static final DcMotorEx[] motors = new DcMotorEx[2];
     public static final double LOW_CHAMBER_POS = 0;
-    public static final int LIFT_SPEED = 2;
+    public static int liftSpeed = 3;
     private static final int RIGHT = 0;
     private static final int LEFT = 1;
     private static final LiftProps RIGHT_MOTOR = new LiftProps(8, 4, 537.7, 1.4, 14); // Right's motor props.
@@ -87,6 +87,8 @@ public class Lift {
         controller = new PIDController(horizontal_p, horizontal_i, horizontal_d);
 
         setIsHardResetAutomating(false);
+
+        liftSpeed = 3;
 
         is_arabic_lift_operating = false;
     }
@@ -187,7 +189,8 @@ public class Lift {
     public static void move(Pos pos) {
         switch (pos) {
             case HIGH_BASKET:
-                targetPosCm = getCurrentLength();
+                HIGH_BASKET_POS = getCurrentLength();
+                targetPosCm = HIGH_BASKET_POS;
                 break;
             case HIGH_BASKET_OVERSHOOT:
                 targetPosCm = HIGH_BASKET_GOAL_POS;
@@ -211,7 +214,7 @@ public class Lift {
     }
 
     public static void move(double direction) {
-        targetPosCm += LIFT_SPEED * direction;
+        targetPosCm += liftSpeed * direction;
     }
 
     public static boolean isMoveable(double direction) {
@@ -219,11 +222,11 @@ public class Lift {
             return false;
         }
         return (LiftArm.isHorizontal() &&
-                targetPosCm + LIFT_SPEED * direction <= HORIZONTAL_LIMIT
-                &&  targetPosCm + LIFT_SPEED * direction >= 0
+                targetPosCm + liftSpeed * direction <= HORIZONTAL_LIMIT
+                &&  targetPosCm + liftSpeed * direction >= 0
         ) ||
                 (LiftArm.isVertical()
-                        && targetPosCm + LIFT_SPEED * direction >= 0
+                        && targetPosCm + liftSpeed * direction >= 0
                 );
     }
 
@@ -232,7 +235,7 @@ public class Lift {
     }
 
     public static boolean arrivedTargetPos() {
-        return getCurrentLength() <= targetPosCm + LIFT_SPEED && getCurrentLength() >= targetPosCm - LIFT_SPEED;
+        return getCurrentLength() <= targetPosCm + liftSpeed && getCurrentLength() >= targetPosCm - liftSpeed;
     }
 
     public static void displayData(Telemetry telemetry){

@@ -69,7 +69,7 @@ public class Robot {
     =======FINAL VARIABLES (CONSTANTS)========
     */
     // When the trigger value exceeds this value, the trigger is considered active
-    private static final double TRIGGERS_THRESHOLD = 0.1;
+    private static final double TRIGGERS_THRESHOLD = 0;
     // The time it takes between when a sample is closed and the robot moved away from the basket
 
     /*
@@ -85,8 +85,8 @@ public class Robot {
     */
     public static GamepadEx gamepadEx1;
     public static GamepadEx gamepadEx2;
-    private static TriggerReader RIGHT_TRIGGER;
-    private static TriggerReader LEFT_TRIGGER;
+    public static TriggerReader RIGHT_TRIGGER;
+    public static TriggerReader LEFT_TRIGGER;
 
 
     /*
@@ -417,30 +417,31 @@ public class Robot {
                     Claw.open();
                 }
             }
-            if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
-//                if (Differential.currentRollAngle + 60 <= 180){
-//                    Differential.move(Differential.currentRollAngle + 60, Differential.currentPitchAngle);
-//                }
-//                else {
-//                    Differential.move(0, Differential.currentPitchAngle);
-//                }
-                // CHANGED WAY OF OPERATING DIFFERENTIAL
-                Differential.move(Differential.DIFFERENTIAL_135_ROLL, Differential.DIFFERENTIAL_135_PITCH);
-            } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
-//                if (Differential.currentRollAngle - 60 >= 0){
-//                    Differential.move(Differential.currentRollAngle - 60, Differential.currentPitchAngle);
-//                }
-//                else {
-//                    Differential.move(180, Differential.currentPitchAngle);
-//                }
-                // CHANGED WAY OF OPERATING DIFFERENTIAL
-                Differential.move(Differential.DIFFERENTIAL_45_ROLL, Differential.DIFFERENTIAL_45_PITCH);
+            if (Drivetrain.isTurned90()){
+                if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
+                    Differential.move(Differential.DIFFERENTIAL_45_ROLL, Differential.DIFFERENTIAL_135_PITCH);
+                } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
+                    Differential.move(Differential.DIFFERENTIAL_135_ROLL, Differential.DIFFERENTIAL_45_PITCH);
+                }
+                else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
+                    Differential.move(Differential.DIFFERENTIAL_90_ROLL, Differential.DIFFERENTIAL_90_PITCH);
+                }
+                else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+                    Differential.move(Differential.DIFFERENTIAL_0_ROLL, Differential.SAMPLE_PITCH);
+                }
             }
-            else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
-                Differential.move(Differential.DIFFERENTIAL_90_ROLL, Differential.DIFFERENTIAL_90_PITCH);
-            }
-            else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
-                Differential.move(Differential.DIFFERENTIAL_0_ROLL, Differential.SAMPLE_PITCH);
+            else{
+                if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
+                    Differential.move(Differential.DIFFERENTIAL_135_ROLL, Differential.DIFFERENTIAL_135_PITCH);
+                } else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
+                    Differential.move(Differential.DIFFERENTIAL_45_ROLL, Differential.DIFFERENTIAL_45_PITCH);
+                }
+                else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
+                    Differential.move(Differential.DIFFERENTIAL_90_ROLL, Differential.DIFFERENTIAL_90_PITCH);
+                }
+                else if (gamepadEx1.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+                    Differential.move(Differential.DIFFERENTIAL_0_ROLL, Differential.SAMPLE_PITCH);
+                }
             }
 
             if (isSampleCollectionAutomating){
@@ -637,6 +638,8 @@ public class Robot {
             opMode.telemetry.addData("prev", Lift.prevPos);
             opMode.telemetry.addData("current length", Lift.getCurrentLength());
             opMode.telemetry.addData("keepRunning", Lift.keepRunning);
+            opMode.telemetry.addData("is turned 90", Drivetrain.isTurned90());
+            opMode.telemetry.addData("imu heading", Drivetrain.getRobotHeading());
             opMode.telemetry.update();
             return true;
         }

@@ -60,6 +60,12 @@ public class Drivetrain {
         resetVariables(); // Setting initial values to the variables.
     }
 
+    public static boolean isTurned90(){
+        return -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES) > 50 && -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES) < 135 ||
+                -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES) < -50 && -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES) > -135;
+
+    }
+
 
     /**
      * Get the robot heading given from the imu.
@@ -67,7 +73,7 @@ public class Drivetrain {
      * @return - Current robot heading.
      */
     public static double getRobotHeading() {
-        return robotHeading;
+        return -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
     }
     public static double getSpeedAdjustment() {
         return speed_adjustment;
