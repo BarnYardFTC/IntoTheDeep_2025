@@ -7,6 +7,7 @@ import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.autonomous.Coordinates.BlueSampleCoordinates;
@@ -15,6 +16,7 @@ import org.firstinspires.ftc.teamcode.autonomous.Coordinates.RedSampleCoordinate
 import org.firstinspires.ftc.teamcode.roadRunner.MecanumDrive;
 
 @Config
+@Disabled
 @Autonomous(name = "Red_Sample_4_Park", group = "Autonomous")
 
 public class RedSample4Park extends LinearOpMode {

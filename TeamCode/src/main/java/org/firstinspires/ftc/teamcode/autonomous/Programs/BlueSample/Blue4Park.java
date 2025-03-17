@@ -24,9 +24,9 @@ import org.firstinspires.ftc.teamcode.subSystems.LiftArm;
 
 public class Blue4Park extends LinearOpMode {
 
-    public static int HIGH_BASKET_SETTLE_TIME = 300;
-    public static int HORIZONTAL_LIFT_SETTLE_TIME = 500;
-    public static int POST_SCORE_DELAY = 700;
+    public static int HIGH_BASKET_SETTLE_TIME = 20;
+    public static int HORIZONTAL_LIFT_SETTLE_TIME = 20;
+    public static int POST_SCORE_DELAY = 250;
 
     @Override
     public void runOpMode() {
@@ -76,18 +76,6 @@ public class Blue4Park extends LinearOpMode {
         waitForStart();
 
         if (isStopRequested()) return;
-
-//        Actions.runBlocking(
-//                new SequentialAction(
-//                        scorePreLoad
-////                        intake2,
-////                        score2,
-////                        intake3,
-////                        score3,
-////                        intake4,
-////                        score4
-//                )
-//        );
 
         Actions.runBlocking(
             new ParallelAction(

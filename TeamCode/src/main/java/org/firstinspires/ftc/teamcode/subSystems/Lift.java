@@ -24,6 +24,7 @@ public class Lift {
     public static final double LOW_CHAMBER_POS = 0;
     public static double liftSpeed;
     public static double LIFT_SPEED = 4;
+    public static double LIFT_SPEED_AUTONOMOUS = 2;
     private static final int RIGHT = 0;
     private static final int LEFT = 1;
     private static final LiftProps RIGHT_MOTOR = new LiftProps(8, 4, 537.7, 1.4, 14); // Right's motor props.
@@ -55,7 +56,7 @@ public class Lift {
 
     public static int LIFT_PREPARE_SPECIMEN = 20;
 
-    public static int HIGH_BASKET_CHECK_INTERVALS = 1000;
+    public static int HIGH_BASKET_CHECK_INTERVALS = 200;
 
     public static int DIFFERENTIAL_MOVEABLE_POS = 3;
     public static int DISABLE_DIFFERENTIAL_LIFT_POS = 10;
@@ -237,7 +238,7 @@ public class Lift {
     }
 
     public static boolean arrivedTargetPos() {
-        return getCurrentLength() <= targetPosCm + liftSpeed && getCurrentLength() >= targetPosCm - liftSpeed;
+        return getCurrentLength() <= targetPosCm + LIFT_SPEED_AUTONOMOUS && getCurrentLength() >= targetPosCm - LIFT_SPEED_AUTONOMOUS;
     }
 
     public static void displayData(Telemetry telemetry){
