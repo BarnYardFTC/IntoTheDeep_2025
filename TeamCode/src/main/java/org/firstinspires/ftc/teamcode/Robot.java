@@ -181,6 +181,7 @@ public class Robot {
      * Move all the systems of the robot to where they should be at the beginning of the teleop
      */
     public static void teleopSetup(){
+        Lift.isAutonomous = false;
         Differential.collectSample();
         Claw.open();
     }
@@ -188,6 +189,7 @@ public class Robot {
      * Move all the systems of the robot to where they should be at the beginning of the autonomous
      */
     public static void autonomousSetup(){
+        Lift.isAutonomous = true;
         Differential.collectSample();
         Claw.close();
     }
@@ -644,18 +646,7 @@ public class Robot {
     private static class DisplayTelemetry implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-//            Lift.displayData(opMode.telemetry);
-//            opMode.telemetry.addData("LiftArm angle", LiftArm.getCurrentAngle());
-//            opMode.telemetry.addData("LiftArm power", LiftArm.getRightMotor().getPower());
-            opMode.telemetry.addData("angle", LimeLight.getAngle());
-            opMode.telemetry.addData("distance", LimeLight.getDistance());
-            opMode.telemetry.addData("pipeLine", LimeLight.getPipeline());
-            Lift.displayData(opMode.telemetry);
-            opMode.telemetry.addData("prev", Lift.prevPos);
-            opMode.telemetry.addData("current length", Lift.getCurrentLength());
-            opMode.telemetry.addData("keepRunning", Lift.keepRunning);
-            opMode.telemetry.addData("is turned 90", Drivetrain.isTurned90());
-            opMode.telemetry.addData("imu heading", Drivetrain.getRobotHeading());
+            opMode.telemetry.addData("current len", Lift.getCurrentLength());
             opMode.telemetry.update();
             return true;
         }

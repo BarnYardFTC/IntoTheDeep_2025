@@ -23,7 +23,7 @@ public class Claw {
     private static Servo claw; // Servo (starting position: claw: 0).
 
     // Time it takes for the claw to close/open (Milliseconds)
-    public static int CLAW_MOVEMENT_DURATION = 200;
+    public static int CLAW_MOVEMENT_DURATION = 300;
 
 
     public static void initialize(OpMode opMode) {

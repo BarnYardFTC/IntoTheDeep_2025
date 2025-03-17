@@ -95,7 +95,7 @@ public class Blue4Park extends LinearOpMode {
                             Robot.reset(),
                             Lift.sampleCollectionAction(),
                             Differential.CollectSampleAction(),
-                            Robot.sleep(HORIZONTAL_LIFT_SETTLE_TIME),
+                            Robot.sleep(Differential.MOVEMENT_DURATION),
                             Claw.closeClaw(),
                             Robot.sleep(Claw.CLAW_MOVEMENT_DURATION)
                         )
@@ -117,7 +117,7 @@ public class Blue4Park extends LinearOpMode {
                                 Robot.reset(),
                                 Lift.sampleCollectionAction(),
                                 Differential.CollectSampleAction(),
-                                Robot.sleep(HORIZONTAL_LIFT_SETTLE_TIME),
+                                Robot.sleep(Differential.MOVEMENT_DURATION),
                                 Claw.closeClaw(),
                                 Robot.sleep(Claw.CLAW_MOVEMENT_DURATION)
                         )
@@ -140,7 +140,7 @@ public class Blue4Park extends LinearOpMode {
                                 Robot.reset(),
                                 Lift.sampleCollection4Action(),
                                 Differential.CollectSample4Action(),
-                                Robot.sleep(HORIZONTAL_LIFT_SETTLE_TIME),
+                                Robot.sleep(Differential.MOVEMENT_DURATION),
                                 Claw.closeClaw(),
                                 Robot.sleep(Claw.CLAW_MOVEMENT_DURATION)
                         )
@@ -148,10 +148,8 @@ public class Blue4Park extends LinearOpMode {
                     Robot.reset(),
                     Claw.closeClaw(),
                     Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
-                    new ParallelAction(
-                        score4,
-                        Robot.highBasketDeposit()
-                    ),
+                    score4,
+                    Robot.highBasketDeposit(),
                     Robot.sleep(HIGH_BASKET_SETTLE_TIME),
                     Claw.openClaw(),
 

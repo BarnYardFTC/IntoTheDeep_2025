@@ -33,8 +33,8 @@ public class Lift {
     public static final double HIGH_CHAMBER_POS = 66 - ROBOT_LIFT_HEIGHT;
     public static final double LOW_BASKET_POS = 67.4 - ROBOT_LIFT_HEIGHT;
 
-    public static double SAMPLE_COLLECTION_POS = 33.5;
-    public static double SAMPLE_COLLECTION_4_POS = 25;
+    public static double SAMPLE_COLLECTION_POS = 32;
+    public static double SAMPLE_COLLECTION_4_POS = 23;
 
     public static final double ACCEPTED_RESETED_POSITION = 8;
 
@@ -42,7 +42,7 @@ public class Lift {
 
     public static double HIGH_BASKET_GOAL_POS = 68;
     public static double HIGH_BASKET_POS = 54;
-    public static double HIGH_BASKET_ACCEPTED_POS = HIGH_BASKET_POS;
+    public static double HIGH_BASKET_ACCEPTED_POS = 60;
 
     public static double HIGH_BASKET_MINIMUM_LENGTH = 48;
 
@@ -50,13 +50,13 @@ public class Lift {
     private static final double HORIZONTAL_LIMIT = 44;
     private static final double VERTICAL_LIMIT = HIGH_BASKET_POS;
 
-    public static double LIFT_HARD_RESET_POWER = 1;
+    public static double LIFT_HARD_RESET_POWER = 0.3;
     public static int LIFT_HARD_RESET_DURATION = 200;
     public static int LIFT_POST_RESET_MOVEMENT_DURATION = 200;
 
     public static int LIFT_PREPARE_SPECIMEN = 20;
 
-    public static int HIGH_BASKET_CHECK_INTERVALS = 200;
+    public static int HIGH_BASKET_CHECK_INTERVALS = 400;
 
     public static int DIFFERENTIAL_MOVEABLE_POS = 3;
     public static int DISABLE_DIFFERENTIAL_LIFT_POS = 10;
@@ -75,11 +75,13 @@ public class Lift {
     public static boolean is_hard_reset_automating;
     public static boolean is_arabic_lift_operating;
 
+
+    public static boolean isAutonomous = false;
+
     public static void initialize(OpMode opMode) {
         motors[RIGHT] = opMode.hardwareMap.get(DcMotorEx.class, "rightLift");
         motors[LEFT] = opMode.hardwareMap.get(DcMotorEx.class, "leftLift");
 
-        motors[LEFT].setDirection(DcMotorSimple.Direction.REVERSE);
         motors[RIGHT].setDirection(DcMotorSimple.Direction.REVERSE);
 
         resetEncoders();
@@ -407,6 +409,10 @@ public class Lift {
                 if (Robot.gamepadEx2.isDown(GamepadKeys.Button.A) || Robot.gamepadEx1.wasJustPressed(GamepadKeys.Button.Y)){
                     keepRunning = false;
                 }
+            }
+
+            if (isAutonomous && getCurrentLength() > HIGH_BASKET_ACCEPTED_POS){
+                keepRunning = false;
             }
 
             if (!keepRunning) {

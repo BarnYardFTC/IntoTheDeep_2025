@@ -19,9 +19,15 @@ public class Test extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         Differential.initialize(this);
         Differential.move(0, 175);
+        Claw.initialize(this);
         waitForStart();
         while (opModeIsActive()){
-
+            if (gamepad1.y){
+                Claw.open();
+            }
+            if (gamepad1.a){
+                Claw.close();
+            }
         }
     }
 }
