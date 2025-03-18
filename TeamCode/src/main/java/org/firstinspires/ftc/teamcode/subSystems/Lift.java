@@ -42,7 +42,7 @@ public class Lift {
 
     public static double HIGH_BASKET_GOAL_POS = 68;
     public static double HIGH_BASKET_POS = 54;
-    public static double HIGH_BASKET_ACCEPTED_POS = 60;
+    public static double HIGH_BASKET_ACCEPTED_POS = 58.5;
 
     public static double HIGH_BASKET_MINIMUM_LENGTH = 48;
 
