@@ -35,6 +35,7 @@ public class Lift {
 
     public static double SAMPLE_COLLECTION_POS = 32;
     public static double SAMPLE_COLLECTION_4_POS = 23;
+    public static double limeLightPos;
 
     public static final double ACCEPTED_RESETED_POSITION = 8;
 
@@ -50,7 +51,7 @@ public class Lift {
     private static final double HORIZONTAL_LIMIT = 44;
     private static final double VERTICAL_LIMIT = HIGH_BASKET_POS;
 
-    public static double LIFT_HARD_RESET_POWER = 0.3;
+    public static double LIFT_HARD_RESET_POWER = 0.8;
     public static int LIFT_HARD_RESET_DURATION = 200;
     public static int LIFT_POST_RESET_MOVEMENT_DURATION = 200;
 
@@ -93,6 +94,7 @@ public class Lift {
         setIsHardResetAutomating(false);
 
         liftSpeed = 0;
+        limeLightPos = 0;
 
         is_arabic_lift_operating = false;
     }
@@ -208,6 +210,9 @@ public class Lift {
             case SAMPLE_COLLECTION_4:
                 targetPosCm = SAMPLE_COLLECTION_4_POS;
                 break;
+            case LIMELIGHT:
+                targetPosCm = limeLightPos;
+                break;
             case RESET:
                 targetPosCm = 0;
                 break;
@@ -236,7 +241,7 @@ public class Lift {
     }
 
     public enum Pos {
-        PREPARE_SPECIMEN, HIGH_BASKET, HIGH_BASKET_OVERSHOOT, LOW_BASKET, RESET, SAMPLE_COLLECTION, SAMPLE_COLLECTION_4
+        PREPARE_SPECIMEN, HIGH_BASKET, HIGH_BASKET_OVERSHOOT, LOW_BASKET, RESET, SAMPLE_COLLECTION, SAMPLE_COLLECTION_4, LIMELIGHT
     }
 
     public static boolean arrivedTargetPos() {

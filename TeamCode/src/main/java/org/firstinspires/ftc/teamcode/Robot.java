@@ -646,7 +646,9 @@ public class Robot {
     private static class DisplayTelemetry implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            opMode.telemetry.addData("current len", Lift.getCurrentLength());
+            opMode.telemetry.addData("pipeline", LimeLight.getPipeline());
+            opMode.telemetry.addData("len", LimeLight.getDistance());
+            opMode.telemetry.addData("ang", LimeLight.getAngle());
             opMode.telemetry.update();
             return true;
         }

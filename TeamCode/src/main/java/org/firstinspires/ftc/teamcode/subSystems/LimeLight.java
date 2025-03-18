@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subSystems;
 
+import static org.firstinspires.ftc.teamcode.subSystems.Lift.arrivedTargetPos;
+
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -140,11 +142,23 @@ public class LimeLight {
         );
     }
 
+    public static class ChaneDistance implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            Lift.limeLightPos = getDistance() + Lift.getTargetPosCm();
+            return false;
+        }
+    }
+
+    public static Action chaneDistance(){
+        return new ChaneDistance();
+    }
+
     public static class MoveLift implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            Lift.move(Lift.getTargetPos() + getDistance());
-            return false;
+            Lift.move(Lift.Pos.LIMELIGHT);
+            return !arrivedTargetPos();
         }
     }
 
@@ -215,15 +229,19 @@ public class LimeLight {
     public static Action autoCollection() {
         return new ParallelAction(
             updateInputs(),
+            Lift.liftPID(),
             new SequentialAction(
+                Claw.openClaw(),
                 Differential.moveToLimeLightAction(),
                 startTrackingAction(),
+                Robot.sleep(100),
+                chaneDistance(),
                 moveLift(),
                 moveDifferential(),
                 stopTrackingAction(),
-                Robot.sleep(100),
+                Robot.sleep(200),
                 Claw.closeClaw(),
-                Robot.sleep(100),
+                Robot.sleep(200),
                 Robot.reset()
             )
         );
