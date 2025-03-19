@@ -57,7 +57,7 @@ public class Lift {
 
     public static int LIFT_PREPARE_SPECIMEN = 20;
 
-    public static int HIGH_BASKET_CHECK_INTERVALS = 400;
+    public static int HIGH_BASKET_CHECK_INTERVALS = 1000;
 
     public static int DIFFERENTIAL_MOVEABLE_POS = 3;
     public static int DISABLE_DIFFERENTIAL_LIFT_POS = 10;

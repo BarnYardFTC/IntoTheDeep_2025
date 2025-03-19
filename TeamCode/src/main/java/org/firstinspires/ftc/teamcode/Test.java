@@ -25,7 +25,7 @@ public class Test extends LinearOpMode {
             if (gamepad1.y){
                 Claw.open();
             }
-            if (gamepad1.a){
+            else if (gamepad1.a){
                 Claw.close();
             }
         }
