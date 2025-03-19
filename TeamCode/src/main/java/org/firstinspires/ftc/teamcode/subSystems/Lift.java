@@ -43,7 +43,7 @@ public class Lift {
 
     public static double HIGH_BASKET_GOAL_POS = 68;
     public static double HIGH_BASKET_POS = 54;
-    public static double HIGH_BASKET_ACCEPTED_POS = 58.5;
+    public static double HIGH_BASKET_ACCEPTED_POS = 57;
 
     public static double HIGH_BASKET_MINIMUM_LENGTH = 48;
 
@@ -57,7 +57,7 @@ public class Lift {
 
     public static int LIFT_PREPARE_SPECIMEN = 20;
 
-    public static int HIGH_BASKET_CHECK_INTERVALS = 1000;
+    public static int HIGH_BASKET_CHECK_INTERVALS = 500;
 
     public static int DIFFERENTIAL_MOVEABLE_POS = 3;
     public static int DISABLE_DIFFERENTIAL_LIFT_POS = 10;
@@ -384,11 +384,9 @@ public class Lift {
 
     public static boolean keepRunning;
     public static class LiftHighBasket implements Action {
-        private final Timer timer;
         private final Timer checkIntervalsTimer;
 
         public LiftHighBasket() {
-            this.timer = new Timer();
             this.checkIntervalsTimer = new Timer();
         }
 
@@ -398,7 +396,7 @@ public class Lift {
             // Move lift to high basket position
 
             if (checkIntervalsTimer.hasElapsed(HIGH_BASKET_CHECK_INTERVALS)) {
-                if (prevPos == currentPos) {
+                if ((int) (prevPos) == (int) (currentPos)) {
                     keepRunning = false;
                 }
                 else {
@@ -411,7 +409,7 @@ public class Lift {
             }
 
             if (Robot.isTeleopInitialized()){
-                if (Robot.gamepadEx2.isDown(GamepadKeys.Button.A) || Robot.gamepadEx1.wasJustPressed(GamepadKeys.Button.Y)){
+                if (Robot.gamepadEx2.wasJustPressed(GamepadKeys.Button.A) || Robot.gamepadEx1.wasJustPressed(GamepadKeys.Button.Y) || Robot.RIGHT_TRIGGER.isDown() || Robot.LEFT_TRIGGER.isDown()){
                     keepRunning = false;
                 }
             }

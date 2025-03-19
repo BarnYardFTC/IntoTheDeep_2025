@@ -111,7 +111,6 @@ public class Blue4Park extends LinearOpMode {
                         score2
                     ),
                     Robot.highBasketDeposit(),
-                    Robot.sleep(HIGH_BASKET_SETTLE_TIME),
                     Claw.openClaw(),
                     Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
 
@@ -130,10 +129,9 @@ public class Blue4Park extends LinearOpMode {
                     Robot.reset(),
                     Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
                     new ParallelAction(
-                        score3,
-                        Robot.highBasketDeposit()
+                        score3
                     ),
-                    Robot.sleep(HIGH_BASKET_SETTLE_TIME),
+                    Robot.highBasketDeposit(),
                     Claw.openClaw(),
 
                     Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
@@ -155,18 +153,17 @@ public class Blue4Park extends LinearOpMode {
                     Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
                     score4,
                     Robot.highBasketDeposit(),
-                    Robot.sleep(HIGH_BASKET_SETTLE_TIME),
                     Claw.openClaw(),
 
                     Robot.sleep(Claw.CLAW_MOVEMENT_DURATION),
-//
-//                    new ParallelAction(
+
+                    new ParallelAction(
 //                        park,
-//                        new SequentialAction(
+                        new SequentialAction(
 //                            Robot.sleep(POST_SCORE_DELAY),
                             Robot.reset()
-//                        )
-//                    )
+                        )
+                    )
                 ),
                 LiftArm.liftArmPID(),
                 Lift.liftPID()
