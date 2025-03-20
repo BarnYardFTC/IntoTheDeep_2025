@@ -258,6 +258,7 @@ public class Lift {
         telemetry.addData("hardReset automating?", isHardResetAutomating());
         telemetry.addData("Right power", Lift.getRightMotor().getPower());
         telemetry.addData("Left power", Lift.getLeftMotor().getPower());
+        telemetry.addData("keepRunning", keepRunning);
         if (Robot.isInitialized()){
             telemetry.addData("differential moveable?", isDifferentialMoveable());
         }
@@ -271,10 +272,7 @@ public class Lift {
     }
     public static void setIsHardResetAutomating(boolean is_hard_reset_automating){
         Lift.is_hard_reset_automating = is_hard_reset_automating;
-    }
-
-
-    /**
+    }/**
      * Autonomous Actions - Actions which can be used in the autonomous programs.
      */
 

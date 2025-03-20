@@ -18,7 +18,6 @@ import org.firstinspires.ftc.teamcode.roadRunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subSystems.Lift;
 
 @Config
-@Disabled
 @Autonomous(name = "Blue_Specimen_Park", group = "Autonomous")
 
 public class BlueSpecimenPark extends LinearOpMode {

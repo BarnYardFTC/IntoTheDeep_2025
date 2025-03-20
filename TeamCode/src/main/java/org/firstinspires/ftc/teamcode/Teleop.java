@@ -30,7 +30,7 @@ public class Teleop extends LinearOpMode {
                 new ParallelAction(
                         Lift.liftPID(),
                         LiftArm.liftArmPID(),
-//                        Robot.displayTelemetry(),
+                        Robot.displayTelemetry(),
                         Robot.activateDrivetrain(),
                         Robot.activateLiftArm(),
                         Robot.activateLift(),
