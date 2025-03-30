@@ -35,8 +35,8 @@ public class TrainingBot extends LinearOpMode {
         DcMotor leftBack = hardwareMap.get(DcMotor.class, "leftBack");
         DcMotor rightFront = hardwareMap.get(DcMotor.class, "rightFront");
         DcMotor rightBack = hardwareMap.get(DcMotor.class, "rightBack");
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
         rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
