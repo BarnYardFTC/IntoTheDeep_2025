@@ -1,131 +1,98 @@
 package org.firstinspires.ftc.teamcode;
-
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-
-@TeleOp(name = "TrainingbotTeleop")
-
+@TeleOp(name = "trainingbotTeleop")
 public class TrainingBotTeleop extends LinearOpMode {
+        private DcMotor frontLeft, frontRight, backLeft, backRight;
+        private TouchSensor touchSensor;
+    private final ElapsedTime timer = new ElapsedTime();
+    public static double power = 1;
+    private DcMotor rightArm;
+    private DcMotor leftArm;
+        @Override
+        public void runOpMode() {
+            initialize();
+            waitForStart();
+            while (opModeIsActive()) {
+                moveOpmode();
+                if(gamepad1.right_bumper){
 
-    private DcMotor leftFrontDrive = null;
-    private DcMotor leftBackDrive = null;
-    private DcMotor rightFrontDrive = null;
-    private DcMotor rightBackDrive = null;
-    private DcMotor Turntable = null;
+                    rightArm.setPower(power);
+                    leftArm.setPower(power);
+                    rightArm.setTargetPosition(500);
+                    leftArm.setTargetPosition(500);
+                    rightArm.getTargetPosition();
+                    leftArm.getTargetPosition();
+                    rightArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    leftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                } else if (touchSensor.isPressed()) {
+                    timer.reset();
+                    while(timer.seconds()<=1){
+                        frontLeft.setPower(0.5);
+                        backLeft.setPower(0.5);
+                        frontRight.setPower(0.5);
+                        backRight.setPower(0.5);
 
-    private Servo tambal;
-    private boolean toggle = false;
-
-
-
-    BNO055IMU imu;
-    Orientation angles = new Orientation();
-
-
-    double initYaw;
-    double adjustedYaw;
-    @Override
-    public void runOpMode() throws InterruptedException {
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.mode = BNO055IMU.SensorMode.IMU;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.loggingEnabled      = false;
-
-
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-
-        imu.initialize(parameters);
-
-        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
-        initYaw = angles.firstAngle;
-
-        tambal = hardwareMap.get(Servo.class, "tambal");
-
-        leftFrontDrive = hardwareMap.get(DcMotor.class, "leftFront");
-        leftBackDrive = hardwareMap.get(DcMotor.class, "leftBack");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "rightBack");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFront");
-
-        leftFrontDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); // This is not shown in video, but this is to brake the motors to prevent drift. Feel free to delete this
-        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        waitForStart();
-
-        while (opModeIsActive()){
-            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
-            adjustedYaw = angles.firstAngle-initYaw;
-
-            // toggle field/normal
-
-            double zerodYaw = -initYaw+angles.firstAngle;
-
-            double x = gamepad1.left_stick_x;
-            double y = -gamepad1.left_stick_y;
-            double turn = gamepad1.right_stick_x;
-
-            double theta = Math.atan2(y, x) * 180/Math.PI; // aka angle
-
-            double realTheta;
-
-            realTheta = (360 - zerodYaw) + theta;
-
-            double power = Math.hypot(x, y);
-
-            double sin = Math.sin((realTheta * (Math.PI / 180)) - (Math.PI / 4));
-            double cos = Math.cos((realTheta * (Math.PI / 180)) - (Math.PI / 4));
-            double maxSinCos = Math.max(Math.abs(sin), Math.abs(cos));
-
-            double leftFront = (power * cos / maxSinCos + turn);
-            double rightFront = (power * sin / maxSinCos - turn);
-            double leftBack = (power * sin / maxSinCos + turn);
-            double rightBack = (power * cos / maxSinCos - turn);
-
-            servoSetJoystickposition(gamepad1.left_trigger);
+                    }
 
 
-            if ((power + Math.abs(turn)) > 1) {
-                leftFront /= power + turn;
-                rightFront /= power - turn;
-                leftBack /= power + turn;
-                rightBack /= power - turn;
+                } else{
+                    rightArm.setPower(0);
+                    leftArm.setPower(0);
+                    telemetry.addData("right arm power", rightArm.getPower());
+                    telemetry.addData("left arm power", leftArm.getPower());
+                    telemetry.addData("left arm pos", leftArm.getCurrentPosition());
+                    telemetry.addData("right arm pos", rightArm.getCurrentPosition());
+                    telemetry.update();
+                }
             }
-
-            if (gamepad1.b){
-                initYaw = angles.firstAngle;
-            }
-
-            leftFrontDrive.setPower(leftFront);
-            rightFrontDrive.setPower(rightFront);
-            leftBackDrive.setPower(leftBack);
-            rightBackDrive.setPower(rightBack);
         }
+    private void initialize() {
+        frontLeft = hardwareMap.get(DcMotor.class, "leftFront");
+        frontRight = hardwareMap.get(DcMotor.class, "rightFront");
+        backLeft = hardwareMap.get(DcMotor.class, "leftBack");
+        backRight = hardwareMap.get(DcMotor.class, "rightBack");
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight.setDirection(DcMotor.Direction.REVERSE);
+        backRight.setDirection(DcMotor.Direction.REVERSE);
+        rightArm = hardwareMap.get(DcMotor.class, "rightArm");
+        leftArm = hardwareMap.get(DcMotor.class, "leftArm");
+        rightArm.setDirection(DcMotorSimple.Direction.REVERSE);
+        touchSensor = hardwareMap.get(TouchSensor.class, "touchSensor");
+        rightArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
-    private double servoSetJoystickposition(double joystickPosition){
-        if(joystickPosition>=0){
-            tambal.setPosition(joystickPosition);
+    private void moveOpmode(){
+        double y = -gamepad1.left_stick_y;
+        double x = gamepad1.left_stick_x * 1.1;
+        double rx = -gamepad1.right_stick_x;
+        double frontLeftPower = y + x + rx;
+        double backLeftPower = y - x + rx;
+        double frontRightPower = y - x - rx;
+        double backRightPower = y + x - rx;
+        double max = Math.max(Math.abs(frontLeftPower), Math.max(Math.abs(backLeftPower),
+                Math.max(Math.abs(frontRightPower), Math.abs(backRightPower))));
+        if (max > 1.0) {
+            frontLeftPower /= max;
+            backLeftPower /= max;
+            frontRightPower /= max;
+            backRightPower /= max;
         }
-        return joystickPosition;
-
+        frontLeft.setPower(frontLeftPower);
+        backLeft.setPower(backLeftPower);
+        frontRight.setPower(frontRightPower);
+        backRight.setPower(backRightPower);
     }
-
 }
-
-
