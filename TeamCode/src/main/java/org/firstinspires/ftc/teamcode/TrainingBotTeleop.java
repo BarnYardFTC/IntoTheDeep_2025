@@ -66,7 +66,10 @@ public class TrainingBotTeleop extends LinearOpMode {
         rightArm = hardwareMap.get(DcMotor.class, "rightArm");
         leftArm = hardwareMap.get(DcMotor.class, "leftArm");
         rightArm.setDirection(DcMotorSimple.Direction.REVERSE);
+
         touchSensor = hardwareMap.get(TouchSensor.class, "touchSensor");
+
+
         rightArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
