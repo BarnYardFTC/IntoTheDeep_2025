@@ -22,9 +22,9 @@ public class Teleop extends LinearOpMode {
     @Override
     public void runOpMode() {
         Robot.initializeTeleop(this);
-        Robot.teleopSetup();
+//        Robot.teleopSetup();
         waitForStart();
-        Differential.moveToDefault();
+//        Differential.moveToDefault();
         if (isStopRequested()) return;
         Actions.runBlocking(
                 new ParallelAction(
@@ -34,8 +34,8 @@ public class Teleop extends LinearOpMode {
                         Robot.activateDrivetrain(),
                         Robot.activateLiftArm(),
                         Robot.activateLift(),
-                        Robot.activateDifferential(),
-                        Robot.activateClaw(),
+//                        Robot.activateDifferential(),
+//                        Robot.activateClaw(),
                         Robot.activateGamepads()
                 )
         );

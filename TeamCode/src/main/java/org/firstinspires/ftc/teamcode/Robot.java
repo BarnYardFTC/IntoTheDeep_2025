@@ -112,12 +112,12 @@ public class Robot {
 
         // Initialize every system of the robot
 //        VisionProcessor.initialize(opMode);
-        LiftArm.initialize(opMode);
-        Lift.initialize(opMode);
+//        LiftArm.initialize(opMode);
+ //       Lift.initialize(opMode);
         Drivetrain.initialize(opMode);
-        Differential.initialize(opMode);
-        Claw.initialize(opMode);
-        LimeLight.initialize(opMode);
+//        Differential.initialize(opMode);
+//        Claw.initialize(opMode);
+//        LimeLight.initialize(opMode);
         initializeOpMode(opMode);
 
         // reset flags
@@ -575,7 +575,7 @@ public class Robot {
            if (gamepadEx2.isDown(GamepadKeys.Button.DPAD_DOWN)){
                Drivetrain.regularMode();
            }
-           else if (Lift.isReseted() && !LiftArm.isVertical() || !Lift.isReseted() && LiftArm.isVertical() && Claw.isOpen()){
+           else if (Lift.isReseted() && !LiftArm.isVertical() || !Lift.isReseted() && LiftArm.isVertical()){ //ToDo: Return claw.open()
                Drivetrain.regularMode();
            }
            else {

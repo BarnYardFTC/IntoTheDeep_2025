@@ -83,6 +83,7 @@ public class Lift {
         motors[RIGHT] = opMode.hardwareMap.get(DcMotorEx.class, "rightLift");
         motors[LEFT] = opMode.hardwareMap.get(DcMotorEx.class, "leftLift");
 
+//        motors[LEFT].setDirection(DcMotorSimple.Direction.REVERSE);
         motors[RIGHT].setDirection(DcMotorSimple.Direction.REVERSE);
 
         resetEncoders();
